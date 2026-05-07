@@ -67,22 +67,36 @@ export function About() {
                     <li>· Iran</li>
                     <li>· & beyond</li>
                   </ul>
-                  <div className="mt-6 grid gap-1 text-[13.5px] text-brand-charcoal/75 md:grid-cols-2">
-                    <div>
-                      <span className="text-brand-charcoal/50">Email · </span>
-                      <a href={`mailto:${site.email}`} className="hover:text-brand-terracotta">
+                  <div className="mt-8 grid gap-px overflow-hidden rounded-md bg-brand-charcoal/10 sm:grid-cols-3">
+                    <div className="bg-white p-5">
+                      <div className="text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
+                        Email
+                      </div>
+                      <a
+                        href={`mailto:${site.email}`}
+                        className="mt-2 block break-all font-display text-[14.5px] font-medium text-brand-ink hover:text-brand-terracotta"
+                      >
                         {site.email}
                       </a>
                     </div>
-                    <div>
-                      <span className="text-brand-charcoal/50">Phone · </span>
-                      <a href={site.whatsapp} className="hover:text-brand-terracotta">
+                    <div className="bg-white p-5">
+                      <div className="text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
+                        Phone · WhatsApp · Telegram
+                      </div>
+                      <a
+                        href={site.whatsapp}
+                        className="mt-2 block font-display text-[14.5px] font-medium text-brand-ink hover:text-brand-terracotta"
+                      >
                         {site.phone}
                       </a>
                     </div>
-                    <div className="md:col-span-2">
-                      <span className="text-brand-charcoal/50">Address · </span>
-                      {site.address}
+                    <div className="bg-white p-5">
+                      <div className="text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
+                        Office · Astana
+                      </div>
+                      <div className="mt-2 text-[13.5px] leading-snug text-brand-ink">
+                        {site.address}
+                      </div>
                     </div>
                   </div>
                 </div>

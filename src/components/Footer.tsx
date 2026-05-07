@@ -52,14 +52,37 @@ export function Footer() {
             ))}
           </div>
 
-          <div className="mt-10 grid w-full max-w-[640px] gap-2 text-[13px] text-brand-charcoal/70 md:grid-cols-2">
-            <a href={`mailto:${site.email}`} className="hover:text-brand-terracotta">
-              {site.email}
-            </a>
-            <a href={site.whatsapp} className="hover:text-brand-terracotta">
-              {site.phone}
-            </a>
-            <span className="md:col-span-2 text-brand-charcoal/55">{site.address}</span>
+          <div className="mt-12 grid w-full max-w-[920px] gap-px overflow-hidden rounded-md border border-brand-charcoal/10 bg-brand-charcoal/10 text-left sm:grid-cols-3">
+            <div className="bg-brand-paper p-5">
+              <div className="text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
+                Email
+              </div>
+              <a
+                href={`mailto:${site.email}`}
+                className="mt-2 block break-all text-[13.5px] font-medium text-brand-ink hover:text-brand-terracotta"
+              >
+                {site.email}
+              </a>
+            </div>
+            <div className="bg-brand-paper p-5">
+              <div className="text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
+                WhatsApp · Telegram
+              </div>
+              <a
+                href={site.whatsapp}
+                className="mt-2 block text-[13.5px] font-medium text-brand-ink hover:text-brand-terracotta"
+              >
+                {site.phone}
+              </a>
+            </div>
+            <div className="bg-brand-paper p-5">
+              <div className="text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
+                Office · Astana
+              </div>
+              <div className="mt-2 text-[13px] leading-snug text-brand-ink">
+                {site.address}
+              </div>
+            </div>
           </div>
         </div>
 

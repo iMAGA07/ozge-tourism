@@ -50,12 +50,15 @@ export function WhyKazakhstan() {
           </div>
 
           <div className="lg:col-span-7">
-            {/* Symmetric 2-column collage: tall left image, two equal squares on the right */}
-            <div className="grid grid-cols-2 gap-3 md:gap-5">
-              <Reveal>
+            {/* Collage: the LEFT image's aspect ratio sets the total height,
+                and the right column tracks it via h-full. We avoid pinning
+                aspect ratios on the right images so they always fill exactly
+                half of the left's height — perfect symmetry on every viewport. */}
+            <div className="grid grid-cols-2 gap-3 md:gap-5 items-stretch">
+              <Reveal className="h-full">
                 <motion.div
                   style={{ y }}
-                  className="relative aspect-[3/4] overflow-hidden rounded-md h-full"
+                  className="relative aspect-[3/4] h-full w-full overflow-hidden rounded-md"
                 >
                   <Image
                     src={`/photos/${photos.mountain.src}`}
@@ -67,9 +70,9 @@ export function WhyKazakhstan() {
                   />
                 </motion.div>
               </Reveal>
-              <div className="grid grid-rows-2 gap-3 md:gap-5">
-                <Reveal delay={0.1}>
-                  <div className="relative aspect-[4/3] overflow-hidden rounded-md h-full">
+              <div className="grid grid-rows-2 gap-3 md:gap-5 h-full">
+                <Reveal delay={0.1} className="h-full">
+                  <div className="relative h-full w-full overflow-hidden rounded-md">
                     <Image
                       src={`/photos/${photos.desert.src}`}
                       alt="Granite peaks"
@@ -80,8 +83,8 @@ export function WhyKazakhstan() {
                     />
                   </div>
                 </Reveal>
-                <Reveal delay={0.2}>
-                  <div className="relative aspect-[4/3] overflow-hidden rounded-md h-full">
+                <Reveal delay={0.2} className="h-full">
+                  <div className="relative h-full w-full overflow-hidden rounded-md">
                     <Image
                       src={`/photos/${photos.lake.src}`}
                       alt="Mountain lake"
