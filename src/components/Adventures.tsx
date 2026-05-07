@@ -49,13 +49,15 @@ export function Adventures() {
                   ))}
                 </ul>
 
-                <a
-                  href="#book"
-                  className="mt-auto pt-8 inline-flex items-center gap-2 text-[13px] font-medium text-brand-terracotta hover:text-brand-ink transition-colors"
-                >
-                  Reserve a weekend
-                  <span>→</span>
-                </a>
+                <div className="mt-auto pt-8">
+                  <a
+                    href="#book"
+                    className="inline-flex items-center gap-2 text-[13px] font-medium text-brand-terracotta hover:text-brand-ink transition-colors"
+                  >
+                    Reserve a weekend
+                    <span>→</span>
+                  </a>
+                </div>
               </div>
             </div>
           </Reveal>
@@ -101,13 +103,15 @@ export function Adventures() {
                   ))}
                 </ul>
 
-                <a
-                  href="#book"
-                  className="mt-auto pt-8 inline-flex w-fit items-center gap-2 rounded-full bg-brand-saffron px-5 py-2.5 text-[13px] font-medium text-brand-ink transition-all hover:bg-white"
-                >
-                  Reserve your place
-                  <span>→</span>
-                </a>
+                <div className="mt-auto pt-8">
+                  <a
+                    href="#book"
+                    className="inline-flex items-center gap-2 rounded-full bg-brand-saffron px-5 py-2.5 text-[13px] font-medium text-brand-ink transition-all hover:bg-white"
+                  >
+                    Reserve your place
+                    <span>→</span>
+                  </a>
+                </div>
               </div>
             </div>
           </Reveal>
