@@ -98,8 +98,11 @@ export function InteractiveMap() {
                         key={r.id}
                         d={r.d}
                         className={cn(
-                          "transition-all duration-500 ease-smooth",
-                          "cursor-pointer"
+                          "transition-all duration-500 ease-smooth cursor-pointer",
+                          // Remove default browser focus outline on tap; keep
+                          // a subtle saffron ring for keyboard users only.
+                          "focus:outline-none focus-visible:outline-none",
+                          "[-webkit-tap-highlight-color:transparent]"
                         )}
                         style={{
                           fill: isActive
@@ -108,6 +111,7 @@ export function InteractiveMap() {
                           stroke: "#1a1410",
                           strokeWidth: 0.6,
                           filter: isActive ? "url(#glow)" : "none",
+                          outline: "none",
                         }}
                         onMouseEnter={() => setActive(r)}
                         onMouseLeave={() => setActive(null)}
