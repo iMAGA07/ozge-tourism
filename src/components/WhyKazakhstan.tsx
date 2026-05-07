@@ -50,46 +50,49 @@ export function WhyKazakhstan() {
           </div>
 
           <div className="lg:col-span-7">
-            <div className="grid grid-cols-12 gap-3 md:gap-5">
-              <Reveal className="col-span-7 row-span-2">
+            {/* Symmetric 2-column collage: tall left image, two equal squares on the right */}
+            <div className="grid grid-cols-2 gap-3 md:gap-5">
+              <Reveal>
                 <motion.div
                   style={{ y }}
-                  className="relative aspect-[3/4] overflow-hidden rounded-md"
+                  className="relative aspect-[3/4] overflow-hidden rounded-md h-full"
                 >
                   <Image
                     src={`/photos/${photos.mountain.src}`}
                     alt="Burabay national park"
                     fill
-                    sizes="(min-width: 1024px) 40vw, 80vw"
+                    sizes="(min-width: 1024px) 30vw, 50vw"
                     className="object-cover"
                     style={{ objectPosition: photos.mountain.position }}
                   />
                 </motion.div>
               </Reveal>
-              <Reveal delay={0.1} className="col-span-5">
-                <div className="relative aspect-[4/3] overflow-hidden rounded-md">
-                  <Image
-                    src={`/photos/${photos.desert.src}`}
-                    alt="Granite peaks"
-                    fill
-                    sizes="(min-width: 1024px) 28vw, 50vw"
-                    className="object-cover"
-                    style={{ objectPosition: photos.desert.position }}
-                  />
-                </div>
-              </Reveal>
-              <Reveal delay={0.2} className="col-span-5">
-                <div className="relative aspect-[4/3] overflow-hidden rounded-md">
-                  <Image
-                    src={`/photos/${photos.lake.src}`}
-                    alt="Mountain lake"
-                    fill
-                    sizes="(min-width: 1024px) 28vw, 50vw"
-                    className="object-cover"
-                    style={{ objectPosition: photos.lake.position }}
-                  />
-                </div>
-              </Reveal>
+              <div className="grid grid-rows-2 gap-3 md:gap-5">
+                <Reveal delay={0.1}>
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-md h-full">
+                    <Image
+                      src={`/photos/${photos.desert.src}`}
+                      alt="Granite peaks"
+                      fill
+                      sizes="(min-width: 1024px) 30vw, 50vw"
+                      className="object-cover"
+                      style={{ objectPosition: photos.desert.position }}
+                    />
+                  </div>
+                </Reveal>
+                <Reveal delay={0.2}>
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-md h-full">
+                    <Image
+                      src={`/photos/${photos.lake.src}`}
+                      alt="Mountain lake"
+                      fill
+                      sizes="(min-width: 1024px) 30vw, 50vw"
+                      className="object-cover"
+                      style={{ objectPosition: photos.lake.position }}
+                    />
+                  </div>
+                </Reveal>
+              </div>
             </div>
           </div>
         </div>

@@ -45,52 +45,66 @@ export const services = [
   {
     title: "Private & Group Tours",
     desc: "Solo travelers, families, friends and private groups — tailored end-to-end.",
+    icon: "users" as const,
   },
   {
     title: "Customized City Tours",
     desc: "Astana, Almaty, Tashkent, Bishkek, Ashgabat, Dushanbe, Kabul, Tehran & beyond.",
+    icon: "city" as const,
   },
   {
     title: "Multi-Day Regional Tours",
     desc: "Full-day and multi-day journeys across all of Central Asia.",
+    icon: "map" as const,
   },
   {
     title: "Adventure & Outdoor",
     desc: "Horse riding, hiking, cycling, trekking, lakes, camping, skiing & more.",
+    icon: "mountain" as const,
   },
   {
     title: "Cultural Experiences",
     desc: "Authentic Kazakh cuisine, village visits, museums and historic sites.",
+    icon: "landmark" as const,
   },
   {
     title: "VIP Transportation",
     desc: "Airport pick-up, drop-off and premium transfers across the region.",
+    icon: "car" as const,
   },
   {
     title: "Embassies & Organizations",
     desc: "Corporate, embassy and international organization packages, fully managed.",
+    icon: "briefcase" as const,
   },
   {
     title: "University & Student Programs",
     desc: "Discounts, summer/winter camps, field trips and curated learning travel.",
+    icon: "graduation" as const,
   },
   {
     title: "Flights & Stays",
     desc: "Flight bookings, accommodation reservations and full travel arrangements.",
+    icon: "plane" as const,
   },
   {
     title: "Content Creation",
     desc: "Photography, drone shoots and storytelling to capture every moment.",
+    icon: "camera" as const,
   },
   {
     title: "24/7 Concierge",
     desc: "On-demand tourism services and local expertise whenever you need them.",
+    icon: "headset" as const,
   },
   {
     title: "Retreats & Off-sites",
     desc: "Corporate, leadership, academic and youth retreats designed around you.",
+    icon: "tent" as const,
   },
 ];
+
+export type ServiceIcon = (typeof services)[number]["icon"];
 
 export const whyUs = [
   {

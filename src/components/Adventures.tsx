@@ -17,12 +17,12 @@ export function Adventures() {
           lead="Major group adventures across Kazakhstan and Central Asia. We also run private and exclusive trips any day, any season — fully tailored to you."
         />
 
-        <div className="mt-14 grid gap-6 md:gap-10 lg:grid-cols-2">
+        <div className="mt-14 grid gap-6 md:gap-10 lg:grid-cols-2 items-stretch">
           {/* Weekend adventures */}
-          <Reveal>
-            <div className="relative overflow-hidden rounded-md border border-brand-charcoal/10 bg-white p-7 md:p-10">
+          <Reveal className="h-full">
+            <div className="relative h-full flex flex-col overflow-hidden rounded-md border border-brand-charcoal/10 bg-white p-7 md:p-10">
               <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-brand-saffron/15 blur-3xl" />
-              <div className="relative">
+              <div className="relative flex flex-col h-full">
                 <div className="text-[10.5px] uppercase tracking-[0.32em] text-brand-terracotta">
                   Weekend
                 </div>
@@ -48,13 +48,21 @@ export function Adventures() {
                     </li>
                   ))}
                 </ul>
+
+                <a
+                  href="#book"
+                  className="mt-auto pt-8 inline-flex items-center gap-2 text-[13px] font-medium text-brand-terracotta hover:text-brand-ink transition-colors"
+                >
+                  Reserve a weekend
+                  <span>→</span>
+                </a>
               </div>
             </div>
           </Reveal>
 
           {/* Long adventures */}
-          <Reveal delay={0.1}>
-            <div className="relative overflow-hidden rounded-md bg-brand-ink p-7 md:p-10 text-brand-cream">
+          <Reveal delay={0.1} className="h-full">
+            <div className="relative h-full flex flex-col overflow-hidden rounded-md bg-brand-ink p-7 md:p-10 text-brand-cream">
               <div className="absolute inset-0 opacity-25">
                 <Image
                   src={`/photos/${photos.golden.src}`}
@@ -66,7 +74,7 @@ export function Adventures() {
                 />
               </div>
               <div className="absolute inset-0 bg-gradient-to-br from-brand-ink via-brand-ink/80 to-brand-ink/55" />
-              <div className="relative">
+              <div className="relative flex flex-col h-full">
                 <div className="text-[10.5px] uppercase tracking-[0.32em] text-brand-saffron">
                   Week-long · all-inclusive
                 </div>
@@ -95,7 +103,7 @@ export function Adventures() {
 
                 <a
                   href="#book"
-                  className="mt-8 inline-flex items-center gap-2 rounded-full bg-brand-saffron px-5 py-2.5 text-[13px] font-medium text-brand-ink transition-all hover:bg-white"
+                  className="mt-auto pt-8 inline-flex w-fit items-center gap-2 rounded-full bg-brand-saffron px-5 py-2.5 text-[13px] font-medium text-brand-ink transition-all hover:bg-white"
                 >
                   Reserve your place
                   <span>→</span>

@@ -27,32 +27,32 @@ export function About() {
           </div>
 
           <div className="lg:col-span-7">
-            <div className="grid grid-cols-12 gap-3 md:gap-5">
-              <Reveal className="col-span-7">
-                <div className="relative aspect-[3/4] overflow-hidden rounded-md">
+            <div className="grid grid-cols-2 gap-3 md:gap-5">
+              <Reveal>
+                <div className="relative aspect-[3/4] overflow-hidden rounded-md h-full">
                   <Image
                     src={`/photos/${photos.family.src}`}
                     alt="Travel family"
                     fill
-                    sizes="(min-width: 1024px) 40vw, 80vw"
+                    sizes="(min-width: 1024px) 30vw, 50vw"
                     className="object-cover"
                     style={{ objectPosition: photos.family.position }}
                   />
                 </div>
               </Reveal>
-              <Reveal delay={0.1} className="col-span-5">
-                <div className="relative aspect-[4/5] overflow-hidden rounded-md">
+              <Reveal delay={0.1}>
+                <div className="relative aspect-[3/4] overflow-hidden rounded-md h-full">
                   <Image
                     src={`/photos/${photos.cuisine.src}`}
                     alt="Authentic cuisine"
                     fill
-                    sizes="(min-width: 1024px) 28vw, 50vw"
+                    sizes="(min-width: 1024px) 30vw, 50vw"
                     className="object-cover"
                     style={{ objectPosition: photos.cuisine.position }}
                   />
                 </div>
               </Reveal>
-              <Reveal delay={0.15} className="col-span-12">
+              <Reveal delay={0.15} className="col-span-2 mt-2">
                 <div className="rounded-md border border-brand-charcoal/15 bg-white p-7 md:p-9">
                   <h3 className="font-display text-xl font-medium tracking-tight text-brand-ink md:text-2xl">
                     Where we operate
