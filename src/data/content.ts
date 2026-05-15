@@ -43,64 +43,64 @@ export const adventures = {
 
 export const services = [
   {
-    title: "Private & Group Tours",
-    desc: "Solo travelers, families, friends and private groups — tailored end-to-end.",
+    title: "Individual, Family & Private Group Tours",
+    desc: "",
     icon: "users" as const,
   },
   {
     title: "Customized City Tours",
-    desc: "Astana, Almaty, Tashkent, Bishkek, Ashgabat, Dushanbe, Kabul, Tehran & beyond.",
+    desc: "Astana, Tashkent, Bishkek, Ashgabat, Dushanbe, Kabul, Tehran, & beyond.",
     icon: "city" as const,
   },
   {
-    title: "Multi-Day Regional Tours",
-    desc: "Full-day and multi-day journeys across all of Central Asia.",
+    title: "Full-Day & Multi-Day Regional Tours",
+    desc: "Across Central Asia.",
     icon: "map" as const,
   },
   {
-    title: "Adventure & Outdoor",
-    desc: "Horse riding, hiking, cycling, trekking, lakes, camping, skiing & more.",
+    title: "Adventure & Outdoor Activities",
+    desc: "Horse riding, hiking, cycling, trekking, lakes, camping, mountains, skiing, snowboarding, and more (you name it!).",
     icon: "mountain" as const,
   },
   {
-    title: "Cultural Experiences",
-    desc: "Authentic Kazakh cuisine, village visits, museums and historic sites.",
+    title: "Cultural & Traditional Experiences",
+    desc: "Authentic Kazakh cuisine, village visits, museums, and historical sites.",
     icon: "landmark" as const,
   },
   {
-    title: "VIP Transportation",
-    desc: "Airport pick-up, drop-off and premium transfers across the region.",
+    title: "Airport Services & Transportation",
+    desc: "Pick-up, drop-off, and VIP transfers.",
     icon: "car" as const,
   },
   {
-    title: "Embassies & Organizations",
-    desc: "Corporate, embassy and international organization packages, fully managed.",
+    title: "Corporate, Embassy & International Organization Packages",
+    desc: "",
     icon: "briefcase" as const,
   },
   {
     title: "University & Student Programs",
-    desc: "Discounts, summer/winter camps, field trips and curated learning travel.",
+    desc: "Discounts, summer/winter camps, field trips, and more.",
     icon: "graduation" as const,
   },
   {
-    title: "Flights & Stays",
-    desc: "Flight bookings, accommodation reservations and full travel arrangements.",
-    icon: "plane" as const,
-  },
-  {
-    title: "Content Creation",
-    desc: "Photography, drone shoots and storytelling to capture every moment.",
-    icon: "camera" as const,
-  },
-  {
-    title: "24/7 Concierge",
-    desc: "On-demand tourism services and local expertise whenever you need them.",
+    title: "24/7 On-Demand Tourism Services",
+    desc: "",
     icon: "headset" as const,
   },
   {
-    title: "Retreats & Off-sites",
-    desc: "Corporate, leadership, academic and youth retreats designed around you.",
-    icon: "tent" as const,
+    title: "Flight Bookings & Accommodation Reservations",
+    desc: "",
+    icon: "plane" as const,
+  },
+  {
+    title: "Transportation Services",
+    desc: "Economy, business, comfortable, premium.",
+    icon: "car" as const,
+  },
+  {
+    title: "Content Creation & Media Support",
+    desc: "Photography, drone shoots, and storytelling.",
+    icon: "camera" as const,
   },
 ];
 
@@ -109,56 +109,52 @@ export type ServiceIcon = (typeof services)[number]["icon"];
 export const whyUs = [
   {
     title: "Available 24/7",
-    desc: "From the first message to the airport farewell — we are reachable, always.",
+    desc: "",
   },
   {
-    title: "Multilingual experts",
-    desc: "Professional, highly experienced guides fluent in the languages you travel in.",
+    title: "Professional, multilingual, and highly experienced guides",
+    desc: "",
   },
   {
-    title: "Fully comprehensive",
-    desc: "Airfare, transport, accommodation and every small detail handled, A to Z.",
+    title: "Fully flexible, fully customized, and fully comprehensive packages",
+    desc: "Covering A to Z of your adventure, including but not limited to airfare, transportation, accommodation, and all other necessary arrangements.",
   },
   {
-    title: "Built for any adventure",
-    desc: "Equipped to deliver any experience — mountain, desert, city, water, snow.",
+    title: "Fully equipped to deliver every type of adventure across Central Asia",
+    desc: "",
   },
   {
-    title: "Proven track record",
-    desc: "100+ tours across Kazakhstan and Central Asia for guests from every continent.",
+    title: "Strong, proven track record across Kazakhstan and Central Asia",
+    desc: "With 100+ tours for individuals, groups, families, and fully customized packages.",
   },
   {
-    title: "Trusted by institutions",
-    desc: "International students, embassies, organizations and expat communities.",
+    title: "Trusted by international students, embassies, international organizations, and expat communities",
+    desc: "",
   },
   {
-    title: "Authentic value",
-    desc: "Real cultural experiences with exceptional value — never tourist-trap polish.",
-  },
-  {
-    title: "Bold guarantee",
-    desc: "If your experience is not worth what you paid, we refund — no questions asked.",
+    title: "Exceptional value combined with authentic cultural experiences",
+    desc: "",
   },
 ];
 
 export const pricing = [
   {
-    label: "Standard rate",
-    title: "Pay our package rate",
+    label: "Option 01",
+    title: "Pay the standard package rate we offer",
     desc:
-      "The most affordable option for the value provided — fully transparent, no surprises.",
+      "Confidently knowing it is the most affordable option for the value provided.",
   },
   {
-    label: "Best price",
+    label: "Option 02",
     title: "10% less than the market",
     desc:
-      "Find a comparable package elsewhere — we'll match it and take 10% off, on the spot.",
+      "Check the market — and then pay 10% less than whatever price you find elsewhere.",
   },
   {
-    label: "Pay as you enjoy",
-    title: "Pay only if you love it",
+    label: "Option 03",
+    title: "Pay as You Enjoy",
     desc:
-      "Pay as you experience the adventure. If you genuinely don't enjoy it — you don't pay.",
+      "Pay as you enjoy the adventure. If you genuinely don't enjoy it — you don't pay. As simple as that. And yes, we are seriously serious. 🙂",
   },
 ];
 

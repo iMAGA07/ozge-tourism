@@ -51,17 +51,16 @@ export function InteractiveMap() {
               Discover Kazakhstan
             </span>
             <h2 className="fluid-h2 mt-5 font-display font-light">
-              One country.{" "}
+              Twenty regions.{" "}
               <span className="font-serif italic font-normal text-brand-saffron">
-                Twenty wonders.
+                One journey.
               </span>
             </h2>
           </div>
           <div className="lg:col-span-5">
             <Reveal>
               <p className="fluid-lead text-brand-cream/75">
-                Hover any region to discover what makes it unique. From cosmodromes
-                to sacred mountains, every corner of Kazakhstan tells a different story.
+                Hover or tap any region to see its name and what it's known for.
               </p>
             </Reveal>
           </div>

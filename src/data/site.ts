@@ -17,11 +17,11 @@ export const site = {
 
 export const navItems = [
   { label: "Home", href: "#home" },
-  { label: "Adventures", href: "#adventures" },
-  { label: "Map", href: "#map" },
-  { label: "Services", href: "#services" },
-  { label: "Why Us", href: "#why" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "About", href: "#about" },
-  { label: "Book", href: "#book" },
+  { label: "Upcoming Adventures", href: "#adventures" },
+  { label: "Our Services", href: "#services" },
+  { label: "Why Choose Us", href: "#why" },
+  { label: "Our Pricing", href: "#pricing" },
+  { label: "Testimonials", href: "#testimonials" },
+  { label: "About Us", href: "#about" },
+  { label: "Book an Adventure", href: "#book" },
 ];

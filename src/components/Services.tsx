@@ -11,7 +11,6 @@ import {
   Plane,
   Camera,
   Headphones,
-  Tent,
   type LucideIcon,
 } from "lucide-react";
 import { Reveal } from "./Reveal";
@@ -30,7 +29,6 @@ const iconMap: Record<ServiceIcon, LucideIcon> = {
   plane: Plane,
   camera: Camera,
   headset: Headphones,
-  tent: Tent,
 };
 
 export function Services() {
@@ -43,8 +41,8 @@ export function Services() {
         <SectionHeader
           eyebrow="Our services"
           title="Adventures of"
-          italic="every kind."
-          lead="From a quiet weekend in the mountains to fully managed corporate expeditions across five countries, every Ozge experience is built around you."
+          italic="all kinds."
+          lead="We offer adventures of all kinds across Kazakhstan and Central Asia — including but not limited to:"
         />
 
         <div className="mt-14 grid gap-px overflow-hidden rounded-md bg-brand-charcoal/10 md:grid-cols-2 lg:grid-cols-3">
@@ -61,12 +59,14 @@ export function Services() {
                       {String(i + 1).padStart(2, "0")}
                     </span>
                   </div>
-                  <h3 className="mt-6 font-display text-xl font-medium tracking-tight text-brand-ink md:text-[22px]">
+                  <h3 className="mt-6 font-display text-lg font-medium tracking-tight text-brand-ink md:text-[19px] leading-snug">
                     {s.title}
                   </h3>
-                  <p className="mt-2.5 text-[13.5px] leading-relaxed text-brand-charcoal/75">
-                    {s.desc}
-                  </p>
+                  {s.desc && (
+                    <p className="mt-2.5 text-[13.5px] leading-relaxed text-brand-charcoal/75">
+                      {s.desc}
+                    </p>
+                  )}
                   <div className="mt-6 h-px w-full bg-brand-charcoal/10" />
                   <div className="mt-4 inline-flex items-center gap-2 text-[12px] font-medium text-brand-terracotta opacity-0 transition-opacity duration-500 group-hover:opacity-100">
                     Talk to us

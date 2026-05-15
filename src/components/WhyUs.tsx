@@ -22,9 +22,9 @@ export function WhyUs() {
           <div className="lg:col-span-5">
             <SectionHeader
               eyebrow="Why choose us"
-              title="Trusted partners,"
-              italic="unforgettable journeys."
-              lead="If you want to experience Central Asia at its best — with a partner committed to excellence, authenticity and unforgettable adventures — we are at your service."
+              title="A trusted partner,"
+              italic="at your service."
+              lead="If you want to experience Central Asia at its best with a trusted partner committed to excellence, authenticity, and unforgettable adventures, we are at your service. Here are some of the reasons why you should choose us:"
             />
 
             <Reveal delay={0.2}>
@@ -53,12 +53,14 @@ export function WhyUs() {
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       <div>
-                        <h3 className="font-display text-[16px] font-medium tracking-tight text-brand-ink md:text-[17px]">
+                        <h3 className="font-display text-[15px] font-medium tracking-tight text-brand-ink md:text-[16px] leading-snug">
                           {w.title}
                         </h3>
-                        <p className="mt-1.5 text-[13.5px] leading-relaxed text-brand-charcoal/75">
-                          {w.desc}
-                        </p>
+                        {w.desc && (
+                          <p className="mt-1.5 text-[13.5px] leading-relaxed text-brand-charcoal/75">
+                            {w.desc}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </li>
@@ -70,12 +72,13 @@ export function WhyUs() {
               <div className="mt-8 overflow-hidden rounded-md border border-brand-terracotta/30 bg-gradient-to-br from-brand-saffron/12 via-transparent to-brand-terracotta/10 p-7 md:p-9">
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-8">
                   <div className="font-display text-3xl font-light tracking-tight text-brand-ink md:text-4xl">
-                    Our bold guarantee.
+                    Our bold promise.
                   </div>
-                  <p className="max-w-[58ch] text-[14.5px] leading-relaxed text-brand-charcoal/85">
-                    If at any point you genuinely feel your experience does not meet
+                  <p className="max-w-[60ch] text-[14.5px] leading-relaxed text-brand-charcoal/85">
+                    We want you to feel completely confident in choosing us. If at
+                    any point you genuinely feel that your experience does not meet
                     your expectations or is not worth what you paid, we will gladly
-                    provide a <strong>full refund</strong> — no questions asked.
+                    provide a <strong>full refund — no questions asked</strong>.
                   </p>
                 </div>
               </div>

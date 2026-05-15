@@ -85,29 +85,32 @@ export function LeadForm() {
             <Reveal>
               <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.34em] text-brand-saffron">
                 <span className="h-[1px] w-8 bg-brand-saffron/60" />
-                Book an adventure
+                Book an adventure with us
               </span>
               <h2 className="fluid-h2 mt-5 font-display font-light text-brand-cream">
-                Begin where{" "}
+                Adventures across{" "}
                 <span className="font-serif italic font-normal text-brand-saffron">
-                  the journey begins.
+                  Central Asia.
                 </span>
               </h2>
-              <p className="fluid-lead mt-6 max-w-[44ch] text-brand-cream/80">
-                Tell us the kind of adventure you're dreaming of, the dates you have
-                in mind, and any specific requirements. We will design everything
-                from A to Z and reply within hours.
+              <p className="fluid-lead mt-6 max-w-[48ch] text-brand-cream/80">
+                Book adventures of any kind across all over Central Asia for
+                yourself, your family members, guests, or your organization. All
+                you need to do is let us know the type of adventure, the specific
+                date, and any other requirements you might have — and we will
+                take care of everything from A to Z.
               </p>
             </Reveal>
 
             <Reveal delay={0.15}>
               <div className="mt-10 rounded-md border border-brand-saffron/30 bg-gradient-to-br from-brand-saffron/12 via-transparent to-brand-terracotta/10 p-6 md:p-7">
                 <div className="font-display text-xl font-light text-brand-cream">
-                  100% bold guarantee
+                  Our Bold Promise for Your Peace of Mind
                 </div>
-                <p className="mt-2 text-[13.5px] leading-relaxed text-brand-cream/80">
-                  Join with complete confidence. If you genuinely don't enjoy the
-                  experience — you receive a 100% full refund. No questions asked.
+                <p className="mt-3 text-[13.5px] leading-relaxed text-brand-cream/80">
+                  Join our adventure with complete confidence. If you genuinely
+                  don't enjoy the experience, you will receive a 100% full refund.
+                  No questions asked. Simple :)
                 </p>
               </div>
             </Reveal>
@@ -134,7 +137,7 @@ export function LeadForm() {
               >
                 <div className="grid gap-5 md:grid-cols-2">
                   <Field
-                    label="Full name"
+                    label="Full Name"
                     id="fullName"
                     error={errors.fullName}
                     value={data.fullName}
@@ -142,7 +145,7 @@ export function LeadForm() {
                     placeholder="Jane Doe"
                   />
                   <Field
-                    label="Contact (WhatsApp / Telegram)"
+                    label="Contact Number (WhatsApp / Telegram)"
                     id="contact"
                     error={errors.contact}
                     value={data.contact}
@@ -153,7 +156,7 @@ export function LeadForm() {
 
                 <div className="mt-5">
                   <Field
-                    label="Email"
+                    label="Email Address"
                     id="email"
                     type="email"
                     error={errors.email}
@@ -168,14 +171,14 @@ export function LeadForm() {
                     htmlFor="details"
                     className="text-[10.5px] uppercase tracking-[0.32em] text-brand-cream/65"
                   >
-                    Details of your adventure
+                    Details of the adventure you are requesting
                   </label>
                   <textarea
                     id="details"
                     rows={5}
                     value={data.details}
                     onChange={(e) => setData({ ...data, details: e.target.value })}
-                    placeholder="Type, preferred dates, number of participants, destination, special requirements..."
+                    placeholder="Please share detailed information about the adventure you are requesting, including the type of adventure, preferred date(s), number of participants, destination (if any), and any special requirements."
                     className={cn(
                       "mt-2 block w-full resize-none rounded-md border bg-transparent px-4 py-3 text-[14px] text-brand-cream placeholder:text-brand-cream/35 transition-colors",
                       "border-brand-cream/20 focus:border-brand-saffron focus:outline-none",
@@ -191,7 +194,7 @@ export function LeadForm() {
 
                 <div className="mt-6">
                   <div className="text-[10.5px] uppercase tracking-[0.32em] text-brand-cream/65">
-                    Preferred contact method
+                    How would you prefer to be contacted?
                   </div>
                   <div className="mt-3 inline-flex rounded-full border border-brand-cream/20 p-1">
                     {(["WhatsApp", "Telegram", "Email"] as const).map((opt) => (

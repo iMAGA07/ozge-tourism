@@ -11,10 +11,10 @@ export function Adventures() {
     <section id="adventures" className="relative bg-brand-cream py-24 md:py-36">
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
         <SectionHeader
-          eyebrow="Upcoming · May 2026"
-          title="Scheduled adventures."
-          italic="Choose yours."
-          lead="Major group adventures across Kazakhstan and Central Asia. We also run private and exclusive trips any day, any season — fully tailored to you."
+          eyebrow="Upcoming Adventures"
+          title="Scheduled Adventures"
+          italic="of May 2026 — Choose Yours!"
+          lead="Our major group adventures for May. We also run one-day & special outdoor activities (minor adventures) announced weekly or a few days in advance, and private & exclusive adventures any day, any week, any season — tailored just for you."
         />
 
         <div className="mt-14 grid gap-6 md:gap-10 lg:grid-cols-2 items-stretch">
@@ -24,14 +24,11 @@ export function Adventures() {
               <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-brand-saffron/15 blur-3xl" />
               <div className="relative flex flex-col h-full">
                 <div className="text-[10.5px] uppercase tracking-[0.32em] text-brand-terracotta">
-                  Weekend
+                  Weekend Adventures
                 </div>
                 <h3 className="mt-3 font-display text-3xl font-light tracking-tight text-brand-ink md:text-4xl">
-                  Kazakhstan · 2–3 days
+                  Kazakhstan · 2–3 Days
                 </h3>
-                <p className="mt-3 text-[14px] text-brand-charcoal/70">
-                  Quick escapes to the country's most spectacular regions.
-                </p>
 
                 <ul className="mt-7 divide-y divide-brand-charcoal/10">
                   {adventures.weekend.map((a) => (
@@ -78,14 +75,11 @@ export function Adventures() {
               <div className="absolute inset-0 bg-gradient-to-br from-brand-ink via-brand-ink/80 to-brand-ink/55" />
               <div className="relative flex flex-col h-full">
                 <div className="text-[10.5px] uppercase tracking-[0.32em] text-brand-saffron">
-                  Week-long · all-inclusive
+                  Week-Long All-Inclusive Adventures
                 </div>
                 <h3 className="mt-3 font-display text-3xl font-light tracking-tight md:text-4xl">
-                  Central Asia · 10 days
+                  Central Asia · 10 Days
                 </h3>
-                <p className="mt-3 text-[14px] text-brand-cream/75">
-                  The grand journey across five Silk Road countries.
-                </p>
 
                 <ul className="mt-7 divide-y divide-brand-cream/10">
                   {adventures.longform.map((a) => (
@@ -118,31 +112,39 @@ export function Adventures() {
         </div>
 
         <Reveal delay={0.15}>
-          <div className="mt-10 grid gap-6 rounded-md border border-brand-charcoal/10 bg-brand-paper p-6 md:grid-cols-3 md:p-8">
-            <div>
-              <div className="text-[10.5px] uppercase tracking-[0.28em] text-brand-terracotta">
-                Minor adventures
-              </div>
-              <p className="mt-2 text-sm text-brand-charcoal/80">
-                One-day & special outdoor activities are announced weekly or a few days in advance.
-              </p>
+          <div className="mt-10 rounded-md border border-brand-charcoal/10 bg-brand-paper p-6 md:p-8">
+            <div className="text-[10.5px] uppercase tracking-[0.32em] text-brand-terracotta">
+              Please note
             </div>
-            <div>
-              <div className="text-[10.5px] uppercase tracking-[0.28em] text-brand-terracotta">
-                Private & exclusive
-              </div>
-              <p className="mt-2 text-sm text-brand-charcoal/80">
-                Tailored adventures any day, any week, any season — for you, your family, or organization.
-              </p>
-            </div>
-            <div>
-              <div className="text-[10.5px] uppercase tracking-[0.28em] text-brand-terracotta">
-                Two ways to stay
-              </div>
-              <p className="mt-2 text-sm text-brand-charcoal/80">
-                Fully equipped camping under the stars, or premium hotel accommodation — your choice.
-              </p>
-            </div>
+            <ul className="mt-4 grid gap-4 text-[14px] leading-relaxed text-brand-charcoal/80 md:grid-cols-3">
+              <li>
+                These are ONLY our major group adventures for May. As usual, we
+                will also have our one-day & special outdoor activities (minor
+                adventures) which will be announced weekly or a few days in advance.
+              </li>
+              <li>
+                We also organize private & exclusive adventures anytime and
+                anywhere across Central Asia for you, your family, or organization
+                — any day, any week, any season — tailored just for you.
+              </li>
+              <li>
+                Choose your style: fully equipped camping under the stars or
+                usual hotel accommodation — both available for all adventures.
+              </li>
+            </ul>
+            <p className="mt-6 border-t border-brand-charcoal/10 pt-5 text-[14px] text-brand-charcoal/75">
+              For reservations and more details of any of the adventures above,
+              please contact us at{" "}
+              <a href="mailto:info@ozgetourism.com" className="text-brand-terracotta hover:text-brand-ink">
+                info@ozgetourism.com
+              </a>{" "}
+              or directly at{" "}
+              <a href="https://wa.me/77757145327" className="text-brand-terracotta hover:text-brand-ink">
+                +7 775 714 53 27
+              </a>{" "}
+              (WhatsApp & Telegram — Mohammad). See you soon on one — or maybe
+              all — of our adventures! 😊
+            </p>
           </div>
         </Reveal>
       </div>

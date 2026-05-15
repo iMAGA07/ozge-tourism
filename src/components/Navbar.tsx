@@ -68,13 +68,13 @@ export function Navbar() {
           </span>
         </a>
 
-        <nav className="hidden lg:flex items-center gap-1">
+        <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1">
           {navItems.slice(0, -1).map((item) => (
             <a
               key={item.href}
               href={item.href}
               className={cn(
-                "rounded-full px-3.5 py-2 text-[13px] font-medium transition-colors duration-500",
+                "rounded-full px-3 py-2 text-[12.5px] font-medium transition-colors duration-500",
                 onHero
                   ? "text-white/85 hover:text-white"
                   : "text-brand-charcoal/80 hover:text-brand-ink"
@@ -120,7 +120,8 @@ export function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:hidden fixed inset-0 top-[64px] bg-brand-paper/98 backdrop-blur-xl"
+            className="lg:hidden fixed inset-0 top-[64px] z-40 bg-brand-paper overflow-y-auto"
+            style={{ backgroundColor: "#fbf8f1" }}
           >
             <nav className="flex flex-col px-6 py-8">
               {navItems.map((item, i) => (
@@ -136,9 +137,16 @@ export function Navbar() {
                   {item.label}
                 </motion.a>
               ))}
-              <div className="mt-8 flex flex-col gap-2 text-sm text-brand-charcoal/80">
-                <a href={`mailto:${site.email}`}>{site.email}</a>
-                <a href={site.whatsapp}>{site.phone}</a>
+              <div className="mt-10 grid gap-3 text-[13px] text-brand-charcoal/80">
+                <div className="text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
+                  Contact
+                </div>
+                <a href={`mailto:${site.email}`} className="font-medium text-brand-ink">
+                  {site.email}
+                </a>
+                <a href={site.whatsapp} className="font-medium text-brand-ink">
+                  {site.phone}
+                </a>
               </div>
             </nav>
           </motion.div>

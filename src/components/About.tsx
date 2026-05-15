@@ -14,7 +14,7 @@ export function About() {
             <SectionHeader
               eyebrow="About us"
               title="Who we are."
-              lead="Ozge Tourism is a division of Ozge LTD, registered in 2025 at the Astana International Financial Centre. We were founded with one mission: to help nature lovers and adventure seekers experience the very best of Kazakhstan and Central Asia."
+              lead="Ozge Tourism is a division of Ozge LTD, officially registered in 2025 at the Astana International Financial Centre (AIFC), Kazakhstan. We were founded with a clear mission: to help nature lovers and adventure seekers discover and experience the very best of Kazakhstan and Central Asia. From majestic landscapes and thrilling adventures to rich history and vibrant cultures, our goal is to provide premium, safe, and meaningful travel experiences, fully customized for individuals and solo travelers, families and friends, groups and student communities, organizations and teams, and international guests."
             />
             <Reveal delay={0.2}>
               <div className="mt-10 grid grid-cols-2 gap-x-8 gap-y-6">
@@ -52,17 +52,57 @@ export function About() {
                   />
                 </div>
               </Reveal>
+              <Reveal delay={0.12} className="col-span-2 mt-2">
+                <div className="rounded-md border border-brand-charcoal/15 bg-brand-paper p-7 md:p-9">
+                  <h3 className="font-display text-xl font-medium tracking-tight text-brand-ink md:text-2xl">
+                    What can we help you with?
+                  </h3>
+                  <div className="mt-4 space-y-4 text-[14px] leading-relaxed text-brand-charcoal/80">
+                    <p>
+                      At Ozge Tourism, we organize exceptional and fully customized
+                      tours, trips, adventures, and retreats across Kazakhstan and
+                      Central Asia. Whether you are looking for a one-day trip, a
+                      weekend getaway, or a multi-day cultural or nature-focused
+                      journey — such as visiting ancient cities or exploring
+                      mountains, lakes, canyons, and national parks — we design
+                      every experience according to your interests.
+                    </p>
+                    <p>
+                      We also offer a wide range of exciting outdoor activities,
+                      including, but not limited to, horse riding, archery, target
+                      shooting, cycling, camping, hiking, paragliding, skiing,
+                      snowboarding, and winter snow adventures, depending on the
+                      season and location.
+                    </p>
+                    <p>
+                      In addition, we organize professional retreats and
+                      team-building programs, including corporate retreats,
+                      leadership and academic retreats, student and youth camps,
+                      and strategic off-site planning retreats for schools,
+                      universities, and organizations. To ensure a smooth and
+                      comfortable travel experience, we also assist with flight
+                      bookings, reservations, and all necessary travel
+                      arrangements across Kazakhstan and Central Asia.
+                    </p>
+                  </div>
+                </div>
+              </Reveal>
+
               <Reveal delay={0.15} className="col-span-2 mt-2">
                 <div className="rounded-md border border-brand-charcoal/15 bg-white p-7 md:p-9">
                   <h3 className="font-display text-xl font-medium tracking-tight text-brand-ink md:text-2xl">
                     Where we operate
                   </h3>
+                  <p className="mt-3 text-[13.5px] text-brand-charcoal/70">
+                    We offer services across Central Asia, including:
+                  </p>
                   <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 text-[14px] text-brand-charcoal/80 sm:grid-cols-3">
                     <li>· Kazakhstan</li>
                     <li>· Uzbekistan</li>
                     <li>· Kyrgyzstan</li>
                     <li>· Tajikistan</li>
                     <li>· Turkmenistan</li>
+                    <li>· Other regional destinations</li>
                     <li>· Afghanistan</li>
                     <li>· Iran</li>
                     <li>· & beyond</li>

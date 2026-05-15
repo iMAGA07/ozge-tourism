@@ -8,10 +8,10 @@ export function Pricing() {
     <section id="pricing" className="relative bg-brand-paper py-24 md:py-36">
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
         <SectionHeader
-          eyebrow="Our pricing"
-          title="Three flexible ways"
-          italic="to travel."
-          lead="Pricing is the last thing you should worry about. Choose what feels right — we will make sure every adventure is worth it."
+          eyebrow="How our pricing works"
+          title="Three flexible options"
+          italic="ahead of you."
+          lead="Luckily for you, pricing is the last thing you need to worry about when adventuring with us. Why? Simply because you have three very flexible options ahead of you."
           align="center"
           className="text-center"
         />
@@ -38,7 +38,7 @@ export function Pricing() {
                       featured ? "text-brand-saffron" : "text-brand-terracotta",
                     ].join(" ")}
                   >
-                    Option {String(i + 1).padStart(2, "0")} · {p.label}
+                    {p.label}
                   </div>
                   <h3
                     className={[
@@ -80,13 +80,19 @@ export function Pricing() {
         </div>
 
         <Reveal delay={0.25}>
-          <div className="mx-auto mt-14 max-w-[68ch] text-center">
-            <p className="font-serif text-2xl italic text-brand-charcoal/85 md:text-3xl">
-              "Our primary purpose isn't to make money — it is to bring people from
-              different cultures together, and help them create lifelong memories."
+          <div className="mx-auto mt-14 max-w-[72ch] text-center">
+            <div className="text-[10.5px] uppercase tracking-[0.32em] text-brand-terracotta">
+              Why do we do this?
+            </div>
+            <p className="mt-5 font-serif text-2xl italic text-brand-charcoal/85 md:text-3xl">
+              Our logic is simple: through Ozge Tourism, our primary purpose is not
+              to make money. Our main objective is to bring diverse people together
+              — from different communities, cultures, and backgrounds — and help
+              them explore together, enjoy together, and create lifelong memories
+              and lasting connections… together.
             </p>
-            <div className="mt-4 text-[12px] uppercase tracking-[0.28em] text-brand-charcoal/55">
-              The Ozge philosophy
+            <div className="mt-5 text-[14px] text-brand-charcoal/70">
+              That's all we're here for. Full stop.
             </div>
           </div>
         </Reveal>

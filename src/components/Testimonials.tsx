@@ -6,13 +6,12 @@ import { testimonials } from "@/data/content";
 
 export function Testimonials() {
   return (
-    <section className="relative bg-brand-mist py-24 md:py-36">
+    <section id="testimonials" className="relative bg-brand-mist py-24 md:py-36">
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
         <SectionHeader
           eyebrow="Testimonials"
-          title="From travelers"
-          italic="who've been with us."
-          lead="Words from real guests after real adventures across Kazakhstan and Central Asia."
+          title="From our"
+          italic="travelers."
         />
 
         <div className="mt-14 columns-1 gap-5 sm:columns-2 lg:columns-3 [column-fill:_balance]">
