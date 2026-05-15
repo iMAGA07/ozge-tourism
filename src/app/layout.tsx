@@ -3,6 +3,8 @@ import { Inter, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { site } from "@/data/site";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { Cursor } from "@/components/Cursor";
+import { SectionProgress, StickyBookCTA } from "@/components/SectionProgress";
 
 const sans = Inter({
   subsets: ["latin"],
@@ -73,9 +75,12 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${sans.variable} ${display.variable} ${serif.variable}`}>
-      <body className="bg-brand-paper text-brand-ink antialiased">
+      <body className="bg-brand-paper text-brand-ink antialiased lg:cursor-none">
         <SmoothScroll />
+        <Cursor />
+        <SectionProgress />
         {children}
+        <StickyBookCTA />
       </body>
     </html>
   );

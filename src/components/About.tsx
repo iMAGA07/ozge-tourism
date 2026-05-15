@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { Reveal } from "./Reveal";
 import { SectionHeader } from "./SectionHeader";
+import { AnimatedNumber } from "./AnimatedNumber";
 import { photos } from "@/data/photos";
 import { site } from "@/data/site";
 
@@ -18,10 +19,41 @@ export function About() {
             />
             <Reveal delay={0.2}>
               <div className="mt-10 grid grid-cols-2 gap-x-8 gap-y-6">
-                <Stat label="Founded" value="2025 · AIFC" />
-                <Stat label="Tours run" value="100+" />
-                <Stat label="Countries" value="5+ across Central Asia" />
-                <Stat label="Languages" value="EN · RU · KZ + more" />
+                <div className="border-t border-brand-charcoal/15 pt-3">
+                  <div className="text-[10.5px] uppercase tracking-[0.28em] text-brand-charcoal/55">
+                    Founded
+                  </div>
+                  <div className="mt-1.5 font-display text-3xl font-light tracking-tight text-brand-ink md:text-4xl">
+                    <AnimatedNumber to={2025} duration={1600} />{" "}
+                    <span className="font-serif italic text-[0.6em] text-brand-terracotta">
+                      AIFC
+                    </span>
+                  </div>
+                </div>
+                <div className="border-t border-brand-charcoal/15 pt-3">
+                  <div className="text-[10.5px] uppercase tracking-[0.28em] text-brand-charcoal/55">
+                    Tours run
+                  </div>
+                  <div className="mt-1.5 font-display text-3xl font-light tracking-tight text-brand-ink md:text-4xl">
+                    <AnimatedNumber to={100} duration={1400} suffix="+" />
+                  </div>
+                </div>
+                <div className="border-t border-brand-charcoal/15 pt-3">
+                  <div className="text-[10.5px] uppercase tracking-[0.28em] text-brand-charcoal/55">
+                    Countries
+                  </div>
+                  <div className="mt-1.5 font-display text-3xl font-light tracking-tight text-brand-ink md:text-4xl">
+                    <AnimatedNumber to={7} duration={1200} suffix="+" />
+                  </div>
+                </div>
+                <div className="border-t border-brand-charcoal/15 pt-3">
+                  <div className="text-[10.5px] uppercase tracking-[0.28em] text-brand-charcoal/55">
+                    Languages
+                  </div>
+                  <div className="mt-1.5 font-display text-[19px] font-medium tracking-tight text-brand-ink md:text-[21px]">
+                    EN · RU · KZ + more
+                  </div>
+                </div>
               </div>
             </Reveal>
           </div>
@@ -149,15 +181,3 @@ export function About() {
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="border-t border-brand-charcoal/15 pt-3">
-      <div className="text-[10.5px] uppercase tracking-[0.28em] text-brand-charcoal/55">
-        {label}
-      </div>
-      <div className="mt-1.5 font-display text-lg font-medium tracking-tight text-brand-ink md:text-[19px]">
-        {value}
-      </div>
-    </div>
-  );
-}

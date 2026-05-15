@@ -119,35 +119,92 @@ export function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:hidden fixed inset-0 top-[64px] z-40 bg-brand-paper overflow-y-auto"
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            className="lg:hidden fixed inset-0 top-[64px] z-40 overflow-y-auto"
             style={{ backgroundColor: "#fbf8f1" }}
           >
-            <nav className="flex flex-col px-6 py-8">
+            {/* Subtle ambient accent */}
+            <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-brand-saffron/20 blur-3xl" />
+            <div className="pointer-events-none absolute -left-24 bottom-24 h-72 w-72 rounded-full bg-brand-terracotta/15 blur-3xl" />
+
+            <nav className="relative flex flex-col px-6 py-8">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.1, duration: 0.4 }}
+                className="mb-6 flex items-baseline justify-between"
+              >
+                <span className="text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
+                  Menu
+                </span>
+                <span className="font-mono text-[10px] tracking-widest text-brand-charcoal/40">
+                  01 / {String(navItems.length).padStart(2, "0")}
+                </span>
+              </motion.div>
+
               {navItems.map((item, i) => (
                 <motion.a
                   key={item.href}
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  initial={{ opacity: 0, y: 14 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.04 * i, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                  className="border-b border-brand-mist/70 py-4 font-display text-2xl tracking-tight text-brand-ink"
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.08 + 0.05 * i, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                  className="group flex items-center justify-between border-b border-brand-charcoal/12 py-5 active:bg-brand-mist/50"
                 >
-                  {item.label}
+                  <span className="flex items-baseline gap-4">
+                    <span className="font-mono text-[11px] tracking-widest text-brand-terracotta/70">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="font-display text-[26px] font-light tracking-tight text-brand-ink">
+                      {item.label}
+                    </span>
+                  </span>
+                  <span className="text-xl text-brand-charcoal/40 transition-all group-active:translate-x-1 group-active:text-brand-terracotta">
+                    →
+                  </span>
                 </motion.a>
               ))}
-              <div className="mt-10 grid gap-3 text-[13px] text-brand-charcoal/80">
+
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                className="mt-10 rounded-md border border-brand-charcoal/10 bg-white p-5"
+              >
                 <div className="text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
-                  Contact
+                  Contact us
                 </div>
-                <a href={`mailto:${site.email}`} className="font-medium text-brand-ink">
+                <a
+                  href={`mailto:${site.email}`}
+                  onClick={() => setOpen(false)}
+                  className="mt-2 block text-[14px] font-medium text-brand-ink"
+                >
                   {site.email}
                 </a>
-                <a href={site.whatsapp} className="font-medium text-brand-ink">
+                <a
+                  href={site.whatsapp}
+                  onClick={() => setOpen(false)}
+                  className="mt-1 block text-[14px] font-medium text-brand-ink"
+                >
                   {site.phone}
                 </a>
-              </div>
+                <div className="mt-3 text-[12px] text-brand-charcoal/55">
+                  WhatsApp · Telegram · Email
+                </div>
+              </motion.div>
+
+              <motion.a
+                href="#book"
+                onClick={() => setOpen(false)}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.55 }}
+                className="mt-5 inline-flex items-center justify-center gap-3 rounded-full bg-brand-ink py-4 text-[14px] font-medium text-brand-cream"
+              >
+                Book an adventure
+                <span>→</span>
+              </motion.a>
             </nav>
           </motion.div>
         )}
