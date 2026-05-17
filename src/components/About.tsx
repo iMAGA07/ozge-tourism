@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Reveal } from "./Reveal";
@@ -341,126 +341,214 @@ function Divider() {
   return <span className="h-6 w-px bg-brand-charcoal/15" />;
 }
 
-/* ───────── Stylised Central Asia map ───────── */
+/* ───────── Real world map (Central Asia highlight) ───────── */
+
+// Markers calibrated to the Equirectangular world SVG (1000×500 viewBox).
+// x = (lon + 180) / 360 * 1000, y = (90 - lat) / 180 * 500
+const cityMarkers = [
+  { code: "KZ", name: "Kazakhstan",   x: 697, y: 108, hub: true },
+  { code: "UZ", name: "Uzbekistan",   x: 691, y: 136 },
+  { code: "KG", name: "Kyrgyzstan",   x: 708, y: 133 },
+  { code: "TJ", name: "Tajikistan",   x: 688, y: 144 },
+  { code: "TM", name: "Turkmenistan", x: 661, y: 144 },
+  { code: "AF", name: "Afghanistan",  x: 691, y: 155 },
+  { code: "IR", name: "Iran",         x: 641, y: 152 },
+];
 
 function CentralAsiaMap() {
+  const [svg, setSvg] = useState<string | null>(null);
   const [hover, setHover] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/world.svg")
+      .then((r) => r.text())
+      .then((t) => {
+        if (!cancelled) setSvg(t);
+      })
+      .catch(() => {
+        if (!cancelled) setSvg("");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Crop the world map to focus on Eurasia (still recognizable as a real
+  // world map, but Central Asia is the visual center).
+  // Original viewBox is "0 0 1000 500"; we use "viewBox" on the wrapper SVG.
+  const cropViewBox = "470 30 380 240";
+
   return (
     <div className="relative">
-      <svg
-        viewBox="0 0 600 340"
-        className="block h-auto w-full"
-        aria-label="Map of Central Asia operating region"
-      >
-        {/* Subtle grid */}
-        <defs>
-          <pattern id="dotGrid" width="20" height="20" patternUnits="userSpaceOnUse">
-            <circle cx="1" cy="1" r="0.7" fill="rgba(26,20,16,0.10)" />
-          </pattern>
-        </defs>
-        <rect width="600" height="340" fill="url(#dotGrid)" />
+      {/* Live styles override the base path color and highlight our 7 countries */}
+      <style jsx global>{`
+        .ozge-world svg {
+          width: 100%;
+          height: auto;
+          display: block;
+        }
+        .ozge-world .c {
+          fill: #efe7d6;
+          stroke: #fbf8f1;
+          stroke-width: 0.3;
+          transition: fill 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .ozge-world .kz,
+        .ozge-world .uz,
+        .ozge-world .kg,
+        .ozge-world .tj,
+        .ozge-world .tm,
+        .ozge-world .af,
+        .ozge-world .ir {
+          fill: #d99a5a;
+        }
+        .ozge-world .kz {
+          fill: #b14a2e;
+        }
+      `}</style>
 
-        {/* Stylised, abstract land mass */}
-        <path
-          d="M40 120
-             C 100 70, 220 60, 320 70
-             C 420 80, 520 60, 570 110
-             C 580 170, 560 230, 500 260
-             C 420 290, 320 320, 220 305
-             C 130 290, 60 250, 40 200 Z"
-          fill="rgba(245,236,220,0.95)"
-          stroke="rgba(26,20,16,0.18)"
-          strokeWidth="1"
-          strokeDasharray="3 4"
+      <div className="relative aspect-[19/12] w-full overflow-hidden rounded-md bg-brand-mist/60">
+        {/* Subtle dot grid backdrop */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-50"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle, rgba(26,20,16,0.08) 1px, transparent 1px)",
+            backgroundSize: "18px 18px",
+          }}
         />
 
-        {/* Routes — dashed lines between Kazakhstan (hub) and all others */}
-        {countries
-          .filter((c) => c.code !== "KZ")
-          .map((c) => (
-            <line
-              key={`route-${c.code}`}
-              x1={350}
-              y1={100}
-              x2={c.x}
-              y2={c.y}
-              stroke="rgba(176,75,47,0.35)"
-              strokeWidth="1"
-              strokeDasharray="3 5"
+        {/* The world map itself */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          {svg ? (
+            <div
+              className="ozge-world w-full"
+              dangerouslySetInnerHTML={{
+                __html: svg.replace(
+                  /viewBox="[^"]*"/,
+                  `viewBox="${cropViewBox}"`
+                ),
+              }}
+              aria-hidden="true"
             />
-          ))}
+          ) : (
+            <div className="text-[11px] uppercase tracking-[0.28em] text-brand-charcoal/40">
+              Loading map…
+            </div>
+          )}
+        </div>
 
-        {/* Markers */}
-        {countries.map((c) => {
-          const isHover = hover === c.code;
-          const r = c.big ? 11 : 7;
-          return (
-            <g
-              key={c.code}
-              onMouseEnter={() => setHover(c.code)}
-              onMouseLeave={() => setHover(null)}
-              style={{ cursor: "pointer" }}
-            >
-              {/* halo */}
-              <circle
-                cx={c.x}
-                cy={c.y}
-                r={r + 6}
-                fill={isHover ? "rgba(224,160,57,0.30)" : "rgba(224,160,57,0)"}
-                className="transition-all duration-500"
+        {/* Marker overlay — separate SVG sized to match cropped viewBox */}
+        <svg
+          viewBox={cropViewBox}
+          preserveAspectRatio="xMidYMid meet"
+          className="absolute inset-0 h-full w-full"
+        >
+          {/* Routes — KZ to every other country */}
+          {cityMarkers
+            .filter((m) => m.code !== "KZ")
+            .map((m) => (
+              <line
+                key={`route-${m.code}`}
+                x1={cityMarkers[0].x}
+                y1={cityMarkers[0].y}
+                x2={m.x}
+                y2={m.y}
+                stroke="rgba(176,75,47,0.45)"
+                strokeWidth="0.4"
+                strokeDasharray="1.2 2"
               />
-              <circle
-                cx={c.x}
-                cy={c.y}
-                r={r}
-                fill={c.big ? "#b14a2e" : "#1a1410"}
-                stroke="#fbf8f1"
-                strokeWidth="2"
-              />
-              <text
-                x={c.x}
-                y={c.y + r + 14}
-                textAnchor="middle"
-                fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace"
-                fontSize={c.big ? 12 : 10}
-                letterSpacing="0.12em"
-                fill="rgba(26,20,16,0.85)"
+            ))}
+
+          {cityMarkers.map((m) => {
+            const isHover = hover === m.code;
+            const r = m.hub ? 2.6 : 1.8;
+            return (
+              <g
+                key={m.code}
+                onMouseEnter={() => setHover(m.code)}
+                onMouseLeave={() => setHover(null)}
+                style={{ cursor: "pointer" }}
               >
-                {c.code}
-              </text>
-              {isHover && (
+                {/* halo */}
+                <circle
+                  cx={m.x}
+                  cy={m.y}
+                  r={r + (isHover ? 5 : 3)}
+                  fill={isHover ? "rgba(224,160,57,0.35)" : "rgba(224,160,57,0.18)"}
+                  className="transition-all duration-500"
+                />
+                <circle
+                  cx={m.x}
+                  cy={m.y}
+                  r={r}
+                  fill={m.hub ? "#b14a2e" : "#1a1410"}
+                  stroke="#fbf8f1"
+                  strokeWidth="0.6"
+                />
                 <text
-                  x={c.x}
-                  y={c.y - r - 8}
+                  x={m.x}
+                  y={m.y + r + 4.2}
                   textAnchor="middle"
-                  fontFamily="ui-sans-serif, system-ui, sans-serif"
-                  fontSize="11"
-                  fill="#1a1410"
-                  fontWeight="500"
+                  fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace"
+                  fontSize={m.hub ? 4.4 : 3.6}
+                  letterSpacing="0.12em"
+                  fill="rgba(26,20,16,0.85)"
                 >
-                  {c.name}
+                  {m.code}
                 </text>
-              )}
-            </g>
-          );
-        })}
+                {isHover && (
+                  <g>
+                    <rect
+                      x={m.x - m.name.length * 1.4}
+                      y={m.y - r - 9.5}
+                      width={m.name.length * 2.8}
+                      height={6}
+                      rx={1}
+                      fill="#1a1410"
+                    />
+                    <text
+                      x={m.x}
+                      y={m.y - r - 5}
+                      textAnchor="middle"
+                      fontFamily="ui-sans-serif, system-ui, sans-serif"
+                      fontSize="4"
+                      fill="#fbf8f1"
+                      fontWeight="500"
+                    >
+                      {m.name}
+                    </text>
+                  </g>
+                )}
+              </g>
+            );
+          })}
+        </svg>
 
-        {/* Compass rose */}
-        <g transform="translate(540, 35)" opacity="0.7">
-          <circle r="14" fill="none" stroke="rgba(26,20,16,0.4)" />
-          <path d="M0,-14 L3,0 L0,14 L-3,0 Z" fill="#b14a2e" />
-          <text
-            y="-19"
-            textAnchor="middle"
-            fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace"
-            fontSize="8"
-            letterSpacing="0.12em"
-            fill="rgba(26,20,16,0.7)"
-          >
-            N
-          </text>
-        </g>
-      </svg>
+        {/* Top-left legend */}
+        <div className="absolute left-3 top-3 flex flex-col gap-1.5 rounded-sm bg-brand-paper/85 px-3 py-2 backdrop-blur">
+          <div className="text-[9.5px] uppercase tracking-[0.32em] text-brand-charcoal/55">
+            Where we operate
+          </div>
+          <div className="flex items-center gap-3 text-[10.5px] text-brand-ink">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-brand-terracotta" />
+              Hub
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-brand-ink" />
+              Operating
+            </span>
+          </div>
+        </div>
+
+        {/* Bottom-right caption */}
+        <div className="absolute bottom-3 right-3 rounded-sm bg-brand-paper/85 px-2.5 py-1 font-mono text-[9.5px] tracking-widest text-brand-charcoal/55 backdrop-blur">
+          ASIA · EQUIRECTANGULAR
+        </div>
+      </div>
     </div>
   );
 }
