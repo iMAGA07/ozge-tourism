@@ -235,13 +235,14 @@ function ReasonCard({
           fill
           sizes="(min-width: 768px) 400px, 80vw"
           className="object-cover transition-transform duration-[1200ms] ease-smooth hover:scale-[1.04]"
+          style={{ objectPosition: "center 18%" }}
         />
-        {/* Top overlay with number */}
+        {/* Top overlay with number + readable filled chip */}
         <div className="absolute inset-x-0 top-0 flex items-center justify-between bg-gradient-to-b from-black/55 to-transparent px-4 py-3">
-          <span className="font-mono text-[10.5px] tracking-widest text-brand-cream/85">
-            Reason № {String(index + 1).padStart(2, "0")}
+          <span className="font-display text-[10px] font-semibold uppercase tracking-[0.32em] text-brand-cream/90">
+            Reason {String(index + 1).padStart(2, "0")}
           </span>
-          <span className="rounded-full border border-brand-saffron/70 px-2 py-0.5 font-mono text-[9.5px] uppercase tracking-widest text-brand-saffron">
+          <span className="inline-flex items-center rounded-full bg-brand-saffron/95 px-2.5 py-1 text-[9.5px] font-medium uppercase tracking-[0.18em] text-brand-ink shadow-[0_4px_12px_rgba(0,0,0,0.25)]">
             {short}
           </span>
         </div>

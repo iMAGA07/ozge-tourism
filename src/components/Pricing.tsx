@@ -7,16 +7,21 @@ import { SectionHeader } from "./SectionHeader";
 import { pricing } from "@/data/content";
 import { cn } from "@/lib/utils";
 
-// Travel-pass visuals per option: a destination photo, a typographic
-// statement, and a customs-style stamp (rotated, hand-printed).
+// Travel-pass visuals per option. `position` moved up (lower Y) so the
+// people at the bottom of each photo are cropped out and the cinematic
+// landscape fills the frame.
 const passes = [
   {
     photo: "IMG_2799.jpg",
-    position: "center 28%",
+    position: "center 10%",
     statement: "The standard.",
     italic: "Best value, always.",
     stamp: { label: "Standard\nrate", color: "saffron", rotate: -8 },
     pricing: "Most affordable for the value",
+    flightCode: "OZG 001",
+    seat: "01A",
+    gate: "A1",
+    classLabel: "ECONOMY",
     bullets: [
       "Transparent — no surprises",
       "Best value for the package",
@@ -25,11 +30,15 @@ const passes = [
   },
   {
     photo: "IMG_3858.jpg",
-    position: "center 30%",
+    position: "center 8%",
     statement: "10% less\nthan the market.",
     italic: "Whatever you find, we beat it.",
     stamp: { label: "−10%\noff", color: "terracotta", rotate: 6 },
     pricing: "Beat any competitor by 10%",
+    flightCode: "OZG 010",
+    seat: "10B",
+    gate: "B7",
+    classLabel: "BUSINESS",
     bullets: [
       "Send us the competing price",
       "We match it and take 10% off",
@@ -38,11 +47,15 @@ const passes = [
   },
   {
     photo: "IMG_3873.jpg",
-    position: "center 30%",
+    position: "center 8%",
     statement: "Pay only if\nyou love it.",
     italic: "Don't enjoy it? Don't pay.",
     stamp: { label: "Pay as you\nenjoy", color: "ink", rotate: -5 },
     pricing: "Zero upfront commitment",
+    flightCode: "OZG ∞",
+    seat: "01F",
+    gate: "F0",
+    classLabel: "FIRST",
     bullets: [
       "No upfront commitment",
       "Pay as you experience",
@@ -143,13 +156,64 @@ export function Pricing() {
 
         {/* The actual travel pass */}
         <Reveal delay={0.15}>
-          <div className="relative mt-8 overflow-hidden rounded-md border border-brand-charcoal/15 bg-brand-paper md:mt-10">
-            {/* Top header strip — like a real boarding pass */}
-            <header className="flex items-center justify-between border-b border-dashed border-brand-charcoal/30 px-5 py-2.5 text-[10px] uppercase tracking-[0.28em] text-brand-charcoal/55 md:px-8">
-              <span className="font-mono">Ozge Tourism · Travel pass</span>
-              <span className="font-mono text-brand-terracotta">
-                № {String(active + 1).padStart(2, "0")} / 03
-              </span>
+          <div className="relative mt-8 overflow-hidden rounded-lg border border-brand-ink/15 bg-brand-paper shadow-[0_30px_80px_-40px_rgba(20,15,10,0.35)] md:mt-10">
+            {/* Top airline-style band — solid dark with logo + flight code + class */}
+            <header className="relative flex items-center justify-between gap-4 bg-brand-ink px-5 py-3 text-brand-cream md:px-8 md:py-4">
+              {/* small triangular accents (like the ink-cut corners of real boarding passes) */}
+              <div className="pointer-events-none absolute -bottom-3 left-12 h-6 w-6 rotate-45 bg-brand-paper" />
+              <div className="pointer-events-none absolute -bottom-3 right-12 h-6 w-6 rotate-45 bg-brand-paper" />
+
+              <div className="flex items-center gap-3">
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-brand-saffron text-brand-ink">
+                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
+                    <path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 1 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1L15 22v-1.5L13 19v-5.5L21 16Z" />
+                  </svg>
+                </span>
+                <div>
+                  <div className="font-display text-[12px] font-medium uppercase tracking-[0.24em] leading-none text-brand-cream">
+                    Ozge Air
+                  </div>
+                  <div className="mt-1 text-[9px] uppercase tracking-[0.32em] text-brand-cream/55">
+                    Boarding Pass
+                  </div>
+                </div>
+              </div>
+
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`flight-${active}`}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  className="flex items-center gap-4 text-right md:gap-7"
+                >
+                  <div>
+                    <div className="text-[9px] uppercase tracking-[0.28em] text-brand-cream/55">
+                      Flight
+                    </div>
+                    <div className="font-mono text-[12px] tracking-widest text-brand-saffron">
+                      {pass.flightCode}
+                    </div>
+                  </div>
+                  <div className="hidden sm:block">
+                    <div className="text-[9px] uppercase tracking-[0.28em] text-brand-cream/55">
+                      Class
+                    </div>
+                    <div className="font-mono text-[12px] tracking-widest text-brand-cream">
+                      {pass.classLabel}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[9px] uppercase tracking-[0.28em] text-brand-cream/55">
+                      Pass
+                    </div>
+                    <div className="font-mono text-[12px] tracking-widest text-brand-cream">
+                      0{active + 1} / 03
+                    </div>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
             </header>
 
             <div className="grid md:grid-cols-[1fr_auto_360px]">
@@ -243,7 +307,7 @@ export function Pricing() {
                 <span className="absolute -left-[7px] -bottom-[7px] h-3.5 w-3.5 rounded-full bg-brand-paper" />
               </div>
 
-              {/* Right info column — itinerary-style */}
+              {/* Right info column — boarding-pass stub */}
               <div className="flex flex-col bg-brand-paper p-7 md:p-9">
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -254,70 +318,91 @@ export function Pricing() {
                     transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
                     className="flex flex-1 flex-col"
                   >
-                    {/* Itinerary header */}
-                    <div className="flex items-baseline justify-between text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
-                      <span>Itinerary</span>
-                      <span className="font-mono">
-                        {String(active + 1).padStart(2, "0")} / 03
-                      </span>
-                    </div>
-
-                    {/* DEPARTURE → ARRIVAL row */}
-                    <div className="mt-6 grid grid-cols-[1fr_auto_1fr] items-end gap-3">
+                    {/* Passenger row */}
+                    <div className="grid grid-cols-2 gap-3 border-b border-dashed border-brand-charcoal/25 pb-4">
                       <div>
-                        <div className="text-[9.5px] uppercase tracking-[0.28em] text-brand-charcoal/45">
-                          Depart
+                        <div className="text-[9px] uppercase tracking-[0.28em] text-brand-charcoal/45">
+                          Passenger
                         </div>
-                        <div className="mt-1 font-display text-2xl font-light leading-none text-brand-ink md:text-3xl">
-                          Today
-                        </div>
-                        <div className="mt-1 text-[10px] uppercase tracking-[0.28em] text-brand-charcoal/55">
-                          your place
+                        <div className="mt-1 font-mono text-[14px] tracking-widest text-brand-ink">
+                          TRAVELER / YOU
                         </div>
                       </div>
-                      {/* Plane glyph between */}
-                      <div className="flex flex-col items-center justify-end gap-1 text-brand-terracotta">
+                      <div className="text-right">
+                        <div className="text-[9px] uppercase tracking-[0.28em] text-brand-charcoal/45">
+                          Issued
+                        </div>
+                        <div className="mt-1 font-mono text-[14px] tracking-widest text-brand-ink">
+                          {new Date()
+                            .toLocaleDateString("en-GB", {
+                              day: "2-digit",
+                              month: "short",
+                            })
+                            .toUpperCase()}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* From → To with airport-style codes */}
+                    <div className="mt-5 grid grid-cols-[1fr_auto_1fr] items-center gap-3">
+                      <div>
+                        <div className="text-[9px] uppercase tracking-[0.28em] text-brand-charcoal/45">
+                          From
+                        </div>
+                        <div className="mt-1 font-display text-3xl font-light leading-none tracking-tight text-brand-ink md:text-4xl">
+                          YOU
+                        </div>
+                        <div className="mt-1.5 text-[10px] uppercase tracking-[0.28em] text-brand-charcoal/55">
+                          home base
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-center gap-1 text-brand-terracotta">
                         <svg
                           viewBox="0 0 60 12"
-                          className="h-3 w-14"
+                          className="h-3 w-16"
                           fill="none"
                           stroke="currentColor"
                           strokeWidth="1.2"
                           strokeLinecap="round"
                         >
-                          <path
-                            d="M2 6 H50"
-                            strokeDasharray="2 3"
-                          />
+                          <path d="M2 6 H50" strokeDasharray="2 3" />
                           <path
                             d="M44 1 L52 6 L44 11 L46 6 Z"
                             fill="currentColor"
                             stroke="none"
                           />
                         </svg>
-                        <div className="text-[9px] uppercase tracking-widest text-brand-charcoal/45">
+                        <div className="font-mono text-[9px] uppercase tracking-widest text-brand-charcoal/45">
                           {active === 0
-                            ? "Direct"
+                            ? "DIRECT"
                             : active === 1
-                            ? "Best fare"
-                            : "Open"}
+                            ? "BEST FARE"
+                            : "OPEN"}
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-[9.5px] uppercase tracking-[0.28em] text-brand-charcoal/45">
-                          Arrive
+                        <div className="text-[9px] uppercase tracking-[0.28em] text-brand-charcoal/45">
+                          To
                         </div>
-                        <div className="mt-1 font-display text-2xl font-light leading-none text-brand-ink md:text-3xl">
-                          Wonder
+                        <div className="mt-1 font-display text-3xl font-light leading-none tracking-tight text-brand-ink md:text-4xl">
+                          CTA
                         </div>
-                        <div className="mt-1 text-[10px] uppercase tracking-[0.28em] text-brand-charcoal/55">
+                        <div className="mt-1.5 text-[10px] uppercase tracking-[0.28em] text-brand-charcoal/55">
                           central asia
                         </div>
                       </div>
                     </div>
 
-                    {/* Big price-prop number */}
-                    <div className="mt-7 border-y border-dashed border-brand-charcoal/25 py-5">
+                    {/* Boarding-pass metadata strip */}
+                    <div className="mt-5 grid grid-cols-4 gap-2 rounded-md border border-brand-charcoal/15 bg-brand-mist/40 px-3 py-3 text-center">
+                      <Cell label="Gate" value={pass.gate} />
+                      <Cell label="Seat" value={pass.seat} />
+                      <Cell label="Boards" value="ANY" />
+                      <Cell label="Class" value={pass.classLabel.slice(0, 4)} />
+                    </div>
+
+                    {/* Fare statement */}
+                    <div className="mt-5 border-y border-dashed border-brand-charcoal/25 py-5">
                       <div className="text-[10px] uppercase tracking-[0.32em] text-brand-terracotta">
                         Fare
                       </div>
@@ -364,24 +449,21 @@ export function Pricing() {
                       </AnimatePresence>
                     </div>
 
-                    {/* Included list with checkmarks */}
-                    <div className="mt-6">
+                    {/* Included list */}
+                    <div className="mt-5">
                       <div className="text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
                         Included
                       </div>
                       <ul className="mt-3 space-y-2 text-[12.5px] leading-snug text-brand-charcoal/75">
                         {pass.bullets.map((b) => (
-                          <li
-                            key={b}
-                            className="flex items-start gap-3"
-                          >
-                            <span className="mt-1 inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full border border-brand-terracotta/45 bg-brand-terracotta/8 text-brand-terracotta">
+                          <li key={b} className="flex items-start gap-3">
+                            <span className="mt-1 inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full border border-brand-terracotta/45 bg-brand-terracotta/10 text-brand-terracotta">
                               <svg
                                 viewBox="0 0 12 12"
                                 className="h-2.5 w-2.5"
                                 fill="none"
                                 stroke="currentColor"
-                                strokeWidth="1.6"
+                                strokeWidth="1.8"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
                               >
@@ -394,24 +476,26 @@ export function Pricing() {
                       </ul>
                     </div>
 
-                    {/* Barcode + CTA */}
+                    {/* Bottom barcode block */}
                     <div className="mt-auto pt-7">
-                      <div className="flex items-end justify-between gap-3 border-t border-dashed border-brand-charcoal/25 pt-4">
-                        <div className="flex h-7 items-end gap-[1px]">
-                          {barcodes[active].map((w, j) => (
-                            <div
-                              key={j}
-                              style={{ width: `${w}px` }}
-                              className="h-full bg-brand-ink"
-                            />
-                          ))}
-                        </div>
-                        <div className="text-right">
-                          <div className="font-mono text-[9.5px] tracking-widest text-brand-charcoal/45">
-                            Seat
+                      <div className="rounded-md bg-brand-ink p-4 text-brand-cream">
+                        <div className="flex items-end justify-between gap-3">
+                          <div className="flex h-9 items-end gap-[1px]">
+                            {barcodes[active].map((w, j) => (
+                              <div
+                                key={j}
+                                style={{ width: `${w}px` }}
+                                className="h-full bg-brand-cream"
+                              />
+                            ))}
                           </div>
-                          <div className="font-mono text-[12px] tracking-widest text-brand-ink">
-                            {active === 0 ? "01A" : active === 1 ? "10B" : "01F"}
+                          <div className="text-right">
+                            <div className="font-mono text-[9px] tracking-widest text-brand-cream/55">
+                              Seq · {String(active + 1).padStart(3, "0")}
+                            </div>
+                            <div className="font-mono text-[10.5px] tracking-widest text-brand-saffron">
+                              {pass.flightCode.replace(" ", "")} · {pass.seat}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -419,7 +503,7 @@ export function Pricing() {
                         href="#book"
                         data-cursor="hover"
                         data-cursor-label="Choose"
-                        className="group mt-5 inline-flex w-full items-center justify-between gap-2 rounded-full bg-brand-ink px-6 py-3.5 text-[13px] font-medium text-brand-cream transition-all hover:bg-brand-terracotta"
+                        className="group mt-4 inline-flex w-full items-center justify-between gap-2 rounded-full bg-brand-ink px-6 py-3.5 text-[13px] font-medium text-brand-cream transition-all hover:bg-brand-terracotta"
                       >
                         <span>Board this option</span>
                         <span className="transition-transform group-hover:translate-x-1">
@@ -474,5 +558,18 @@ export function Pricing() {
         </Reveal>
       </div>
     </section>
+  );
+}
+
+function Cell({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="border-l border-brand-charcoal/15 first:border-l-0">
+      <div className="text-[8.5px] uppercase tracking-[0.28em] text-brand-charcoal/45">
+        {label}
+      </div>
+      <div className="mt-1 font-mono text-[12.5px] tracking-widest text-brand-ink">
+        {value}
+      </div>
+    </div>
   );
 }

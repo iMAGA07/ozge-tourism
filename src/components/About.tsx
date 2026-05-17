@@ -306,12 +306,6 @@ export function About() {
           </div>
         </Reveal>
 
-        {/* CONTACT — Air Mail envelope with letter inside, polaroids around */}
-        <Reveal delay={0.1}>
-          <div className="relative mt-20 md:mt-28">
-            <AirMailEnvelope />
-          </div>
-        </Reveal>
       </div>
     </section>
   );
@@ -341,18 +335,19 @@ function Divider() {
   return <span className="h-6 w-px bg-brand-charcoal/15" />;
 }
 
-/* ───────── Real world map (Central Asia highlight) ───────── */
+/* ───────── World map (uses user-supplied Simplified_World_Map.svg) ───────── */
 
-// Markers calibrated to the Equirectangular world SVG (1000×500 viewBox).
-// x = (lon + 180) / 360 * 1000, y = (90 - lat) / 180 * 500
+// Markers calibrated to the simplified world SVG (viewBox 0 0 1016.371 514.609,
+// Equirectangular projection). x = (lon+180)/360 * 1016.371,
+// y = (90-lat)/180 * 514.609.
 const cityMarkers = [
-  { code: "KZ", name: "Kazakhstan",   x: 697, y: 108, hub: true },
-  { code: "UZ", name: "Uzbekistan",   x: 691, y: 136 },
-  { code: "KG", name: "Kyrgyzstan",   x: 708, y: 133 },
-  { code: "TJ", name: "Tajikistan",   x: 688, y: 144 },
-  { code: "TM", name: "Turkmenistan", x: 661, y: 144 },
-  { code: "AF", name: "Afghanistan",  x: 691, y: 155 },
-  { code: "IR", name: "Iran",         x: 641, y: 152 },
+  { code: "KZ", name: "Kazakhstan",   x: 710, y: 111, hub: true },
+  { code: "UZ", name: "Uzbekistan",   x: 704, y: 139 },
+  { code: "KG", name: "Kyrgyzstan",   x: 719, y: 135 },
+  { code: "TJ", name: "Tajikistan",   x: 702, y: 147 },
+  { code: "TM", name: "Turkmenistan", x: 673, y: 149 },
+  { code: "AF", name: "Afghanistan",  x: 703, y: 159 },
+  { code: "IR", name: "Iran",         x: 653, y: 155 },
 ];
 
 function CentralAsiaMap() {
@@ -361,7 +356,7 @@ function CentralAsiaMap() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/world.svg")
+    fetch("/world-simple.svg")
       .then((r) => r.text())
       .then((t) => {
         if (!cancelled) setSvg(t);
@@ -374,45 +369,33 @@ function CentralAsiaMap() {
     };
   }, []);
 
-  // Crop the world map to focus on Eurasia (still recognizable as a real
-  // world map, but Central Asia is the visual center).
-  // Original viewBox is "0 0 1000 500"; we use "viewBox" on the wrapper SVG.
-  const cropViewBox = "470 30 380 240";
+  // Show the entire world; users can see all continents, and our 7
+  // operating countries are highlighted by the marker overlay.
+  const cropViewBox = "0 0 1016.371 514.609";
 
   return (
     <div className="relative">
-      {/* Live styles override the base path color and highlight our 7 countries */}
+      {/* Brand recolor of the simplified map */}
       <style jsx global>{`
         .ozge-world svg {
           width: 100%;
           height: auto;
           display: block;
         }
-        .ozge-world .c {
-          fill: #efe7d6;
-          stroke: #fbf8f1;
-          stroke-width: 0.3;
-          transition: fill 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .ozge-world .kz,
-        .ozge-world .uz,
-        .ozge-world .kg,
-        .ozge-world .tj,
-        .ozge-world .tm,
-        .ozge-world .af,
-        .ozge-world .ir {
-          fill: #d99a5a;
-        }
-        .ozge-world .kz {
-          fill: #b14a2e;
+        .ozge-world .land,
+        .ozge-world path {
+          fill: #e9e0cb;
+          stroke: rgba(26, 20, 16, 0.22);
+          stroke-width: 0.45;
+          stroke-miterlimit: 10;
         }
       `}</style>
 
-      <div className="relative aspect-[19/12] w-full overflow-hidden rounded-md bg-brand-mist/60">
+      <div className="relative aspect-[2/1] w-full overflow-hidden rounded-md bg-brand-mist/40">
         {/* Subtle dot grid backdrop */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-50"
+          className="pointer-events-none absolute inset-0 opacity-40"
           style={{
             backgroundImage:
               "radial-gradient(circle, rgba(26,20,16,0.08) 1px, transparent 1px)",
@@ -424,13 +407,8 @@ function CentralAsiaMap() {
         <div className="absolute inset-0 flex items-center justify-center">
           {svg ? (
             <div
-              className="ozge-world w-full"
-              dangerouslySetInnerHTML={{
-                __html: svg.replace(
-                  /viewBox="[^"]*"/,
-                  `viewBox="${cropViewBox}"`
-                ),
-              }}
+              className="ozge-world h-full w-full"
+              dangerouslySetInnerHTML={{ __html: svg }}
               aria-hidden="true"
             />
           ) : (
@@ -440,13 +418,13 @@ function CentralAsiaMap() {
           )}
         </div>
 
-        {/* Marker overlay — separate SVG sized to match cropped viewBox */}
+        {/* Marker overlay — separate SVG sized to match the map viewBox */}
         <svg
           viewBox={cropViewBox}
           preserveAspectRatio="xMidYMid meet"
           className="absolute inset-0 h-full w-full"
         >
-          {/* Routes — KZ to every other country */}
+          {/* Silk-road routes from KZ hub */}
           {cityMarkers
             .filter((m) => m.code !== "KZ")
             .map((m) => (
@@ -456,15 +434,15 @@ function CentralAsiaMap() {
                 y1={cityMarkers[0].y}
                 x2={m.x}
                 y2={m.y}
-                stroke="rgba(176,75,47,0.45)"
-                strokeWidth="0.4"
-                strokeDasharray="1.2 2"
+                stroke="rgba(176,75,47,0.55)"
+                strokeWidth="0.5"
+                strokeDasharray="1.4 2.2"
               />
             ))}
 
           {cityMarkers.map((m) => {
             const isHover = hover === m.code;
-            const r = m.hub ? 2.6 : 1.8;
+            const r = m.hub ? 3.4 : 2.4;
             return (
               <g
                 key={m.code}
@@ -472,12 +450,15 @@ function CentralAsiaMap() {
                 onMouseLeave={() => setHover(null)}
                 style={{ cursor: "pointer" }}
               >
-                {/* halo */}
                 <circle
                   cx={m.x}
                   cy={m.y}
-                  r={r + (isHover ? 5 : 3)}
-                  fill={isHover ? "rgba(224,160,57,0.35)" : "rgba(224,160,57,0.18)"}
+                  r={r + (isHover ? 6 : 3.5)}
+                  fill={
+                    isHover
+                      ? "rgba(224,160,57,0.40)"
+                      : "rgba(224,160,57,0.22)"
+                  }
                   className="transition-all duration-500"
                 />
                 <circle
@@ -486,14 +467,14 @@ function CentralAsiaMap() {
                   r={r}
                   fill={m.hub ? "#b14a2e" : "#1a1410"}
                   stroke="#fbf8f1"
-                  strokeWidth="0.6"
+                  strokeWidth="0.8"
                 />
                 <text
                   x={m.x}
-                  y={m.y + r + 4.2}
+                  y={m.y + r + 5}
                   textAnchor="middle"
                   fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace"
-                  fontSize={m.hub ? 4.4 : 3.6}
+                  fontSize={m.hub ? 5 : 4.2}
                   letterSpacing="0.12em"
                   fill="rgba(26,20,16,0.85)"
                 >
@@ -502,19 +483,19 @@ function CentralAsiaMap() {
                 {isHover && (
                   <g>
                     <rect
-                      x={m.x - m.name.length * 1.4}
-                      y={m.y - r - 9.5}
-                      width={m.name.length * 2.8}
-                      height={6}
-                      rx={1}
+                      x={m.x - m.name.length * 1.6}
+                      y={m.y - r - 11}
+                      width={m.name.length * 3.2}
+                      height={7}
+                      rx={1.2}
                       fill="#1a1410"
                     />
                     <text
                       x={m.x}
-                      y={m.y - r - 5}
+                      y={m.y - r - 6}
                       textAnchor="middle"
                       fontFamily="ui-sans-serif, system-ui, sans-serif"
-                      fontSize="4"
+                      fontSize="4.6"
                       fill="#fbf8f1"
                       fontWeight="500"
                     >
@@ -528,14 +509,14 @@ function CentralAsiaMap() {
         </svg>
 
         {/* Top-left legend */}
-        <div className="absolute left-3 top-3 flex flex-col gap-1.5 rounded-sm bg-brand-paper/85 px-3 py-2 backdrop-blur">
+        <div className="absolute left-3 top-3 flex flex-col gap-1.5 rounded-sm bg-brand-paper/90 px-3 py-2 backdrop-blur">
           <div className="text-[9.5px] uppercase tracking-[0.32em] text-brand-charcoal/55">
             Where we operate
           </div>
           <div className="flex items-center gap-3 text-[10.5px] text-brand-ink">
             <span className="inline-flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-brand-terracotta" />
-              Hub
+              Hub · Kazakhstan
             </span>
             <span className="inline-flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-brand-ink" />
@@ -545,253 +526,11 @@ function CentralAsiaMap() {
         </div>
 
         {/* Bottom-right caption */}
-        <div className="absolute bottom-3 right-3 rounded-sm bg-brand-paper/85 px-2.5 py-1 font-mono text-[9.5px] tracking-widest text-brand-charcoal/55 backdrop-blur">
-          ASIA · EQUIRECTANGULAR
+        <div className="absolute bottom-3 right-3 rounded-sm bg-brand-paper/90 px-2.5 py-1 font-mono text-[9.5px] tracking-widest text-brand-charcoal/55 backdrop-blur">
+          7 COUNTRIES · CENTRAL ASIA
         </div>
       </div>
     </div>
   );
 }
 
-/* ───────── Air-mail envelope ───────── */
-
-function AirMailEnvelope() {
-  // Two extra polaroid props to scatter around the envelope
-  const accents = [
-    { src: photos.canyon.src, top: -30, left: -20, rotate: -10, caption: "Hidden canyon" },
-    { src: photos.lake.src,    top: -10, right: -30, rotate: 8,  caption: "Mountain lake" },
-    { src: photos.steppe.src,  bottom: -30, left: -10, rotate: 6, caption: "Open steppe" },
-    { src: photos.yurt.src,    bottom: -20, right: -30, rotate: -8, caption: "Inside the yurt" },
-  ] as const;
-
-  return (
-    <div className="relative mx-auto max-w-[820px]">
-      {/* Floating polaroids around the envelope */}
-      {accents.map((a, i) => (
-        <div
-          key={i}
-          style={{
-            top: "top" in a ? a.top : undefined,
-            left: "left" in a ? a.left : undefined,
-            right: "right" in a ? a.right : undefined,
-            bottom: "bottom" in a ? a.bottom : undefined,
-            transform: `rotate(${a.rotate}deg)`,
-          }}
-          className="pointer-events-none absolute hidden h-32 w-24 rounded-sm bg-brand-paper p-1.5 pb-3 shadow-[0_12px_36px_-14px_rgba(20,15,10,0.35)] md:block"
-        >
-          <div className="relative h-full w-full overflow-hidden bg-brand-mist">
-            <Image
-              src={`/photos/${a.src}`}
-              alt=""
-              fill
-              sizes="96px"
-              className="object-cover"
-            />
-          </div>
-        </div>
-      ))}
-
-      {/* Paper plane top-right */}
-      <svg
-        viewBox="0 0 80 30"
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-12 right-4 hidden h-8 w-20 text-brand-terracotta md:block"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M2 28 C 18 12, 38 6, 62 8" strokeDasharray="2 3" />
-        <path d="M58 2 L72 10 L58 14 L60 10 Z" fill="currentColor" />
-      </svg>
-
-      {/* Envelope card */}
-      <div className="relative overflow-hidden rounded-md bg-brand-paper shadow-[0_30px_80px_-40px_rgba(20,15,10,0.4)]">
-        {/* Air-mail diagonal stripes border */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 rounded-md"
-          style={{
-            padding: "10px",
-            background:
-              "repeating-linear-gradient(45deg, #b14a2e 0 10px, transparent 10px 20px, #1f3a8a 20px 30px, transparent 30px 40px)",
-            WebkitMask:
-              "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
-            WebkitMaskComposite: "xor",
-            maskComposite: "exclude",
-            opacity: 0.55,
-          }}
-        />
-
-        <div className="relative grid gap-8 p-7 md:grid-cols-12 md:gap-10 md:p-12">
-          {/* Left — the letter */}
-          <div className="md:col-span-7">
-            {/* Letter header */}
-            <div className="flex items-baseline justify-between border-b border-brand-charcoal/10 pb-3 text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
-              <span className="font-mono">Par Avion · Air Mail</span>
-              <span className="font-mono text-brand-terracotta">
-                ASTANA · KZ
-              </span>
-            </div>
-
-            <div className="mt-5 font-serif text-2xl italic leading-tight text-brand-ink md:text-3xl">
-              Dear traveler,
-            </div>
-            <p className="mt-3 text-[13.5px] leading-relaxed text-brand-charcoal/70 md:text-[14px]">
-              Tell us the kind of adventure you&apos;re dreaming of, and
-              we&apos;ll take care of the rest — from the first flight to the
-              last yurt. Reach us any time:
-            </p>
-
-            {/* Contact lines */}
-            <dl className="mt-5 grid gap-3 text-[13.5px] text-brand-ink">
-              <div className="flex items-baseline gap-3">
-                <dt className="w-16 text-[10px] uppercase tracking-[0.28em] text-brand-charcoal/55">
-                  Email
-                </dt>
-                <dd>
-                  <a
-                    href={`mailto:${site.email}`}
-                    className="font-medium hover:text-brand-terracotta"
-                  >
-                    {site.email}
-                  </a>
-                </dd>
-              </div>
-              <div className="flex items-baseline gap-3">
-                <dt className="w-16 text-[10px] uppercase tracking-[0.28em] text-brand-charcoal/55">
-                  Phone
-                </dt>
-                <dd>
-                  <a
-                    href={site.whatsapp}
-                    className="font-medium hover:text-brand-terracotta"
-                  >
-                    {site.phone}
-                  </a>
-                  <span className="ml-2 text-[11.5px] text-brand-charcoal/55">
-                    WhatsApp · Telegram
-                  </span>
-                </dd>
-              </div>
-              <div className="flex items-baseline gap-3">
-                <dt className="w-16 text-[10px] uppercase tracking-[0.28em] text-brand-charcoal/55">
-                  Office
-                </dt>
-                <dd className="leading-snug">{site.address}</dd>
-              </div>
-            </dl>
-
-            {/* Signature */}
-            <div className="mt-7 flex items-end justify-between">
-              <div>
-                <div className="font-serif text-[24px] italic leading-none text-brand-ink md:text-[28px]">
-                  Mohammad
-                </div>
-                <div className="mt-1.5 text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
-                  Founder · Ozge Tourism
-                </div>
-              </div>
-              <a
-                href="#book"
-                data-cursor="hover"
-                className="hidden items-center gap-2 rounded-full bg-brand-ink px-5 py-2.5 text-[12.5px] font-medium text-brand-cream transition-all hover:bg-brand-terracotta sm:inline-flex"
-              >
-                Write back
-                <span>→</span>
-              </a>
-            </div>
-          </div>
-
-          {/* Right — stamp wall */}
-          <div className="relative md:col-span-5">
-            <div className="text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
-              Postage
-            </div>
-            <div className="mt-4 grid grid-cols-3 gap-3">
-              {/* Stamp 1 — round customs */}
-              <div className="col-span-1 flex h-24 items-center justify-center rounded-md border border-brand-charcoal/15 bg-brand-paper">
-                <div className="flex h-16 w-16 -rotate-6 flex-col items-center justify-center rounded-full border-[2px] border-brand-terracotta/70 text-center font-mono text-[8px] uppercase tracking-widest text-brand-terracotta/85">
-                  <span>Ozge</span>
-                  <span>2025</span>
-                  <span>KZ</span>
-                </div>
-              </div>
-              {/* Stamp 2 — rectangular value */}
-              <div className="col-span-2 rounded-md border border-brand-charcoal/15 bg-brand-mist p-3">
-                <div className="flex h-full items-end justify-between">
-                  <div>
-                    <div className="font-display text-3xl font-light leading-none text-brand-terracotta md:text-4xl">
-                      ∞
-                    </div>
-                    <div className="mt-2 text-[9.5px] uppercase tracking-widest text-brand-charcoal/60">
-                      Anytime
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-mono text-[9px] tracking-widest text-brand-charcoal/55">
-                      OZGE
-                    </div>
-                    <div className="font-mono text-[9px] tracking-widest text-brand-charcoal/55">
-                      AIRMAIL
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* Stamp 3 — wide value */}
-              <div className="col-span-2 rounded-md border border-brand-charcoal/15 bg-brand-ink p-3 text-brand-cream">
-                <div className="flex h-full items-end justify-between">
-                  <div>
-                    <div className="font-display text-2xl font-light leading-none text-brand-saffron md:text-3xl">
-                      24 / 7
-                    </div>
-                    <div className="mt-1.5 text-[9.5px] uppercase tracking-widest text-brand-cream/60">
-                      On-call
-                    </div>
-                  </div>
-                  <div className="text-right text-[9px] uppercase tracking-widest text-brand-cream/55">
-                    Concierge
-                  </div>
-                </div>
-              </div>
-              {/* Stamp 4 — postmark */}
-              <div className="col-span-1 flex h-20 items-center justify-center rounded-md border border-brand-charcoal/15 bg-brand-paper">
-                <div className="rotate-[-12deg] rounded-sm border border-brand-saffron px-2 py-1 font-mono text-[9px] tracking-widest text-brand-saffron">
-                  VISA-FREE
-                </div>
-              </div>
-            </div>
-
-            {/* Tiny route line */}
-            <svg
-              viewBox="0 0 200 30"
-              className="mt-5 h-6 w-full text-brand-charcoal/40"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1"
-              strokeLinecap="round"
-            >
-              <path d="M5 25 C 50 5, 120 5, 180 22" strokeDasharray="2 4" />
-              <circle cx="5" cy="25" r="2" fill="#b14a2e" stroke="none" />
-              <circle cx="180" cy="22" r="2" fill="#b14a2e" stroke="none" />
-            </svg>
-            <div className="mt-1 flex justify-between text-[9px] uppercase tracking-widest text-brand-charcoal/55">
-              <span>YOU</span>
-              <span>OZGE · ASTANA</span>
-            </div>
-
-            <a
-              href="#book"
-              data-cursor="hover"
-              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-ink px-5 py-3 text-[12.5px] font-medium text-brand-cream transition-all hover:bg-brand-terracotta sm:hidden"
-            >
-              Write back
-              <span>→</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
