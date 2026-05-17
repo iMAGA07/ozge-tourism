@@ -23,6 +23,11 @@ body {
   background: #fbf8f1;
   color: #1a1410;
   font-family: var(--font-sans);
+  /* Prevent any element from creating a horizontal scroll axis. Several
+     hero / drawer animations briefly translate elements past the right edge
+     of the viewport, which would otherwise allow the page to swipe left
+     and right on mobile. */
+  overflow-x: clip;
 }
 
 ::selection {

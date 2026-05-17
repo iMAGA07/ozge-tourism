@@ -48,9 +48,13 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-[60] transition-all duration-700 ease-smooth",
+        "fixed inset-x-0 top-0 z-[70] transition-colors duration-500 ease-smooth",
+        // NOTE: we deliberately avoid backdrop-blur on the scrolled state.
+        // Some iOS Safari builds stop hit-testing children inside a
+        // backdrop-filtered fixed element, which made the hamburger button
+        // fail to register taps once the user scrolled.
         scrolled
-          ? "backdrop-blur-md bg-brand-paper/85 border-b border-brand-mist/60"
+          ? "bg-brand-paper border-b border-brand-mist/60"
           : "bg-gradient-to-b from-black/30 via-black/10 to-transparent"
       )}
     >
@@ -126,10 +130,12 @@ export function Navbar() {
               cursor: "pointer",
             }}
             className={cn(
-              "lg:hidden relative z-[70] inline-flex h-12 w-12 items-center justify-center rounded-full border",
+              // No backdrop-blur — Safari has a hit-testing bug with
+              // backdrop-filter on fixed elements that swallows taps.
+              "lg:hidden relative z-[80] inline-flex h-12 w-12 items-center justify-center rounded-full border",
               onHero
-                ? "border-white/45 bg-white/10 text-white backdrop-blur-md"
-                : "border-brand-charcoal/20 bg-brand-paper/80 text-brand-ink"
+                ? "border-white/55 bg-white/15 text-white"
+                : "border-brand-charcoal/25 bg-brand-paper text-brand-ink"
             )}
           >
             {open ? <X size={20} /> : <Menu size={20} />}
@@ -144,8 +150,14 @@ export function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:hidden fixed inset-0 top-[64px] z-40 overflow-y-auto"
-            style={{ backgroundColor: "#fbf8f1" }}
+            // overflow-x-hidden is critical: child links animate from x:30,
+            // which would otherwise create a horizontal scroll axis the
+            // user could swipe.
+            className="lg:hidden fixed inset-0 top-[64px] z-40 overflow-x-hidden overflow-y-auto overscroll-contain"
+            style={{
+              backgroundColor: "#fbf8f1",
+              WebkitOverflowScrolling: "touch",
+            }}
           >
             {/* Subtle ambient accent */}
             <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-brand-saffron/20 blur-3xl" />
