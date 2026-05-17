@@ -3,35 +3,29 @@ import Image from "next/image";
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import { Reveal } from "./Reveal";
-import { AnimatedNumber } from "./AnimatedNumber";
 import { whyUs } from "@/data/content";
 import { cn } from "@/lib/utils";
 
 const reasonPhotos = [
-  "IMG_2799.jpg",
-  "IMG_5616_2.jpg",
-  "IMG_7140.jpg",
-  "IMG_6919.jpg",
-  "IMG_6160.jpg",
-  "IMG_3797.jpg",
-  "IMG_3858.jpg",
-];
-
-const metrics = [
-  { v: 24, suffix: "/7", label: "On-call concierge" },
-  { v: 100, suffix: "+", label: "Adventures delivered" },
-  { v: 7, suffix: "+", label: "Countries covered" },
-  { v: 5, suffix: "★", label: "Guest rating" },
+  "IMG_2799.jpg",   // 24/7
+  "IMG_5616_2.jpg", // multilingual guides
+  "IMG_7140.jpg",   // comprehensive packages
+  "IMG_6919.jpg",   // every adventure
+  "IMG_6160.jpg",   // track record
+  "IMG_3797.jpg",   // institutions
+  "IMG_3858.jpg",   // authentic value
 ];
 
 export function WhyUs() {
   const ref = useRef<HTMLElement>(null);
   const [active, setActive] = useState<number>(0);
+
+  // Subtle parallax on the sticky preview column
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
-  const previewY = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
+  const previewY = useTransform(scrollYProgress, [0, 1], ["-6%", "6%"]);
 
   return (
     <section
@@ -40,8 +34,8 @@ export function WhyUs() {
       className="relative overflow-hidden bg-brand-paper py-24 md:py-36"
     >
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
-        {/* Header */}
-        <div className="grid gap-8 md:grid-cols-12 md:gap-12">
+        {/* Manifesto-style opening */}
+        <div className="grid gap-10 md:grid-cols-12 md:gap-16">
           <div className="md:col-span-7">
             <Reveal>
               <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.34em] text-brand-terracotta">
@@ -54,47 +48,43 @@ export function WhyUs() {
                   at your service.
                 </span>
               </h2>
-            </Reveal>
-          </div>
-          <div className="md:col-span-5">
-            <Reveal delay={0.1}>
-              <p className="fluid-lead text-brand-charcoal/80">
+              <p className="mt-7 max-w-[58ch] fluid-lead text-brand-charcoal/80">
                 If you want to experience Central Asia at its best with a trusted
                 partner committed to excellence, authenticity, and unforgettable
                 adventures, we are at your service.
               </p>
             </Reveal>
           </div>
+
+          {/* Inline credibility line — single editorial bar, no badges */}
+          <div className="md:col-span-5 md:self-end">
+            <Reveal delay={0.15}>
+              <div className="flex flex-col gap-5 border-l-2 border-brand-terracotta/60 pl-5 md:pl-6">
+                <div className="text-[10.5px] uppercase tracking-[0.32em] text-brand-charcoal/55">
+                  Trusted by
+                </div>
+                <p className="font-serif text-xl italic leading-snug text-brand-ink md:text-2xl">
+                  International students, embassies, international organizations,
+                  and expat communities — across Kazakhstan & Central Asia since
+                  2025.
+                </p>
+              </div>
+            </Reveal>
+          </div>
         </div>
 
-        {/* Metrics ticker */}
-        <Reveal delay={0.15}>
-          <div className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-md bg-brand-charcoal/10 sm:grid-cols-4">
-            {metrics.map((m, i) => (
-              <div key={m.label} className="bg-brand-paper p-5 md:p-7">
-                <div className="font-display text-4xl font-light tracking-tight text-brand-ink md:text-6xl">
-                  <AnimatedNumber to={m.v} duration={1400 + i * 100} suffix={m.suffix} />
-                </div>
-                <div className="mt-2 text-[10.5px] uppercase tracking-[0.28em] text-brand-charcoal/55">
-                  {m.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </Reveal>
-
-        {/* Editorial reasons */}
-        <div className="mt-16 grid gap-12 md:mt-24 md:grid-cols-12 md:gap-14">
-          {/* Sticky preview column */}
+        {/* Editorial reasons — the real heart of this section */}
+        <div className="mt-20 grid gap-12 md:mt-28 md:grid-cols-12 md:gap-14">
+          {/* Sticky preview */}
           <div className="order-2 md:order-1 md:col-span-5">
             <div className="md:sticky md:top-28">
               <Reveal>
-                <div className="mb-4 hidden items-center justify-between md:flex">
+                <div className="mb-4 hidden items-baseline justify-between md:flex">
                   <span className="text-[10.5px] uppercase tracking-[0.32em] text-brand-terracotta">
-                    Reason {String(active + 1).padStart(2, "0")} / {String(whyUs.length).padStart(2, "0")}
+                    Reasons to choose us
                   </span>
                   <span className="font-mono text-[10.5px] tracking-widest text-brand-charcoal/40">
-                    Hover to explore
+                    {String(active + 1).padStart(2, "0")} / {String(whyUs.length).padStart(2, "0")}
                   </span>
                 </div>
 
@@ -121,14 +111,24 @@ export function WhyUs() {
                     </motion.div>
                   </AnimatePresence>
 
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-brand-ink/55 via-transparent to-transparent" />
-                  <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
-                    <div className="text-[10px] uppercase tracking-[0.32em] text-brand-saffron">
-                      In view
-                    </div>
-                    <div className="mt-1 max-w-[28ch] font-display text-base font-medium leading-snug text-brand-cream md:text-lg">
-                      {whyUs[active].title}
-                    </div>
+                  {/* Tasteful caption strip */}
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-ink/80 via-brand-ink/20 to-transparent p-5 md:p-7">
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={active}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                      >
+                        <div className="text-[10px] uppercase tracking-[0.32em] text-brand-saffron">
+                          № {String(active + 1).padStart(2, "0")}
+                        </div>
+                        <div className="mt-2 font-display text-lg font-medium leading-snug text-brand-cream md:text-xl">
+                          {whyUs[active].title}
+                        </div>
+                      </motion.div>
+                    </AnimatePresence>
                   </div>
                 </motion.div>
               </Reveal>
@@ -151,12 +151,12 @@ export function WhyUs() {
                       onClick={() => setActive(i)}
                       onFocus={() => setActive(i)}
                       data-cursor="hover"
-                      className="flex w-full items-start gap-5 py-6 text-left md:gap-7 md:py-8"
+                      className="flex w-full items-start gap-5 py-7 text-left md:gap-8 md:py-9"
                     >
                       <span
                         className={cn(
                           "shrink-0 font-display font-light leading-none transition-all duration-700 ease-smooth",
-                          "text-[44px] md:text-[64px]",
+                          "text-[42px] md:text-[68px]",
                           isActive
                             ? "translate-x-1 text-brand-terracotta"
                             : "text-brand-charcoal/30"
@@ -217,6 +217,11 @@ export function WhyUs() {
                             sizes="100vw"
                             className="object-cover"
                           />
+                          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-ink/65 to-transparent p-4">
+                            <div className="text-[10px] uppercase tracking-[0.32em] text-brand-saffron">
+                              № {String(i + 1).padStart(2, "0")}
+                            </div>
+                          </div>
                         </div>
                       </motion.div>
                     )}
@@ -227,32 +232,35 @@ export function WhyUs() {
           </div>
         </div>
 
-        {/* Bold promise as editorial pull-quote */}
+        {/* Bold promise — full-bleed dark band, signature-style */}
         <Reveal delay={0.1}>
-          <div className="mt-20 grid items-center gap-8 md:mt-24 md:grid-cols-12 md:gap-12">
-            <div className="md:col-span-5">
-              <div className="text-[10.5px] uppercase tracking-[0.34em] text-brand-terracotta">
-                Our bold promise
+          <div className="relative mt-24 overflow-hidden rounded-md bg-brand-ink text-brand-cream md:mt-32">
+            <div className="pointer-events-none absolute -right-32 -top-32 h-72 w-72 rounded-full bg-brand-saffron/15 blur-3xl" />
+            <div className="pointer-events-none absolute -left-32 -bottom-32 h-72 w-72 rounded-full bg-brand-terracotta/20 blur-3xl" />
+
+            <div className="relative grid items-center gap-10 px-7 py-12 md:grid-cols-12 md:gap-16 md:px-14 md:py-20">
+              <div className="md:col-span-7">
+                <div className="text-[10.5px] uppercase tracking-[0.34em] text-brand-saffron">
+                  Our bold promise
+                </div>
+                <h3 className="mt-5 font-display text-4xl font-light leading-[1.05] tracking-tight md:text-7xl">
+                  Don&apos;t love it?{" "}
+                  <span className="block font-serif italic text-brand-saffron md:mt-2">
+                    Don&apos;t pay.
+                  </span>
+                </h3>
               </div>
-              <div className="mt-4 font-display text-4xl font-light tracking-tight text-brand-ink md:text-7xl">
-                Don't love it?{" "}
-                <span className="block font-serif italic text-brand-terracotta md:mt-2">
-                  Don't pay.
-                </span>
-              </div>
-            </div>
-            <div className="md:col-span-7">
-              <div className="rounded-md border-l-2 border-brand-terracotta bg-brand-mist/40 p-6 md:p-8">
-                <p className="text-[15.5px] leading-relaxed text-brand-charcoal/85 md:text-[16.5px]">
+              <div className="md:col-span-5 md:border-l md:border-brand-cream/15 md:pl-10">
+                <p className="text-[15px] leading-relaxed text-brand-cream/85 md:text-[15.5px]">
                   We want you to feel completely confident in choosing us. If at
                   any point you genuinely feel that your experience does not
                   meet your expectations or is not worth what you paid, we will
                   gladly provide a{" "}
-                  <strong>full refund — no questions asked</strong>.
+                  <span className="text-brand-saffron">full refund — no questions asked</span>.
                 </p>
-                <div className="mt-5 flex items-center gap-3 text-[12px] uppercase tracking-[0.28em] text-brand-charcoal/55">
-                  <span className="h-[1px] w-8 bg-brand-charcoal/40" />
-                  Mohammad · Founder
+                <div className="mt-7 flex items-center gap-3 text-[11px] uppercase tracking-[0.34em] text-brand-cream/60">
+                  <span className="h-[1px] w-10 bg-brand-saffron/60" />
+                  Mohammad · Founder, Ozge Tourism
                 </div>
               </div>
             </div>
