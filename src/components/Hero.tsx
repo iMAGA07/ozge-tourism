@@ -6,13 +6,14 @@ import { RevealText } from "./Reveal";
 import { Magnetic } from "./Magnetic";
 
 // Five cinematic frames that crossfade slowly in the background. Each has
-// its own object-position so the strongest part of the photo stays in view.
+// its own object-position so the strongest part of the photo stays in view
+// (smaller Y = show more of the top, which crops the people at the bottom).
 const heroFrames = [
-  { src: "IMG_0898.jpg", position: "center 38%", label: "Horseback · Steppe" },
-  { src: "IMG_3882.jpg", position: "center 28%", label: "Burabay · Akmola" },
-  { src: "IMG_2600_3.jpg", position: "center 22%", label: "Sacred lakes · Akmola" },
-  { src: "IMG_7140.jpg", position: "center 50%", label: "Yurt · Family table" },
-  { src: "IMG_6585.jpg", position: "center 30%", label: "Karkaraly · Karaganda" },
+  { src: "IMG_0898.jpg", position: "center 30%", label: "Horseback · Kazakh steppe" },
+  { src: "IMG_3882.jpg", position: "center 8%", label: "Burabay · Akmola" },
+  { src: "IMG_2600_3.jpg", position: "center 8%", label: "Sacred lakes · Akmola" },
+  { src: "IMG_6075.jpg", position: "center 10%", label: "Open steppe" },
+  { src: "IMG_6585.jpg", position: "center 12%", label: "Karkaraly · Karaganda" },
 ];
 
 export function Hero() {
@@ -65,9 +66,11 @@ export function Hero() {
         </AnimatePresence>
       </motion.div>
 
-      {/* Cinematic overlays */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/15 to-black/70" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0)_0%,rgba(0,0,0,0.40)_85%)]" />
+      {/* Cinematic overlays — darker so the cream + saffron typography always
+          reads cleanly. pointer-events-none ensures they never intercept taps. */}
+      <div className="pointer-events-none absolute inset-0 bg-black/20" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/55 via-black/30 to-black/85" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.15)_0%,rgba(0,0,0,0.65)_90%)]" />
 
       {/* Frame-progress dots */}
       <motion.div

@@ -32,7 +32,7 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-700 ease-smooth",
+        "fixed inset-x-0 top-0 z-[60] transition-all duration-700 ease-smooth",
         scrolled
           ? "backdrop-blur-md bg-brand-paper/85 border-b border-brand-mist/60"
           : "bg-gradient-to-b from-black/30 via-black/10 to-transparent"
@@ -99,16 +99,20 @@ export function Navbar() {
             <span className="text-brand-terracotta">→</span>
           </a>
           <button
+            type="button"
             onClick={() => setOpen((v) => !v)}
-            aria-label="Open menu"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            style={{ touchAction: "manipulation", WebkitTapHighlightColor: "transparent" }}
             className={cn(
-              "lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-full border transition-colors duration-500",
+              "lg:hidden relative z-[60] inline-flex h-11 w-11 items-center justify-center rounded-full border transition-colors duration-500",
+              "active:scale-95",
               onHero
                 ? "border-white/40 text-white"
                 : "border-brand-charcoal/15 text-brand-ink"
             )}
           >
-            {open ? <X size={18} /> : <Menu size={18} />}
+            {open ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </div>
