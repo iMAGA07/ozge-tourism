@@ -8,7 +8,6 @@ import { photos } from "@/data/photos";
 import { site } from "@/data/site";
 import { cn } from "@/lib/utils";
 
-// Polaroid grid — captures of the operation
 const polaroids = [
   { src: "IMG_5616_2.jpg", caption: "Horse riding · Akmola", rotate: -4 },
   { src: "IMG_8742.jpg", caption: "Inside the yurt", rotate: 3 },
@@ -16,16 +15,16 @@ const polaroids = [
   { src: "IMG_7140.jpg", caption: "Family table · Steppe", rotate: 5 },
 ];
 
-// Country code → label for the passport stamps
-const operations = [
-  { code: "KZ", label: "Kazakhstan", year: "2025" },
-  { code: "UZ", label: "Uzbekistan", year: "2025" },
-  { code: "KG", label: "Kyrgyzstan", year: "2025" },
-  { code: "TJ", label: "Tajikistan", year: "2025" },
-  { code: "TM", label: "Turkmenistan", year: "2025" },
-  { code: "AF", label: "Afghanistan", year: "2025" },
-  { code: "IR", label: "Iran", year: "2025" },
-  { code: "+", label: "& beyond", year: "—" },
+// Approximate geographic positions on a 600×340 stylised Central Asia
+// canvas (west → east, north → south). Numbers tuned visually, not GIS-grade.
+const countries = [
+  { code: "KZ", name: "Kazakhstan",   x: 350, y: 100, big: true },
+  { code: "UZ", name: "Uzbekistan",   x: 280, y: 215 },
+  { code: "TM", name: "Turkmenistan", x: 215, y: 235 },
+  { code: "KG", name: "Kyrgyzstan",   x: 440, y: 195 },
+  { code: "TJ", name: "Tajikistan",   x: 410, y: 245 },
+  { code: "AF", name: "Afghanistan",  x: 330, y: 290 },
+  { code: "IR", name: "Iran",         x: 130, y: 280 },
 ];
 
 type HelpTab = "tours" | "outdoor" | "retreats" | "logistics";
@@ -34,25 +33,25 @@ const helpTabs: { id: HelpTab; label: string; body: string }[] = [
     id: "tours",
     label: "Tours & Trips",
     body:
-      "Exceptional and fully customized tours, trips, adventures, and retreats across Kazakhstan and Central Asia. Whether you're looking for a one-day trip, a weekend getaway, or a multi-day cultural or nature-focused journey — we design every experience according to your interests.",
+      "Exceptional and fully customized tours, trips, adventures, and retreats across Kazakhstan and Central Asia. Whether you're looking for a one-day trip, a weekend getaway, or a multi-day cultural or nature-focused journey — we design every experience around your interests.",
   },
   {
     id: "outdoor",
     label: "Outdoor Activities",
     body:
-      "A wide range of exciting outdoor activities — including, but not limited to, horse riding, archery, target shooting, cycling, camping, hiking, paragliding, skiing, snowboarding, and winter snow adventures — depending on the season and location.",
+      "A wide range of exciting outdoor activities — horse riding, archery, target shooting, cycling, camping, hiking, paragliding, skiing, snowboarding, and winter snow adventures — depending on the season and location.",
   },
   {
     id: "retreats",
     label: "Retreats & Off-sites",
     body:
-      "Professional retreats and team-building programs, including corporate retreats, leadership and academic retreats, student and youth camps, and strategic off-site planning retreats for schools, universities, and organizations.",
+      "Professional retreats and team-building programs — including corporate retreats, leadership and academic retreats, student and youth camps, and strategic off-site planning retreats for schools, universities, and organizations.",
   },
   {
     id: "logistics",
     label: "Travel Logistics",
     body:
-      "To ensure a smooth and comfortable travel experience, we also assist with flight bookings, reservations, and all necessary travel arrangements across Kazakhstan and Central Asia.",
+      "We assist with flight bookings, reservations, and all necessary travel arrangements across Kazakhstan and Central Asia, so your experience is smooth and comfortable from door to door.",
   },
 ];
 
@@ -88,9 +87,9 @@ export function About() {
                 About us
               </span>
               <h2 className="fluid-h2 mt-5 font-display font-light text-brand-ink">
-                Stamped in 2025.{" "}
+                Founded for explorers,{" "}
                 <span className="font-serif italic font-normal text-brand-terracotta">
-                  Made for explorers.
+                  by explorers.
                 </span>
               </h2>
             </div>
@@ -98,108 +97,88 @@ export function About() {
               <p className="text-[13.5px] leading-relaxed text-brand-charcoal/65 md:text-[14px]">
                 Ozge Tourism is a division of Ozge LTD, officially registered in
                 2025 at the Astana International Financial Centre (AIFC),
-                Kazakhstan. We were founded with a clear mission: to help nature
-                lovers and adventure seekers discover and experience the very
-                best of Kazakhstan and Central Asia.
+                Kazakhstan. Founded with one mission: to help nature lovers and
+                adventure seekers discover the very best of Central Asia.
               </p>
             </div>
           </div>
         </Reveal>
 
-        {/* PASSPORT SPREAD ─ Who we are */}
+        {/* WHO WE ARE — editorial letterhead on left, polaroids on right */}
         <Reveal delay={0.1}>
-          <div className="relative mt-14 grid overflow-hidden rounded-md border border-brand-charcoal/15 bg-brand-paper md:mt-20 md:grid-cols-2">
-            {/* Spine / center binding */}
-            <div className="pointer-events-none absolute inset-y-6 left-1/2 hidden w-px -translate-x-1/2 bg-brand-charcoal/15 md:block" />
-            <div className="pointer-events-none absolute inset-y-6 left-1/2 hidden -translate-x-1/2 flex-col items-center justify-around md:flex">
-              {[0, 1, 2, 3].map((i) => (
-                <span
-                  key={i}
-                  className="h-2.5 w-2.5 rounded-full border border-brand-charcoal/40 bg-brand-paper"
-                />
-              ))}
-            </div>
-
-            {/* Left page — passport bio */}
-            <div className="relative p-7 md:p-12">
-              {/* Top header */}
-              <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.28em] text-brand-charcoal/55">
-                <span className="font-mono">Republic of Adventure</span>
-                <span className="font-mono text-brand-terracotta">PASSPORT</span>
-              </div>
-
-              <div className="mt-8 grid grid-cols-[88px_1fr] gap-5">
-                {/* "Photo" — the team */}
-                <div className="relative aspect-[3/4] overflow-hidden rounded-sm border border-brand-charcoal/20">
-                  <Image
-                    src={`/photos/${photos.guide.src}`}
-                    alt=""
-                    fill
-                    sizes="88px"
-                    className="object-cover grayscale"
-                  />
-                </div>
-                <dl className="space-y-3 text-[10.5px] uppercase tracking-[0.22em] text-brand-charcoal/55">
+          <div className="relative mt-14 grid gap-8 md:mt-20 md:grid-cols-12 md:gap-10">
+            {/* Left — editorial intro, no ticket aesthetic */}
+            <div className="relative md:col-span-7">
+              <div className="rounded-md border border-brand-charcoal/12 bg-brand-paper p-8 md:p-12">
+                {/* Letterhead */}
+                <div className="flex items-baseline justify-between border-b border-brand-charcoal/12 pb-5">
                   <div>
-                    <dt className="text-brand-charcoal/45">Name</dt>
-                    <dd className="mt-1 font-display text-[15px] font-medium tracking-normal text-brand-ink">
+                    <div className="font-display text-lg font-medium tracking-tight text-brand-ink">
                       Ozge Tourism
-                    </dd>
+                    </div>
+                    <div className="mt-0.5 text-[10.5px] uppercase tracking-[0.32em] text-brand-charcoal/55">
+                      A division of Ozge LTD · AIFC · Astana
+                    </div>
                   </div>
-                  <div>
-                    <dt className="text-brand-charcoal/45">Registered</dt>
-                    <dd className="mt-1 font-mono text-[11.5px] tracking-wider text-brand-ink">
-                      AIFC · 2025
-                    </dd>
+                  <div className="hidden text-right text-[10.5px] uppercase tracking-[0.32em] text-brand-charcoal/45 md:block">
+                    Est. 2025
                   </div>
-                  <div>
-                    <dt className="text-brand-charcoal/45">Operating</dt>
-                    <dd className="mt-1 font-mono text-[11.5px] tracking-wider text-brand-ink">
-                      Central Asia
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-brand-charcoal/45">Languages</dt>
-                    <dd className="mt-1 font-mono text-[11.5px] tracking-wider text-brand-ink">
-                      EN · RU · KZ + more
-                    </dd>
-                  </div>
-                </dl>
-              </div>
+                </div>
 
-              {/* Stats stamps */}
-              <div className="mt-8 grid grid-cols-3 gap-3 border-t border-dashed border-brand-charcoal/25 pt-6">
-                <Stat label="Tours" value={<><AnimatedNumber to={100} duration={1400} />+</>} />
-                <Stat label="Countries" value={<><AnimatedNumber to={7} duration={1100} />+</>} />
-                <Stat label="Since" value={<><AnimatedNumber to={2025} duration={1500} /></>} />
-              </div>
+                {/* Editorial body */}
+                <h3 className="mt-7 font-serif text-2xl italic leading-snug text-brand-ink md:text-3xl">
+                  &ldquo;We help nature lovers and adventure seekers experience
+                  the very best of Kazakhstan and Central Asia — from majestic
+                  landscapes and thrilling adventures to rich history and
+                  vibrant cultures.&rdquo;
+                </h3>
 
-              {/* Diagonal "Approved" stamp */}
-              <div className="pointer-events-none absolute right-6 top-1/2 hidden -translate-y-1/2 rotate-[-12deg] md:block">
-                <div className="flex h-24 w-24 flex-col items-center justify-center rounded-full border-[3px] border-brand-terracotta/70 text-center font-display text-[12px] font-medium uppercase tracking-[0.06em] text-brand-terracotta/75">
-                  <span>Approved</span>
-                  <span className="font-mono text-[9px] tracking-widest">
-                    AIFC · 2025
-                  </span>
+                <p className="mt-6 max-w-[58ch] text-[13.5px] leading-relaxed text-brand-charcoal/65 md:text-[14px]">
+                  Our goal is to provide premium, safe, and meaningful travel
+                  experiences, fully customized for individuals and solo
+                  travelers, families and friends, groups and student
+                  communities, organizations and teams, and international
+                  guests.
+                </p>
+
+                {/* Single-line stats — typographic, no badges */}
+                <div className="mt-8 flex flex-wrap items-baseline gap-x-5 gap-y-2 border-t border-brand-charcoal/12 pt-5">
+                  <Stat label="Founded" value={<AnimatedNumber to={2025} duration={1500} />} />
+                  <Divider />
+                  <Stat label="Tours" value={<><AnimatedNumber to={100} duration={1400} />+</>} />
+                  <Divider />
+                  <Stat label="Countries" value={<><AnimatedNumber to={7} duration={1100} />+</>} />
+                  <Divider />
+                  <Stat label="Languages" value="EN · RU · KZ" />
+                </div>
+
+                {/* Signature line */}
+                <div className="mt-8 flex items-end justify-between">
+                  <div>
+                    <div className="font-serif text-[26px] italic leading-none text-brand-ink md:text-[32px]">
+                      Mohammad
+                    </div>
+                    <div className="mt-2 text-[10.5px] uppercase tracking-[0.32em] text-brand-charcoal/55">
+                      Founder · Ozge Tourism
+                    </div>
+                  </div>
+                  <div className="text-right text-[10.5px] uppercase tracking-[0.32em] text-brand-charcoal/45">
+                    Mangilik El · Astana
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Right page — polaroids */}
-            <div className="relative bg-brand-mist/50 p-7 md:p-12">
-              <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.28em] text-brand-charcoal/55">
-                <span className="font-mono">Notes from the road</span>
-                <span className="font-mono">04 / 04</span>
-              </div>
-
-              <div className="mt-7 grid grid-cols-2 gap-4 md:gap-6">
+            {/* Right — polaroid wall */}
+            <div className="relative md:col-span-5">
+              <div className="grid grid-cols-2 gap-4 md:gap-5">
                 {polaroids.map((p, i) => (
                   <div
                     key={p.src}
                     style={{ transform: `rotate(${p.rotate}deg)` }}
                     className={cn(
-                      "rounded-sm bg-brand-paper p-2 pb-4 shadow-[0_8px_30px_-12px_rgba(20,15,10,0.25)]",
-                      i === 1 || i === 2 ? "mt-4 md:mt-6" : ""
+                      "rounded-sm bg-brand-paper p-2 pb-4 shadow-[0_10px_30px_-12px_rgba(20,15,10,0.25)]",
+                      i === 1 || i === 2 ? "mt-6" : ""
                     )}
                   >
                     <div className="relative aspect-[3/4] overflow-hidden bg-brand-mist">
@@ -207,7 +186,7 @@ export function About() {
                         src={`/photos/${p.src}`}
                         alt={p.caption}
                         fill
-                        sizes="(min-width: 768px) 18vw, 40vw"
+                        sizes="(min-width: 768px) 20vw, 45vw"
                         className="object-cover"
                       />
                     </div>
@@ -221,7 +200,7 @@ export function About() {
           </div>
         </Reveal>
 
-        {/* WHAT CAN WE HELP WITH — tabbed open journal */}
+        {/* WHAT CAN WE HELP WITH — kept tabbed journal but lighter */}
         <Reveal delay={0.1}>
           <div className="mt-12 overflow-hidden rounded-md border border-brand-charcoal/15 bg-brand-ink text-brand-cream md:mt-16">
             <div className="grid md:grid-cols-12">
@@ -280,7 +259,7 @@ export function About() {
                         {active.label}
                       </span>
                     </div>
-                    <p className="mt-4 text-[13.5px] leading-relaxed text-brand-cream/70 md:text-[14px]">
+                    <p className="mt-4 text-[13px] leading-relaxed text-brand-cream/65 md:text-[13.5px]">
                       {active.body}
                     </p>
                   </motion.div>
@@ -290,139 +269,55 @@ export function About() {
           </div>
         </Reveal>
 
-        {/* WHERE WE OPERATE — passport stamps grid */}
+        {/* WHERE WE OPERATE — stylised Central Asia map */}
         <Reveal delay={0.1}>
-          <div className="mt-12 md:mt-16">
+          <div className="mt-14 md:mt-20">
             <div className="flex items-baseline justify-between text-[10.5px] uppercase tracking-[0.34em] text-brand-terracotta">
               <span>Where we operate</span>
               <span className="font-mono text-brand-charcoal/45">
-                07 + beyond
+                07 countries · &amp; beyond
               </span>
             </div>
-            <ul className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4 md:gap-4">
-              {operations.map((o, i) => (
+
+            <div className="relative mt-5 overflow-hidden rounded-md border border-brand-charcoal/12 bg-brand-mist/40 p-4 md:p-6">
+              <CentralAsiaMap />
+            </div>
+
+            {/* Country chips below the map */}
+            <ul className="mt-4 flex flex-wrap gap-2">
+              {countries.map((c) => (
                 <li
-                  key={o.code}
-                  data-cursor="hover"
-                  className="group relative overflow-hidden rounded-md border border-brand-charcoal/20 bg-brand-paper p-4 transition-all duration-500 hover:-translate-y-0.5 hover:border-brand-terracotta/60"
+                  key={c.code}
+                  className="inline-flex items-center gap-2 rounded-full border border-brand-charcoal/15 bg-brand-paper px-3 py-1.5 text-[12px] text-brand-charcoal/80"
                 >
-                  {/* Inner faux stamp ring */}
-                  <div className="pointer-events-none absolute inset-2 rounded-md border border-dashed border-brand-charcoal/15 transition-colors group-hover:border-brand-terracotta/40" />
-                  <div className="relative">
-                    <div className="font-display text-2xl font-light text-brand-terracotta md:text-3xl">
-                      {o.code}
-                    </div>
-                    <div className="mt-1 font-display text-[13px] font-medium text-brand-ink">
-                      {o.label}
-                    </div>
-                    <div className="mt-2 font-mono text-[9.5px] tracking-widest text-brand-charcoal/45">
-                      EST · {o.year}
-                    </div>
-                    {/* Rotated "VISA" mini stamp on first cell */}
-                    {i === 0 && (
-                      <div className="absolute right-0 top-0 rotate-[-12deg]">
-                        <div className="rounded-sm border border-brand-saffron/60 px-1.5 py-0.5 font-mono text-[9px] tracking-widest text-brand-saffron/80">
-                          VISA-FREE
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                  <span className="font-mono text-[10.5px] tracking-widest text-brand-terracotta">
+                    {c.code}
+                  </span>
+                  {c.name}
                 </li>
               ))}
+              <li className="inline-flex items-center gap-2 rounded-full border border-dashed border-brand-charcoal/30 px-3 py-1.5 text-[12px] text-brand-charcoal/60">
+                <span className="font-mono text-[10.5px] tracking-widest text-brand-charcoal/50">
+                  +
+                </span>
+                &amp; beyond
+              </li>
             </ul>
           </div>
         </Reveal>
 
-        {/* CONTACT — envelope */}
+        {/* CONTACT — Air Mail envelope with letter inside, polaroids around */}
         <Reveal delay={0.1}>
-          <div className="relative mt-14 md:mt-20">
-            {/* Floating polaroid accents */}
-            <div className="pointer-events-none absolute left-2 top-6 hidden h-32 w-24 -rotate-6 rounded-sm bg-brand-paper p-1.5 pb-3 shadow-[0_8px_30px_-12px_rgba(20,15,10,0.25)] md:block">
-              <div className="relative h-full w-full overflow-hidden">
-                <Image
-                  src={`/photos/${photos.canyon.src}`}
-                  alt=""
-                  fill
-                  sizes="96px"
-                  className="object-cover"
-                />
-              </div>
-            </div>
-            <div className="pointer-events-none absolute right-2 top-12 hidden h-32 w-24 rotate-6 rounded-sm bg-brand-paper p-1.5 pb-3 shadow-[0_8px_30px_-12px_rgba(20,15,10,0.25)] md:block">
-              <div className="relative h-full w-full overflow-hidden">
-                <Image
-                  src={`/photos/${photos.lake.src}`}
-                  alt=""
-                  fill
-                  sizes="96px"
-                  className="object-cover"
-                />
-              </div>
-            </div>
-
-            <div className="relative mx-auto max-w-[760px] rounded-md border border-brand-charcoal/15 bg-brand-paper p-6 shadow-[0_30px_80px_-40px_rgba(20,15,10,0.3)] md:p-9">
-              {/* Envelope flap (top triangle) */}
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute -top-px left-1/2 h-12 w-[60%] -translate-x-1/2 border-b border-brand-charcoal/15"
-                style={{
-                  clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                  background:
-                    "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(176,75,47,0.05) 100%)",
-                }}
-              />
-
-              <div className="flex items-baseline justify-between text-[10px] uppercase tracking-[0.28em] text-brand-charcoal/55">
-                <span className="font-mono">Mail us</span>
-                <span className="font-mono text-brand-terracotta">PAR AVION</span>
-              </div>
-
-              <div className="mt-5 grid gap-3 md:grid-cols-3 md:gap-4">
-                <div className="rounded-md border border-brand-charcoal/15 bg-white p-4">
-                  <div className="text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
-                    Email
-                  </div>
-                  <a
-                    href={`mailto:${site.email}`}
-                    className="mt-2 block break-all font-display text-[14px] font-medium text-brand-ink hover:text-brand-terracotta"
-                  >
-                    {site.email}
-                  </a>
-                </div>
-                <div className="rounded-md border border-brand-charcoal/15 bg-white p-4">
-                  <div className="text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
-                    WhatsApp · Telegram
-                  </div>
-                  <a
-                    href={site.whatsapp}
-                    className="mt-2 block font-display text-[14px] font-medium text-brand-ink hover:text-brand-terracotta"
-                  >
-                    {site.phone}
-                  </a>
-                </div>
-                <div className="rounded-md border border-brand-charcoal/15 bg-white p-4">
-                  <div className="text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
-                    Office · Astana
-                  </div>
-                  <div className="mt-2 text-[12.5px] leading-snug text-brand-ink">
-                    {site.address}
-                  </div>
-                </div>
-              </div>
-
-              {/* Stamp in the corner */}
-              <div className="pointer-events-none absolute bottom-4 right-4 rotate-[-8deg] md:bottom-6 md:right-6">
-                <div className="rounded-sm border-2 border-brand-terracotta/70 px-2 py-1 font-mono text-[9px] tracking-widest text-brand-terracotta/80">
-                  ASTANA · KAZ
-                </div>
-              </div>
-            </div>
+          <div className="relative mt-20 md:mt-28">
+            <AirMailEnvelope />
           </div>
         </Reveal>
       </div>
     </section>
   );
 }
+
+/* ────────────────────────── helpers ────────────────────────── */
 
 function Stat({
   label,
@@ -432,12 +327,382 @@ function Stat({
   value: React.ReactNode;
 }) {
   return (
-    <div className="text-center">
-      <div className="font-display text-2xl font-light leading-none text-brand-ink md:text-3xl">
+    <div>
+      <div className="font-display text-xl font-light leading-none text-brand-ink md:text-2xl">
         {value}
       </div>
-      <div className="mt-1.5 text-[9.5px] uppercase tracking-[0.28em] text-brand-charcoal/55">
+      <div className="mt-1 text-[9.5px] uppercase tracking-[0.28em] text-brand-charcoal/55">
         {label}
+      </div>
+    </div>
+  );
+}
+function Divider() {
+  return <span className="h-6 w-px bg-brand-charcoal/15" />;
+}
+
+/* ───────── Stylised Central Asia map ───────── */
+
+function CentralAsiaMap() {
+  const [hover, setHover] = useState<string | null>(null);
+  return (
+    <div className="relative">
+      <svg
+        viewBox="0 0 600 340"
+        className="block h-auto w-full"
+        aria-label="Map of Central Asia operating region"
+      >
+        {/* Subtle grid */}
+        <defs>
+          <pattern id="dotGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r="0.7" fill="rgba(26,20,16,0.10)" />
+          </pattern>
+        </defs>
+        <rect width="600" height="340" fill="url(#dotGrid)" />
+
+        {/* Stylised, abstract land mass */}
+        <path
+          d="M40 120
+             C 100 70, 220 60, 320 70
+             C 420 80, 520 60, 570 110
+             C 580 170, 560 230, 500 260
+             C 420 290, 320 320, 220 305
+             C 130 290, 60 250, 40 200 Z"
+          fill="rgba(245,236,220,0.95)"
+          stroke="rgba(26,20,16,0.18)"
+          strokeWidth="1"
+          strokeDasharray="3 4"
+        />
+
+        {/* Routes — dashed lines between Kazakhstan (hub) and all others */}
+        {countries
+          .filter((c) => c.code !== "KZ")
+          .map((c) => (
+            <line
+              key={`route-${c.code}`}
+              x1={350}
+              y1={100}
+              x2={c.x}
+              y2={c.y}
+              stroke="rgba(176,75,47,0.35)"
+              strokeWidth="1"
+              strokeDasharray="3 5"
+            />
+          ))}
+
+        {/* Markers */}
+        {countries.map((c) => {
+          const isHover = hover === c.code;
+          const r = c.big ? 11 : 7;
+          return (
+            <g
+              key={c.code}
+              onMouseEnter={() => setHover(c.code)}
+              onMouseLeave={() => setHover(null)}
+              style={{ cursor: "pointer" }}
+            >
+              {/* halo */}
+              <circle
+                cx={c.x}
+                cy={c.y}
+                r={r + 6}
+                fill={isHover ? "rgba(224,160,57,0.30)" : "rgba(224,160,57,0)"}
+                className="transition-all duration-500"
+              />
+              <circle
+                cx={c.x}
+                cy={c.y}
+                r={r}
+                fill={c.big ? "#b14a2e" : "#1a1410"}
+                stroke="#fbf8f1"
+                strokeWidth="2"
+              />
+              <text
+                x={c.x}
+                y={c.y + r + 14}
+                textAnchor="middle"
+                fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace"
+                fontSize={c.big ? 12 : 10}
+                letterSpacing="0.12em"
+                fill="rgba(26,20,16,0.85)"
+              >
+                {c.code}
+              </text>
+              {isHover && (
+                <text
+                  x={c.x}
+                  y={c.y - r - 8}
+                  textAnchor="middle"
+                  fontFamily="ui-sans-serif, system-ui, sans-serif"
+                  fontSize="11"
+                  fill="#1a1410"
+                  fontWeight="500"
+                >
+                  {c.name}
+                </text>
+              )}
+            </g>
+          );
+        })}
+
+        {/* Compass rose */}
+        <g transform="translate(540, 35)" opacity="0.7">
+          <circle r="14" fill="none" stroke="rgba(26,20,16,0.4)" />
+          <path d="M0,-14 L3,0 L0,14 L-3,0 Z" fill="#b14a2e" />
+          <text
+            y="-19"
+            textAnchor="middle"
+            fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace"
+            fontSize="8"
+            letterSpacing="0.12em"
+            fill="rgba(26,20,16,0.7)"
+          >
+            N
+          </text>
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+/* ───────── Air-mail envelope ───────── */
+
+function AirMailEnvelope() {
+  // Two extra polaroid props to scatter around the envelope
+  const accents = [
+    { src: photos.canyon.src, top: -30, left: -20, rotate: -10, caption: "Hidden canyon" },
+    { src: photos.lake.src,    top: -10, right: -30, rotate: 8,  caption: "Mountain lake" },
+    { src: photos.steppe.src,  bottom: -30, left: -10, rotate: 6, caption: "Open steppe" },
+    { src: photos.yurt.src,    bottom: -20, right: -30, rotate: -8, caption: "Inside the yurt" },
+  ] as const;
+
+  return (
+    <div className="relative mx-auto max-w-[820px]">
+      {/* Floating polaroids around the envelope */}
+      {accents.map((a, i) => (
+        <div
+          key={i}
+          style={{
+            top: "top" in a ? a.top : undefined,
+            left: "left" in a ? a.left : undefined,
+            right: "right" in a ? a.right : undefined,
+            bottom: "bottom" in a ? a.bottom : undefined,
+            transform: `rotate(${a.rotate}deg)`,
+          }}
+          className="pointer-events-none absolute hidden h-32 w-24 rounded-sm bg-brand-paper p-1.5 pb-3 shadow-[0_12px_36px_-14px_rgba(20,15,10,0.35)] md:block"
+        >
+          <div className="relative h-full w-full overflow-hidden bg-brand-mist">
+            <Image
+              src={`/photos/${a.src}`}
+              alt=""
+              fill
+              sizes="96px"
+              className="object-cover"
+            />
+          </div>
+        </div>
+      ))}
+
+      {/* Paper plane top-right */}
+      <svg
+        viewBox="0 0 80 30"
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-12 right-4 hidden h-8 w-20 text-brand-terracotta md:block"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M2 28 C 18 12, 38 6, 62 8" strokeDasharray="2 3" />
+        <path d="M58 2 L72 10 L58 14 L60 10 Z" fill="currentColor" />
+      </svg>
+
+      {/* Envelope card */}
+      <div className="relative overflow-hidden rounded-md bg-brand-paper shadow-[0_30px_80px_-40px_rgba(20,15,10,0.4)]">
+        {/* Air-mail diagonal stripes border */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 rounded-md"
+          style={{
+            padding: "10px",
+            background:
+              "repeating-linear-gradient(45deg, #b14a2e 0 10px, transparent 10px 20px, #1f3a8a 20px 30px, transparent 30px 40px)",
+            WebkitMask:
+              "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
+            WebkitMaskComposite: "xor",
+            maskComposite: "exclude",
+            opacity: 0.55,
+          }}
+        />
+
+        <div className="relative grid gap-8 p-7 md:grid-cols-12 md:gap-10 md:p-12">
+          {/* Left — the letter */}
+          <div className="md:col-span-7">
+            {/* Letter header */}
+            <div className="flex items-baseline justify-between border-b border-brand-charcoal/10 pb-3 text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
+              <span className="font-mono">Par Avion · Air Mail</span>
+              <span className="font-mono text-brand-terracotta">
+                ASTANA · KZ
+              </span>
+            </div>
+
+            <div className="mt-5 font-serif text-2xl italic leading-tight text-brand-ink md:text-3xl">
+              Dear traveler,
+            </div>
+            <p className="mt-3 text-[13.5px] leading-relaxed text-brand-charcoal/70 md:text-[14px]">
+              Tell us the kind of adventure you&apos;re dreaming of, and
+              we&apos;ll take care of the rest — from the first flight to the
+              last yurt. Reach us any time:
+            </p>
+
+            {/* Contact lines */}
+            <dl className="mt-5 grid gap-3 text-[13.5px] text-brand-ink">
+              <div className="flex items-baseline gap-3">
+                <dt className="w-16 text-[10px] uppercase tracking-[0.28em] text-brand-charcoal/55">
+                  Email
+                </dt>
+                <dd>
+                  <a
+                    href={`mailto:${site.email}`}
+                    className="font-medium hover:text-brand-terracotta"
+                  >
+                    {site.email}
+                  </a>
+                </dd>
+              </div>
+              <div className="flex items-baseline gap-3">
+                <dt className="w-16 text-[10px] uppercase tracking-[0.28em] text-brand-charcoal/55">
+                  Phone
+                </dt>
+                <dd>
+                  <a
+                    href={site.whatsapp}
+                    className="font-medium hover:text-brand-terracotta"
+                  >
+                    {site.phone}
+                  </a>
+                  <span className="ml-2 text-[11.5px] text-brand-charcoal/55">
+                    WhatsApp · Telegram
+                  </span>
+                </dd>
+              </div>
+              <div className="flex items-baseline gap-3">
+                <dt className="w-16 text-[10px] uppercase tracking-[0.28em] text-brand-charcoal/55">
+                  Office
+                </dt>
+                <dd className="leading-snug">{site.address}</dd>
+              </div>
+            </dl>
+
+            {/* Signature */}
+            <div className="mt-7 flex items-end justify-between">
+              <div>
+                <div className="font-serif text-[24px] italic leading-none text-brand-ink md:text-[28px]">
+                  Mohammad
+                </div>
+                <div className="mt-1.5 text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
+                  Founder · Ozge Tourism
+                </div>
+              </div>
+              <a
+                href="#book"
+                data-cursor="hover"
+                className="hidden items-center gap-2 rounded-full bg-brand-ink px-5 py-2.5 text-[12.5px] font-medium text-brand-cream transition-all hover:bg-brand-terracotta sm:inline-flex"
+              >
+                Write back
+                <span>→</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Right — stamp wall */}
+          <div className="relative md:col-span-5">
+            <div className="text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
+              Postage
+            </div>
+            <div className="mt-4 grid grid-cols-3 gap-3">
+              {/* Stamp 1 — round customs */}
+              <div className="col-span-1 flex h-24 items-center justify-center rounded-md border border-brand-charcoal/15 bg-brand-paper">
+                <div className="flex h-16 w-16 -rotate-6 flex-col items-center justify-center rounded-full border-[2px] border-brand-terracotta/70 text-center font-mono text-[8px] uppercase tracking-widest text-brand-terracotta/85">
+                  <span>Ozge</span>
+                  <span>2025</span>
+                  <span>KZ</span>
+                </div>
+              </div>
+              {/* Stamp 2 — rectangular value */}
+              <div className="col-span-2 rounded-md border border-brand-charcoal/15 bg-brand-mist p-3">
+                <div className="flex h-full items-end justify-between">
+                  <div>
+                    <div className="font-display text-3xl font-light leading-none text-brand-terracotta md:text-4xl">
+                      ∞
+                    </div>
+                    <div className="mt-2 text-[9.5px] uppercase tracking-widest text-brand-charcoal/60">
+                      Anytime
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-mono text-[9px] tracking-widest text-brand-charcoal/55">
+                      OZGE
+                    </div>
+                    <div className="font-mono text-[9px] tracking-widest text-brand-charcoal/55">
+                      AIRMAIL
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Stamp 3 — wide value */}
+              <div className="col-span-2 rounded-md border border-brand-charcoal/15 bg-brand-ink p-3 text-brand-cream">
+                <div className="flex h-full items-end justify-between">
+                  <div>
+                    <div className="font-display text-2xl font-light leading-none text-brand-saffron md:text-3xl">
+                      24 / 7
+                    </div>
+                    <div className="mt-1.5 text-[9.5px] uppercase tracking-widest text-brand-cream/60">
+                      On-call
+                    </div>
+                  </div>
+                  <div className="text-right text-[9px] uppercase tracking-widest text-brand-cream/55">
+                    Concierge
+                  </div>
+                </div>
+              </div>
+              {/* Stamp 4 — postmark */}
+              <div className="col-span-1 flex h-20 items-center justify-center rounded-md border border-brand-charcoal/15 bg-brand-paper">
+                <div className="rotate-[-12deg] rounded-sm border border-brand-saffron px-2 py-1 font-mono text-[9px] tracking-widest text-brand-saffron">
+                  VISA-FREE
+                </div>
+              </div>
+            </div>
+
+            {/* Tiny route line */}
+            <svg
+              viewBox="0 0 200 30"
+              className="mt-5 h-6 w-full text-brand-charcoal/40"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1"
+              strokeLinecap="round"
+            >
+              <path d="M5 25 C 50 5, 120 5, 180 22" strokeDasharray="2 4" />
+              <circle cx="5" cy="25" r="2" fill="#b14a2e" stroke="none" />
+              <circle cx="180" cy="22" r="2" fill="#b14a2e" stroke="none" />
+            </svg>
+            <div className="mt-1 flex justify-between text-[9px] uppercase tracking-widest text-brand-charcoal/55">
+              <span>YOU</span>
+              <span>OZGE · ASTANA</span>
+            </div>
+
+            <a
+              href="#book"
+              data-cursor="hover"
+              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-ink px-5 py-3 text-[12.5px] font-medium text-brand-cream transition-all hover:bg-brand-terracotta sm:hidden"
+            >
+              Write back
+              <span>→</span>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -243,7 +243,7 @@ export function Pricing() {
                 <span className="absolute -left-[7px] -bottom-[7px] h-3.5 w-3.5 rounded-full bg-brand-paper" />
               </div>
 
-              {/* Right info column — like a ticket stub */}
+              {/* Right info column — itinerary-style */}
               <div className="flex flex-col bg-brand-paper p-7 md:p-9">
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -254,62 +254,174 @@ export function Pricing() {
                     transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
                     className="flex flex-1 flex-col"
                   >
-                    <div className="space-y-3 border-b border-dashed border-brand-charcoal/25 pb-5 text-[9px] uppercase tracking-[0.28em] text-brand-charcoal/55">
-                      <div className="flex items-baseline justify-between">
-                        <span>From</span>
-                        <span className="font-mono text-[12px] tracking-wider text-brand-ink">
-                          YOU
-                        </span>
+                    {/* Itinerary header */}
+                    <div className="flex items-baseline justify-between text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
+                      <span>Itinerary</span>
+                      <span className="font-mono">
+                        {String(active + 1).padStart(2, "0")} / 03
+                      </span>
+                    </div>
+
+                    {/* DEPARTURE → ARRIVAL row */}
+                    <div className="mt-6 grid grid-cols-[1fr_auto_1fr] items-end gap-3">
+                      <div>
+                        <div className="text-[9.5px] uppercase tracking-[0.28em] text-brand-charcoal/45">
+                          Depart
+                        </div>
+                        <div className="mt-1 font-display text-2xl font-light leading-none text-brand-ink md:text-3xl">
+                          Today
+                        </div>
+                        <div className="mt-1 text-[10px] uppercase tracking-[0.28em] text-brand-charcoal/55">
+                          your place
+                        </div>
                       </div>
-                      <div className="flex items-baseline justify-between">
-                        <span>To</span>
-                        <span className="font-mono text-[12px] tracking-wider text-brand-ink">
-                          ADVENTURE
-                        </span>
+                      {/* Plane glyph between */}
+                      <div className="flex flex-col items-center justify-end gap-1 text-brand-terracotta">
+                        <svg
+                          viewBox="0 0 60 12"
+                          className="h-3 w-14"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.2"
+                          strokeLinecap="round"
+                        >
+                          <path
+                            d="M2 6 H50"
+                            strokeDasharray="2 3"
+                          />
+                          <path
+                            d="M44 1 L52 6 L44 11 L46 6 Z"
+                            fill="currentColor"
+                            stroke="none"
+                          />
+                        </svg>
+                        <div className="text-[9px] uppercase tracking-widest text-brand-charcoal/45">
+                          {active === 0
+                            ? "Direct"
+                            : active === 1
+                            ? "Best fare"
+                            : "Open"}
+                        </div>
                       </div>
-                      <div className="flex items-baseline justify-between">
-                        <span>Pricing</span>
-                        <span className="font-mono text-[12px] tracking-wider text-brand-terracotta">
-                          {pass.pricing}
-                        </span>
+                      <div className="text-right">
+                        <div className="text-[9.5px] uppercase tracking-[0.28em] text-brand-charcoal/45">
+                          Arrive
+                        </div>
+                        <div className="mt-1 font-display text-2xl font-light leading-none text-brand-ink md:text-3xl">
+                          Wonder
+                        </div>
+                        <div className="mt-1 text-[10px] uppercase tracking-[0.28em] text-brand-charcoal/55">
+                          central asia
+                        </div>
                       </div>
                     </div>
 
-                    <h4 className="mt-5 font-display text-lg font-medium leading-snug text-brand-ink md:text-xl">
-                      {current.title}
-                    </h4>
+                    {/* Big price-prop number */}
+                    <div className="mt-7 border-y border-dashed border-brand-charcoal/25 py-5">
+                      <div className="text-[10px] uppercase tracking-[0.32em] text-brand-terracotta">
+                        Fare
+                      </div>
+                      <AnimatePresence mode="wait">
+                        <motion.div
+                          key={`fare-${active}`}
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -6 }}
+                          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                          className="mt-2 flex items-end gap-3 font-display text-brand-ink"
+                        >
+                          {active === 0 && (
+                            <>
+                              <span className="text-4xl font-light leading-none md:text-5xl">
+                                Standard
+                              </span>
+                              <span className="pb-1 font-serif text-base italic text-brand-charcoal/60">
+                                rate
+                              </span>
+                            </>
+                          )}
+                          {active === 1 && (
+                            <>
+                              <span className="text-5xl font-light leading-none text-brand-terracotta md:text-6xl">
+                                −10%
+                              </span>
+                              <span className="pb-1 font-serif text-base italic text-brand-charcoal/60">
+                                vs market
+                              </span>
+                            </>
+                          )}
+                          {active === 2 && (
+                            <>
+                              <span className="text-5xl font-light leading-none md:text-6xl">
+                                Pay
+                              </span>
+                              <span className="pb-1 font-serif text-base italic text-brand-terracotta">
+                                if you love it
+                              </span>
+                            </>
+                          )}
+                        </motion.div>
+                      </AnimatePresence>
+                    </div>
 
-                    <p className="mt-3 text-[12.5px] leading-relaxed text-brand-charcoal/65 md:text-[13px]">
-                      {current.desc}
-                    </p>
-
-                    <ul className="mt-5 space-y-2 text-[12.5px] text-brand-charcoal/70">
-                      {pass.bullets.map((b) => (
-                        <li key={b} className="flex items-start gap-2.5">
-                          <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-brand-terracotta" />
-                          <span>{b}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    {/* Included list with checkmarks */}
+                    <div className="mt-6">
+                      <div className="text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
+                        Included
+                      </div>
+                      <ul className="mt-3 space-y-2 text-[12.5px] leading-snug text-brand-charcoal/75">
+                        {pass.bullets.map((b) => (
+                          <li
+                            key={b}
+                            className="flex items-start gap-3"
+                          >
+                            <span className="mt-1 inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full border border-brand-terracotta/45 bg-brand-terracotta/8 text-brand-terracotta">
+                              <svg
+                                viewBox="0 0 12 12"
+                                className="h-2.5 w-2.5"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="1.6"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <path d="M2.5 6 L5 8.5 L9.5 3.5" />
+                              </svg>
+                            </span>
+                            <span>{b}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
 
                     {/* Barcode + CTA */}
-                    <div className="mt-auto pt-6">
-                      <div className="flex h-7 items-end gap-[1px]">
-                        {barcodes[active].map((w, j) => (
-                          <div
-                            key={j}
-                            style={{ width: `${w}px` }}
-                            className="h-full bg-brand-ink"
-                          />
-                        ))}
+                    <div className="mt-auto pt-7">
+                      <div className="flex items-end justify-between gap-3 border-t border-dashed border-brand-charcoal/25 pt-4">
+                        <div className="flex h-7 items-end gap-[1px]">
+                          {barcodes[active].map((w, j) => (
+                            <div
+                              key={j}
+                              style={{ width: `${w}px` }}
+                              className="h-full bg-brand-ink"
+                            />
+                          ))}
+                        </div>
+                        <div className="text-right">
+                          <div className="font-mono text-[9.5px] tracking-widest text-brand-charcoal/45">
+                            Seat
+                          </div>
+                          <div className="font-mono text-[12px] tracking-widest text-brand-ink">
+                            {active === 0 ? "01A" : active === 1 ? "10B" : "01F"}
+                          </div>
+                        </div>
                       </div>
                       <a
                         href="#book"
                         data-cursor="hover"
                         data-cursor-label="Choose"
-                        className="group mt-5 inline-flex items-center gap-2 rounded-full bg-brand-ink px-6 py-3 text-[13px] font-medium text-brand-cream transition-all hover:bg-brand-terracotta"
+                        className="group mt-5 inline-flex w-full items-center justify-between gap-2 rounded-full bg-brand-ink px-6 py-3.5 text-[13px] font-medium text-brand-cream transition-all hover:bg-brand-terracotta"
                       >
-                        Choose this option
+                        <span>Board this option</span>
                         <span className="transition-transform group-hover:translate-x-1">
                           →
                         </span>
