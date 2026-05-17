@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils";
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  // De-duplicate clicks that fire after a synthesized pointerup → click on iOS
+  const lastToggleAt = useRef(0);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -18,11 +20,25 @@ export function Navbar() {
   }, []);
 
   useEffect(() => {
+    // Lock the page underneath the drawer
+    document.documentElement.style.overflow = open ? "hidden" : "";
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
+      document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
     };
   }, [open]);
+
+  // Stable toggle that ignores double-fires within 250ms (some iOS versions
+  // dispatch both pointerup and a synthesized click — we want one toggle).
+  const toggle = useCallback(() => {
+    const now = Date.now();
+    if (now - lastToggleAt.current < 250) return;
+    lastToggleAt.current = now;
+    setOpen((v) => !v);
+  }, []);
+
+  const closeMenu = useCallback(() => setOpen(false), []);
 
   // When at the very top of the page we sit on top of the dark hero photo —
   // use light text. After scroll, we switch to a light cream surface and
@@ -100,16 +116,20 @@ export function Navbar() {
           </a>
           <button
             type="button"
-            onClick={() => setOpen((v) => !v)}
+            onClick={toggle}
+            onPointerUp={toggle}
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
-            style={{ touchAction: "manipulation", WebkitTapHighlightColor: "transparent" }}
+            style={{
+              touchAction: "manipulation",
+              WebkitTapHighlightColor: "transparent",
+              cursor: "pointer",
+            }}
             className={cn(
-              "lg:hidden relative z-[60] inline-flex h-11 w-11 items-center justify-center rounded-full border transition-colors duration-500",
-              "active:scale-95",
+              "lg:hidden relative z-[70] inline-flex h-12 w-12 items-center justify-center rounded-full border",
               onHero
-                ? "border-white/40 text-white"
-                : "border-brand-charcoal/15 text-brand-ink"
+                ? "border-white/45 bg-white/10 text-white backdrop-blur-md"
+                : "border-brand-charcoal/20 bg-brand-paper/80 text-brand-ink"
             )}
           >
             {open ? <X size={20} /> : <Menu size={20} />}
