@@ -301,38 +301,43 @@ export function Adventures() {
 
         {/* Please-note block stays for transparency */}
         <Reveal delay={0.2}>
-          <div className="mt-10 rounded-md border border-brand-charcoal/10 bg-brand-paper p-6 md:mt-14 md:p-8">
-            <div className="text-[10.5px] uppercase tracking-[0.32em] text-brand-terracotta">
+          <div className="mt-10 rounded-md border border-brand-charcoal/10 bg-brand-paper p-5 md:mt-14 md:p-7">
+            <div className="text-[10px] uppercase tracking-[0.32em] text-brand-terracotta/80">
               Please note
             </div>
-            <ul className="mt-4 grid gap-4 text-[14px] leading-relaxed text-brand-charcoal/80 md:grid-cols-3">
+            <ul className="mt-3 grid gap-3 text-[12.5px] leading-relaxed text-brand-charcoal/60 md:grid-cols-3 md:gap-5">
               <li>
                 These are ONLY our major group adventures for May. As usual, we
-                will also have our one-day & special outdoor activities (minor
-                adventures) which will be announced weekly or a few days in advance.
+                will also have one-day &amp; special outdoor activities (minor
+                adventures) announced weekly or a few days in advance.
               </li>
               <li>
-                We also organize private & exclusive adventures anytime and
-                anywhere across Central Asia for you, your family, or organization
-                — any day, any week, any season — tailored just for you.
+                We also organize private &amp; exclusive adventures anywhere
+                across Central Asia for you, your family, or organization — any
+                day, any week, any season.
               </li>
               <li>
                 Choose your style: fully equipped camping under the stars or
-                usual hotel accommodation — both available for all adventures.
+                hotel accommodation — both available for all adventures.
               </li>
             </ul>
-            <p className="mt-6 border-t border-brand-charcoal/10 pt-5 text-[14px] text-brand-charcoal/75">
-              For reservations and more details of any of the adventures above,
-              please contact us at{" "}
-              <a href="mailto:info@ozgetourism.com" className="text-brand-terracotta hover:text-brand-ink">
+            <p className="mt-5 border-t border-brand-charcoal/10 pt-4 text-[12.5px] leading-relaxed text-brand-charcoal/60">
+              For reservations &amp; details, write{" "}
+              <a
+                href="mailto:info@ozgetourism.com"
+                className="text-brand-terracotta hover:text-brand-ink"
+              >
                 info@ozgetourism.com
               </a>{" "}
-              or directly at{" "}
-              <a href="https://wa.me/77757145327" className="text-brand-terracotta hover:text-brand-ink">
+              or message{" "}
+              <a
+                href="https://wa.me/77757145327"
+                className="text-brand-terracotta hover:text-brand-ink"
+              >
                 +7 775 714 53 27
               </a>{" "}
-              (WhatsApp & Telegram — Mohammad). See you soon on one — or maybe
-              all — of our adventures! 😊
+              (WhatsApp &amp; Telegram — Mohammad). See you soon on one — or
+              maybe all — of our adventures! 😊
             </p>
           </div>
         </Reveal>

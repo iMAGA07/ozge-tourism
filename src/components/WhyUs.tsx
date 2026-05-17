@@ -1,41 +1,58 @@
 "use client";
-import Image from "next/image";
-import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
-import { useRef, useState } from "react";
 import { Reveal } from "./Reveal";
 import { whyUs } from "@/data/content";
 import { cn } from "@/lib/utils";
 
-const reasonPhotos = [
-  "IMG_2799.jpg",   // 24/7
-  "IMG_5616_2.jpg", // multilingual guides
-  "IMG_7140.jpg",   // comprehensive packages
-  "IMG_6919.jpg",   // every adventure
-  "IMG_6160.jpg",   // track record
-  "IMG_3797.jpg",   // institutions
-  "IMG_3858.jpg",   // authentic value
+// Deterministic barcode bars (width 1px–3px) — one pattern per reason,
+// generated once at module load so SSR + client agree.
+function barcodePattern(seed: number, length = 36): number[] {
+  const out: number[] = [];
+  let x = seed * 1313 + 17;
+  for (let i = 0; i < length; i++) {
+    x = (x * 1103515245 + 12345) & 0x7fffffff;
+    const w = (x % 3) + 1; // 1, 2, or 3 px
+    out.push(w);
+  }
+  return out;
+}
+const barcodes = whyUs.map((_, i) => barcodePattern(i + 1));
+
+// Flight-info-style metadata per reason — fully invented yet plausible.
+const stamps = [
+  { code: "OZG · 247", status: "ALWAYS-ON", classLabel: "FIRST" },
+  { code: "OZG · MLG", status: "FLUENT", classLabel: "PRO" },
+  { code: "OZG · ALL", status: "A → Z", classLabel: "FIRST" },
+  { code: "OZG · ADV", status: "READY", classLabel: "ALL" },
+  { code: "OZG · 100+", status: "PROVEN", classLabel: "GOLD" },
+  { code: "OZG · INT", status: "TRUSTED", classLabel: "VIP" },
+  { code: "OZG · VAL", status: "AUTHENTIC", classLabel: "FIRST" },
 ];
 
 export function WhyUs() {
-  const ref = useRef<HTMLElement>(null);
-  const [active, setActive] = useState<number>(0);
-
-  // Subtle parallax on the sticky preview column
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const previewY = useTransform(scrollYProgress, [0, 1], ["-6%", "6%"]);
-
   return (
     <section
       id="why"
-      ref={ref}
-      className="relative overflow-hidden bg-brand-paper py-24 md:py-36"
+      className="relative overflow-hidden bg-brand-mist py-24 md:py-36"
     >
-      <div className="mx-auto max-w-[1400px] px-6 md:px-10">
-        {/* Manifesto-style opening */}
-        <div className="grid gap-10 md:grid-cols-12 md:gap-16">
+      {/* Faint dashed flight-path illustration */}
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 1400 240"
+        className="pointer-events-none absolute inset-x-0 top-10 mx-auto hidden h-32 max-w-[1400px] text-brand-terracotta/15 md:block"
+        preserveAspectRatio="none"
+      >
+        <path
+          d="M0,180 C200,40 480,260 700,120 S1200,40 1400,180"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeDasharray="6 8"
+        />
+      </svg>
+
+      <div className="relative mx-auto max-w-[1400px] px-6 md:px-10">
+        {/* Header */}
+        <div className="grid gap-8 md:grid-cols-12 md:gap-12">
           <div className="md:col-span-7">
             <Reveal>
               <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.34em] text-brand-terracotta">
@@ -43,198 +60,46 @@ export function WhyUs() {
                 Why choose us
               </span>
               <h2 className="fluid-h2 mt-5 font-display font-light text-brand-ink">
-                A trusted partner,{" "}
+                Seven boarding passes{" "}
                 <span className="font-serif italic font-normal text-brand-terracotta">
-                  at your service.
+                  to peace of mind.
                 </span>
               </h2>
-              <p className="mt-7 max-w-[58ch] fluid-lead text-brand-charcoal/80">
+            </Reveal>
+          </div>
+          <div className="md:col-span-5 md:self-end">
+            <Reveal delay={0.1}>
+              <p className="text-[13.5px] leading-relaxed text-brand-charcoal/65 md:text-[14px]">
                 If you want to experience Central Asia at its best with a trusted
                 partner committed to excellence, authenticity, and unforgettable
-                adventures, we are at your service.
+                adventures — here&apos;s every reason to fly with us.
               </p>
             </Reveal>
           </div>
-
-          {/* Inline credibility line — single editorial bar, no badges */}
-          <div className="md:col-span-5 md:self-end">
-            <Reveal delay={0.15}>
-              <div className="flex flex-col gap-5 border-l-2 border-brand-terracotta/60 pl-5 md:pl-6">
-                <div className="text-[10.5px] uppercase tracking-[0.32em] text-brand-charcoal/55">
-                  Trusted by
-                </div>
-                <p className="font-serif text-xl italic leading-snug text-brand-ink md:text-2xl">
-                  International students, embassies, international organizations,
-                  and expat communities — across Kazakhstan & Central Asia since
-                  2025.
-                </p>
-              </div>
-            </Reveal>
-          </div>
         </div>
 
-        {/* Editorial reasons — the real heart of this section */}
-        <div className="mt-20 grid gap-12 md:mt-28 md:grid-cols-12 md:gap-14">
-          {/* Sticky preview */}
-          <div className="order-2 md:order-1 md:col-span-5">
-            <div className="md:sticky md:top-28">
-              <Reveal>
-                <div className="mb-4 hidden items-baseline justify-between md:flex">
-                  <span className="text-[10.5px] uppercase tracking-[0.32em] text-brand-terracotta">
-                    Reasons to choose us
-                  </span>
-                  <span className="font-mono text-[10.5px] tracking-widest text-brand-charcoal/40">
-                    {String(active + 1).padStart(2, "0")} / {String(whyUs.length).padStart(2, "0")}
-                  </span>
-                </div>
-
-                <motion.div
-                  style={{ y: previewY }}
-                  className="relative aspect-[4/5] overflow-hidden rounded-md bg-brand-mist md:aspect-[3/4]"
-                >
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={active}
-                      initial={{ opacity: 0, scale: 1.05 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.98 }}
-                      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                      className="absolute inset-0"
-                    >
-                      <Image
-                        src={`/photos/${reasonPhotos[active % reasonPhotos.length]}`}
-                        alt=""
-                        fill
-                        sizes="(min-width: 768px) 38vw, 100vw"
-                        className="object-cover"
-                      />
-                    </motion.div>
-                  </AnimatePresence>
-
-                  {/* Tasteful caption strip */}
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-ink/80 via-brand-ink/20 to-transparent p-5 md:p-7">
-                    <AnimatePresence mode="wait">
-                      <motion.div
-                        key={active}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -6 }}
-                        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                      >
-                        <div className="text-[10px] uppercase tracking-[0.32em] text-brand-saffron">
-                          № {String(active + 1).padStart(2, "0")}
-                        </div>
-                        <div className="mt-2 font-display text-lg font-medium leading-snug text-brand-cream md:text-xl">
-                          {whyUs[active].title}
-                        </div>
-                      </motion.div>
-                    </AnimatePresence>
-                  </div>
-                </motion.div>
+        {/* Boarding-pass grid */}
+        <div className="mt-14 grid gap-5 md:mt-20 md:grid-cols-2 md:gap-6">
+          {whyUs.map((w, i) => {
+            const isPriority = i === 6; // the "exceptional value" one
+            return (
+              <Reveal key={w.title} delay={Math.min(i, 5) * 0.05}>
+                <BoardingPass
+                  index={i}
+                  title={w.title}
+                  desc={w.desc}
+                  stamp={stamps[i]}
+                  barcode={barcodes[i]}
+                  emphasis={isPriority}
+                />
               </Reveal>
-            </div>
-          </div>
-
-          {/* Reasons list */}
-          <div className="order-1 md:order-2 md:col-span-7">
-            <ol className="border-t border-brand-charcoal/15">
-              {whyUs.map((w, i) => {
-                const isActive = active === i;
-                return (
-                  <li
-                    key={w.title}
-                    className="group border-b border-brand-charcoal/15"
-                  >
-                    <button
-                      type="button"
-                      onPointerEnter={() => setActive(i)}
-                      onClick={() => setActive(i)}
-                      onFocus={() => setActive(i)}
-                      data-cursor="hover"
-                      className="flex w-full items-start gap-5 py-7 text-left md:gap-8 md:py-9"
-                    >
-                      <span
-                        className={cn(
-                          "shrink-0 font-display font-light leading-none transition-all duration-700 ease-smooth",
-                          "text-[42px] md:text-[68px]",
-                          isActive
-                            ? "translate-x-1 text-brand-terracotta"
-                            : "text-brand-charcoal/30"
-                        )}
-                      >
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <div className="flex-1">
-                        <h3
-                          className={cn(
-                            "font-display font-medium leading-snug tracking-tight transition-colors duration-500",
-                            "text-[18px] md:text-[22px]",
-                            isActive ? "text-brand-ink" : "text-brand-charcoal/80"
-                          )}
-                        >
-                          {w.title}
-                        </h3>
-                        <AnimatePresence initial={false}>
-                          {w.desc && isActive && (
-                            <motion.p
-                              initial={{ opacity: 0, height: 0 }}
-                              animate={{ opacity: 1, height: "auto" }}
-                              exit={{ opacity: 0, height: 0 }}
-                              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                              className="overflow-hidden text-[14px] leading-relaxed text-brand-charcoal/75 md:text-[14.5px]"
-                            >
-                              <span className="mt-2.5 block">{w.desc}</span>
-                            </motion.p>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                      <span
-                        className={cn(
-                          "self-center text-xl transition-all duration-500 md:text-2xl",
-                          isActive
-                            ? "translate-x-1 text-brand-terracotta"
-                            : "text-brand-charcoal/30"
-                        )}
-                      >
-                        →
-                      </span>
-                    </button>
-
-                    {/* Mobile inline preview */}
-                    {isActive && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-                        className="overflow-hidden md:hidden"
-                      >
-                        <div className="relative mb-6 aspect-[4/3] w-full overflow-hidden rounded-md">
-                          <Image
-                            src={`/photos/${reasonPhotos[i % reasonPhotos.length]}`}
-                            alt=""
-                            fill
-                            sizes="100vw"
-                            className="object-cover"
-                          />
-                          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-ink/65 to-transparent p-4">
-                            <div className="text-[10px] uppercase tracking-[0.32em] text-brand-saffron">
-                              № {String(i + 1).padStart(2, "0")}
-                            </div>
-                          </div>
-                        </div>
-                      </motion.div>
-                    )}
-                  </li>
-                );
-              })}
-            </ol>
-          </div>
+            );
+          })}
         </div>
 
-        {/* Bold promise — full-bleed dark band, signature-style */}
+        {/* Bold promise — dark full-bleed stamp */}
         <Reveal delay={0.1}>
-          <div className="relative mt-24 overflow-hidden rounded-md bg-brand-ink text-brand-cream md:mt-32">
+          <div className="relative mt-16 overflow-hidden rounded-md bg-brand-ink text-brand-cream md:mt-20">
             <div className="pointer-events-none absolute -right-32 -top-32 h-72 w-72 rounded-full bg-brand-saffron/15 blur-3xl" />
             <div className="pointer-events-none absolute -left-32 -bottom-32 h-72 w-72 rounded-full bg-brand-terracotta/20 blur-3xl" />
 
@@ -251,10 +116,10 @@ export function WhyUs() {
                 </h3>
               </div>
               <div className="md:col-span-5 md:border-l md:border-brand-cream/15 md:pl-10">
-                <p className="text-[15px] leading-relaxed text-brand-cream/85 md:text-[15.5px]">
+                <p className="text-[14px] leading-relaxed text-brand-cream/75 md:text-[14.5px]">
                   We want you to feel completely confident in choosing us. If at
-                  any point you genuinely feel that your experience does not
-                  meet your expectations or is not worth what you paid, we will
+                  any point you genuinely feel your experience does not meet
+                  your expectations or is not worth what you paid, we will
                   gladly provide a{" "}
                   <span className="text-brand-saffron">full refund — no questions asked</span>.
                 </p>
@@ -268,5 +133,100 @@ export function WhyUs() {
         </Reveal>
       </div>
     </section>
+  );
+}
+
+function BoardingPass({
+  index,
+  title,
+  desc,
+  stamp,
+  barcode,
+  emphasis,
+}: {
+  index: number;
+  title: string;
+  desc?: string;
+  stamp: { code: string; status: string; classLabel: string };
+  barcode: number[];
+  emphasis?: boolean;
+}) {
+  return (
+    <article
+      data-cursor="hover"
+      className={cn(
+        "group relative overflow-hidden rounded-md border bg-brand-paper transition-all duration-500 ease-smooth hover:-translate-y-0.5 hover:shadow-[0_18px_36px_-18px_rgba(20,15,10,0.18)]",
+        emphasis
+          ? "border-brand-terracotta/60"
+          : "border-brand-charcoal/15"
+      )}
+    >
+      {/* Top header strip */}
+      <header className="flex items-center justify-between border-b border-dashed border-brand-charcoal/25 bg-brand-paper px-5 py-2.5 text-[10px] uppercase tracking-[0.28em] text-brand-charcoal/55">
+        <span className="font-mono">Ozge · Boarding</span>
+        <span className="flex items-center gap-1.5 font-mono text-brand-terracotta">
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-brand-terracotta" />
+          № {String(index + 1).padStart(2, "0")}
+        </span>
+      </header>
+
+      <div className="grid grid-cols-[1fr_auto]">
+        {/* Left main */}
+        <div className="p-5 md:p-6">
+          <div className="text-[9.5px] uppercase tracking-[0.32em] text-brand-terracotta/80">
+            Reason
+          </div>
+          <h3 className="mt-2 font-display text-[17px] font-medium leading-snug tracking-tight text-brand-ink md:text-[19px]">
+            {title}
+          </h3>
+          {desc && (
+            <p className="mt-3 text-[12.5px] leading-relaxed text-brand-charcoal/65">
+              {desc}
+            </p>
+          )}
+        </div>
+
+        {/* Perforated divider with punch holes */}
+        <div className="relative border-l border-dashed border-brand-charcoal/30">
+          <span className="absolute -left-[7px] -top-[7px] h-3.5 w-3.5 rounded-full bg-brand-mist" />
+          <span className="absolute -left-[7px] -bottom-[7px] h-3.5 w-3.5 rounded-full bg-brand-mist" />
+        </div>
+
+        {/* Right metadata strip */}
+        <aside className="flex w-[120px] flex-col justify-between bg-brand-paper p-4 md:w-[150px] md:p-5">
+          <div className="space-y-3 text-[9px] uppercase tracking-[0.22em] text-brand-charcoal/55">
+            <div>
+              <div className="text-brand-charcoal/40">Flight</div>
+              <div className="font-mono text-[11px] tracking-wider text-brand-ink">
+                {stamp.code}
+              </div>
+            </div>
+            <div>
+              <div className="text-brand-charcoal/40">Status</div>
+              <div className="font-mono text-[11px] tracking-wider text-brand-terracotta">
+                {stamp.status}
+              </div>
+            </div>
+            <div>
+              <div className="text-brand-charcoal/40">Class</div>
+              <div className="font-mono text-[11px] tracking-wider text-brand-ink">
+                {stamp.classLabel}
+              </div>
+            </div>
+          </div>
+
+          {/* Barcode */}
+          <div className="mt-5 flex h-7 items-end gap-[1px]">
+            {barcode.map((w, j) => (
+              <div
+                key={j}
+                style={{ width: `${w}px` }}
+                className="h-full bg-brand-ink"
+              />
+            ))}
+          </div>
+        </aside>
+      </div>
+    </article>
   );
 }
