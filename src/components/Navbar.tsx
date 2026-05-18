@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  // De-duplicate clicks that fire after a synthesized pointerup → click on iOS
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const lastToggleAt = useRef(0);
 
   useEffect(() => {
@@ -19,24 +19,59 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // iOS-safe scroll lock: save current scroll position, pin body via
+  // position: fixed (NOT overflow:hidden, which iOS sometimes ignores or
+  // resets to top), restore on unlock.
   useEffect(() => {
-    // Lock the page underneath the drawer
-    document.documentElement.style.overflow = open ? "hidden" : "";
-    document.body.style.overflow = open ? "hidden" : "";
+    if (!open) return;
+    const scrollY = window.scrollY;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.width = "100%";
     return () => {
-      document.documentElement.style.overflow = "";
-      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.width = "";
+      window.scrollTo(0, scrollY);
     };
   }, [open]);
 
-  // Stable toggle that ignores double-fires within 250ms (some iOS versions
-  // dispatch both pointerup and a synthesized click — we want one toggle).
+  // Stable toggle that ignores double-fires within 220 ms (iOS sometimes
+  // fires pointerup AND click for the same physical tap).
   const toggle = useCallback(() => {
     const now = Date.now();
-    if (now - lastToggleAt.current < 250) return;
+    if (now - lastToggleAt.current < 220) return;
     lastToggleAt.current = now;
     setOpen((v) => !v);
   }, []);
+
+  // Document-level capture handler — fires before any other element on top
+  // could intercept. This is the bulletproof path for the hamburger when
+  // scrolled, where some Safari builds drop the on-element click.
+  useEffect(() => {
+    const handler = (e: PointerEvent) => {
+      const btn = buttonRef.current;
+      if (!btn) return;
+      const r = btn.getBoundingClientRect();
+      if (
+        e.clientX >= r.left &&
+        e.clientX <= r.right &&
+        e.clientY >= r.top &&
+        e.clientY <= r.bottom
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+        toggle();
+      }
+    };
+    document.addEventListener("pointerup", handler, { capture: true });
+    return () =>
+      document.removeEventListener("pointerup", handler, { capture: true });
+  }, [toggle]);
 
   const closeMenu = useCallback(() => setOpen(false), []);
 
@@ -119,9 +154,9 @@ export function Navbar() {
             <span className="text-brand-terracotta">→</span>
           </a>
           <button
+            ref={buttonRef}
             type="button"
             onClick={toggle}
-            onPointerUp={toggle}
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             style={{
@@ -130,8 +165,6 @@ export function Navbar() {
               cursor: "pointer",
             }}
             className={cn(
-              // No backdrop-blur — Safari has a hit-testing bug with
-              // backdrop-filter on fixed elements that swallows taps.
               "lg:hidden relative z-[80] inline-flex h-12 w-12 items-center justify-center rounded-full border",
               onHero
                 ? "border-white/55 bg-white/15 text-white"

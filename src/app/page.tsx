@@ -13,7 +13,7 @@ import { Footer } from "@/components/Footer";
 
 export default function HomePage() {
   return (
-    <main className="relative">
+    <main className="relative overflow-x-clip">
       <Navbar />
       <Hero />
       <Marquee />
