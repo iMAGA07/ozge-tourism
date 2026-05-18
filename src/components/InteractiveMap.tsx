@@ -78,7 +78,9 @@ export function InteractiveMap() {
   const [view, setView] = useState<"world" | "kz">("world");
   const [activeCode, setActiveCode] = useState<Country["code"]>("KZ");
 
-  const active = countryByCode[activeCode];
+  // Defensive fallback — if for any reason the lookup fails (e.g. an unknown
+  // code slips in), default to Kazakhstan rather than crashing the page.
+  const active = countryByCode[activeCode] ?? countries[0];
 
   return (
     <section
@@ -213,16 +215,23 @@ function WorldView({
     };
   }, []);
 
-  // Single delegated handler — clicks/hovers on any path with data-code set
-  // the active country.
+  // Single delegated handler — clicks on any path with data-code set the
+  // active country. The DOM attribute is lowercase ("kz", "uz", ...) so we
+  // normalize to upper case to match the Country["code"] keys.
+  const validCodes = useMemo(
+    () => new Set(countries.map((c) => c.code)),
+    []
+  );
   const onDelegated = useCallback(
     (e: React.SyntheticEvent<HTMLDivElement>) => {
       const t = e.target as Element | null;
-      if (!t || !t.getAttribute) return;
-      const code = t.getAttribute("data-code") as Country["code"] | null;
-      if (code && code !== activeCode) onPick(code);
+      if (!t || typeof t.getAttribute !== "function") return;
+      const raw = t.getAttribute("data-code");
+      if (!raw) return;
+      const code = raw.toUpperCase() as Country["code"];
+      if (validCodes.has(code) && code !== activeCode) onPick(code);
     },
-    [activeCode, onPick]
+    [activeCode, onPick, validCodes]
   );
 
   return (
