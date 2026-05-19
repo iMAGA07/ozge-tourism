@@ -137,8 +137,9 @@ export function InteractiveMap() {
                   exit={{ opacity: 0 }}
                 >
                   <p className="text-[13.5px] text-brand-cream/70 md:text-[14px]">
-                    Click any highlighted country on the map. Kazakhstan opens
-                    into all twenty of its regions.
+                    Tap any highlighted country on the map.{" "}
+                    <span className="text-brand-saffron">Tap Kazakhstan</span>{" "}
+                    and the map zooms into all twenty of its regions.
                   </p>
                 </motion.div>
               )}
@@ -151,10 +152,13 @@ export function InteractiveMap() {
             {view === "world" ? (
               <motion.div
                 key="world"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                initial={{ opacity: 0, scale: 0.96, filter: "blur(8px)" }}
+                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, scale: 1.3, filter: "blur(10px)" }}
+                transition={{ duration: 0.7, ease: [0.65, 0, 0.35, 1] }}
+                // Zoom into Kazakhstan's approximate position on the cropped
+                // viewBox so it feels like "diving in" to that country.
+                style={{ transformOrigin: "60% 30%" }}
               >
                 <WorldView
                   activeCode={activeCode}
@@ -166,10 +170,10 @@ export function InteractiveMap() {
             ) : (
               <motion.div
                 key="kz"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                initial={{ opacity: 0, scale: 1.15, filter: "blur(10px)" }}
+                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, scale: 0.92, filter: "blur(8px)" }}
+                transition={{ duration: 0.7, ease: [0.65, 0, 0.35, 1] }}
               >
                 <KazakhstanRegionsView />
               </motion.div>
@@ -215,23 +219,46 @@ function WorldView({
     };
   }, []);
 
-  // Single delegated handler — clicks on any path with data-code set the
-  // active country. The DOM attribute is lowercase ("kz", "uz", ...) so we
-  // normalize to upper case to match the Country["code"] keys.
+  // The DOM `data-code` attribute is lower-case (kz, uz, ...) — we
+  // normalize to upper case to match Country["code"] keys.
   const validCodes = useMemo(
     () => new Set(countries.map((c) => c.code)),
     []
   );
-  const onDelegated = useCallback(
-    (e: React.SyntheticEvent<HTMLDivElement>) => {
-      const t = e.target as Element | null;
-      if (!t || typeof t.getAttribute !== "function") return;
-      const raw = t.getAttribute("data-code");
-      if (!raw) return;
-      const code = raw.toUpperCase() as Country["code"];
-      if (validCodes.has(code) && code !== activeCode) onPick(code);
+
+  const codeFrom = (t: EventTarget | null): Country["code"] | null => {
+    const el = t as Element | null;
+    if (!el || typeof el.getAttribute !== "function") return null;
+    const raw = el.getAttribute("data-code");
+    if (!raw) return null;
+    const code = raw.toUpperCase() as Country["code"];
+    return validCodes.has(code) ? code : null;
+  };
+
+  // Hover (mouse only) → just update the side-panel preview.
+  const onHover = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (e.pointerType === "touch") return;
+      const code = codeFrom(e.target);
+      if (code && code !== activeCode) onPick(code);
     },
-    [activeCode, onPick, validCodes]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [activeCode, onPick]
+  );
+
+  // Click / tap → select; clicking Kazakhstan drills straight into the
+  // 20-region map after a short visual confirmation.
+  const onCountryClick = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const code = codeFrom(e.target);
+      if (!code) return;
+      onPick(code);
+      if (code === "KZ") {
+        window.setTimeout(() => onDrillKZ(), 320);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [onPick, onDrillKZ]
   );
 
   return (
@@ -289,9 +316,8 @@ function WorldView({
               "ozge-cmap relative",
               `active-${activeCode.toLowerCase()}`
             )}
-            onClick={onDelegated}
-            onPointerMove={onDelegated}
-            onTouchEnd={onDelegated}
+            onClick={onCountryClick}
+            onPointerMove={onHover}
             role="application"
             aria-label="Clickable map of Central Asia"
           >
@@ -322,7 +348,11 @@ function WorldView({
                 <button
                   key={c.code}
                   type="button"
-                  onClick={() => onPick(c.code)}
+                  onClick={() => {
+                    onPick(c.code);
+                    if (c.code === "KZ")
+                      window.setTimeout(() => onDrillKZ(), 320);
+                  }}
                   className={cn(
                     "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11.5px] transition-all",
                     isActive
