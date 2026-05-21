@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Reveal } from "./Reveal";
 import { SectionHeader } from "./SectionHeader";
 import { adventures } from "@/data/content";
+import { flagSrc } from "@/data/flags";
 import { cn } from "@/lib/utils";
 
 type Track = "weekend" | "longform";
@@ -182,15 +183,13 @@ export function Adventures() {
                         key={r}
                         className="flex items-center gap-3 rounded-full border border-brand-cream/15 bg-white/[0.04] px-3.5 py-1.5 text-[12.5px] text-brand-cream"
                       >
-                        <span className="relative h-5 w-5 shrink-0 overflow-hidden rounded-full">
-                          <Image
-                            src={`/photos/${regionPhoto[r] ?? "IMG_2600_3.jpg"}`}
-                            alt=""
-                            fill
-                            sizes="20px"
-                            className="object-cover"
-                          />
-                        </span>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={flagSrc(r)}
+                          alt=""
+                          className="h-3.5 w-5 shrink-0 rounded-[2px] object-cover ring-1 ring-brand-cream/20"
+                          loading="lazy"
+                        />
                         {r}
                       </li>
                     ))}

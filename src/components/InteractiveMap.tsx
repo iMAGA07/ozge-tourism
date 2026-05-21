@@ -354,15 +354,19 @@ function WorldView({
                       window.setTimeout(() => onDrillKZ(), 320);
                   }}
                   className={cn(
-                    "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11.5px] transition-all",
+                    "inline-flex items-center gap-2 rounded-full border py-1.5 pl-1.5 pr-3 text-[11.5px] transition-all",
                     isActive
                       ? "border-brand-saffron bg-brand-saffron text-brand-ink"
                       : "border-brand-cream/20 text-brand-cream/80 hover:border-brand-cream/55 hover:text-brand-cream"
                   )}
                 >
-                  <span className="font-mono text-[10px] tracking-widest">
-                    {c.code}
-                  </span>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={`/flags/${c.code.toLowerCase()}.svg`}
+                    alt=""
+                    className="h-4 w-6 shrink-0 rounded-[3px] object-cover ring-1 ring-black/10"
+                    loading="lazy"
+                  />
                   <span>{c.name}</span>
                 </button>
               );
