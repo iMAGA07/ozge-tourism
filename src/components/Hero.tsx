@@ -2,8 +2,17 @@
 import Image from "next/image";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { Compass, Mountain, Plane, CalendarCheck } from "lucide-react";
 import { RevealText } from "./Reveal";
 import { Magnetic } from "./Magnetic";
+
+// The four things Ozge does, shown as glass chips under the hero copy.
+const offerings = [
+  { icon: Compass, label: "Tours" },
+  { icon: Mountain, label: "Outdoor Adventures" },
+  { icon: Plane, label: "Logistics & Transport" },
+  { icon: CalendarCheck, label: "Bookings" },
+];
 
 // Five cinematic frames that crossfade slowly in the background. Each has
 // its own object-position so the strongest part of the photo stays in view
@@ -103,47 +112,63 @@ export function Hero() {
         style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]), opacity: fade }}
         className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center"
       >
-        <motion.span
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-7 inline-flex items-center gap-3 whitespace-nowrap rounded-full border border-white/25 bg-white/5 px-4 py-1.5 text-[10px] uppercase tracking-[0.3em] text-white/85 backdrop-blur-md sm:text-[10.5px] sm:tracking-[0.32em]"
-        >
-          <span className="h-1.5 w-1.5 rounded-full bg-brand-saffron animate-pulse" />
-          Central Asia · Est. 2025
-        </motion.span>
-
         <h1 className="fluid-h1 max-w-[16ch] font-display font-light text-white">
-          <RevealText text="Explore. Enjoy." delay={0.1} />
+          <RevealText text="Explore. Enjoy." delay={0.05} />
           <span className="block font-serif italic font-normal text-brand-saffron">
-            <RevealText text="Connect." delay={0.22} />
+            <RevealText text="Connect." delay={0.18} />
           </span>
         </h1>
 
         <motion.p
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.95, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-6 max-w-[60ch] text-[11.5px] uppercase tracking-[0.22em] text-white/80 sm:text-[13px] sm:tracking-[0.24em]"
+          transition={{ delay: 0.85, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-7 max-w-[52ch] fluid-lead text-white/90"
         >
-          Tours · Outdoor Adventures · Logistics &amp; Transportation · Bookings
+          Join us to experience and enjoy the very best of{" "}
+          <span className="font-serif italic text-brand-saffron">
+            Kazakhstan and Central Asia
+          </span>{" "}
+          — from majestic landscapes and thrilling outdoor adventures to rich
+          history and vibrant cultures.
         </motion.p>
 
-        <motion.p
+        {/* Four offerings as glass chips */}
+        <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.1, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-6 max-w-[58ch] fluid-lead text-white/85"
+          transition={{ delay: 1.0, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-7 grid w-full max-w-[520px] grid-cols-2 gap-2.5 sm:max-w-none sm:flex sm:flex-wrap sm:justify-center sm:gap-3"
         >
-          Join us to experience and enjoy the very best of Kazakhstan and
-          Central Asia — from majestic landscapes and thrilling outdoor
-          adventures to rich history and vibrant cultures.
-        </motion.p>
+          {offerings.map((o, i) => {
+            const Icon = o.icon;
+            return (
+              <motion.div
+                key={o.label}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  delay: 1.05 + i * 0.08,
+                  duration: 0.7,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="group flex items-center gap-2.5 rounded-xl border border-white/20 bg-white/10 px-3.5 py-2.5 backdrop-blur-md transition-colors duration-500 hover:border-brand-saffron/60 hover:bg-white/15"
+              >
+                <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-brand-saffron/90 text-brand-ink">
+                  <Icon strokeWidth={1.8} className="h-4 w-4" />
+                </span>
+                <span className="text-[12px] font-medium tracking-wide text-white sm:text-[12.5px]">
+                  {o.label}
+                </span>
+              </motion.div>
+            );
+          })}
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.25, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ delay: 1.4, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           className="mt-9 flex flex-wrap items-center justify-center gap-3"
         >
           <Magnetic strength={0.18}>
