@@ -6,6 +6,37 @@ export type Region = {
   d: string;
   blurb: string;
   highlights: string[];
+  population?: string;
+  area?: string;
+  unesco?: string[];
+  adventure?: string[];
+};
+
+// Region-level basic info (population, area, UNESCO, adventure).
+const details: Record<
+  string,
+  { population: string; area: string; unesco?: string[]; adventure: string[] }
+> = {
+  KZ19: { population: "≈ 1.5M", area: "223,911 km²", unesco: ["Tamgaly Petroglyphs"], adventure: ["Hiking", "Skiing", "Lake trekking", "Horse riding"] },
+  KZ75: { population: "≈ 2.2M", area: "682 km²", adventure: ["City tours", "Medeu & Shymbulak skiing", "Cable car"] },
+  KZ47: { population: "≈ 780K", area: "165,642 km²", adventure: ["Desert trekking", "Off-road safari", "Canyoning", "Camping"] },
+  KZ61: { population: "≈ 2.2M", area: "116,279 km²", unesco: ["Khoja Ahmed Yasawi Mausoleum"], adventure: ["Pilgrimage routes", "Desert tours", "Heritage walks"] },
+  KZ71: { population: "≈ 1.4M", area: "722 km²", adventure: ["City & architecture tours", "Expo & Bayterek"] },
+  KZ23: { population: "≈ 700K", area: "118,631 km²", adventure: ["Caspian coast", "Sturgeon waters", "Ural delta"] },
+  KZ27: { population: "≈ 700K", area: "151,339 km²", adventure: ["Steppe rides", "River trips", "Cossack heritage"] },
+  KZ15: { population: "≈ 930K", area: "300,629 km²", adventure: ["Steppe trails", "Salt lakes", "Mugalzhar hills"] },
+  KZ39: { population: "≈ 870K", area: "196,001 km²", unesco: ["Saryarka (part)"], adventure: ["Birdwatching", "Lake camping", "Naurzum reserve"] },
+  KZ59: { population: "≈ 530K", area: "98,040 km²", adventure: ["Lake retreats", "Pine forests", "Burabay nearby"] },
+  KZ11: { population: "≈ 740K", area: "146,219 km²", unesco: ["Saryarka — Steppe & Lakes"], adventure: ["Burabay hiking", "Lake swimming", "Zerenda"] },
+  KZ55: { population: "≈ 750K", area: "124,755 km²", adventure: ["Bayanaul trekking", "Irtysh river", "Granite peaks"] },
+  KZ63: { population: "≈ 730K", area: "97,000 km²", adventure: ["Altai trekking", "Markakol lake", "Rafting", "Berel mounds"] },
+  KZ10: { population: "≈ 600K", area: "185,500 km²", adventure: ["Steppe & taiga", "Abai heritage", "Semey"] },
+  KZ33: { population: "≈ 670K", area: "118,000 km²", unesco: ["Tamgaly Petroglyphs"], adventure: ["Altyn-Emel", "Singing Dune", "Lake Balkhash", "Petroglyphs"] },
+  KZ35: { population: "≈ 1.1M", area: "239,000 km²", adventure: ["Karkaraly pines", "Steppe rides", "Spassk memorial"] },
+  KZ62: { population: "≈ 220K", area: "189,000 km²", adventure: ["Sacred Ulytau hills", "Jochi Mausoleum", "Steppe lore"] },
+  KZ43: { population: "≈ 830K", area: "226,019 km²", adventure: ["Baikonur Cosmodrome", "Aral Sea", "Korkyt Ata"] },
+  KZ31: { population: "≈ 1.2M", area: "144,264 km²", unesco: ["Aksu-Zhabagly (Western Tien-Shan)"], adventure: ["Aksu-Zhabagly reserve", "Taraz heritage", "Mausoleums"] },
+  KZ79: { population: "≈ 1.2M", area: "1,170 km²", adventure: ["Old Town", "Bazaars", "Kazakh cuisine"] },
 };
 
 const meta: Record<string, { name?: string; blurb: string; highlights: string[] }> = {
@@ -134,12 +165,17 @@ const meta: Record<string, { name?: string; blurb: string; highlights: string[] 
 export const regions: Region[] = (paths as { id: string; name: string; d: string }[]).map(
   (p) => {
     const m = meta[p.id] ?? { blurb: "A beautiful region of Kazakhstan.", highlights: [] };
+    const d = details[p.id];
     return {
       id: p.id,
       name: m.name ?? p.name,
       d: p.d,
       blurb: m.blurb,
       highlights: m.highlights,
+      population: d?.population,
+      area: d?.area,
+      unesco: d?.unesco,
+      adventure: d?.adventure,
     };
   }
 );

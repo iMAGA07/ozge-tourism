@@ -2,85 +2,17 @@
 import { useState, useRef, useMemo, useEffect, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { regions, regionViewBox, type Region } from "@/data/regions";
+import { countryInfo, countryByCode, type CountryInfo } from "@/data/countries";
 import { Reveal } from "./Reveal";
 import { cn } from "@/lib/utils";
 
-// ─────────────── Country metadata ─────────────────────────────────────────
-
-type Country = {
-  code: "KZ" | "UZ" | "KG" | "TJ" | "TM" | "AF" | "IR";
-  name: string;
-  blurb: string;
-  highlights: string[];
-  hasRegions?: boolean;
-};
-
-const countries: Country[] = [
-  {
-    code: "KZ",
-    name: "Kazakhstan",
-    blurb:
-      "Twenty regions, every landscape — from Mangystau's surreal chalk desert to the Tian Shan's alpine lakes.",
-    highlights: ["Burabay", "Mangystau", "Charyn", "Altai"],
-    hasRegions: true,
-  },
-  {
-    code: "UZ",
-    name: "Uzbekistan",
-    blurb:
-      "Silk Road jewels — Samarkand's azure tiles, Bukhara's caravanserais, Khiva's walled old town.",
-    highlights: ["Samarkand", "Bukhara", "Khiva", "Tashkent"],
-  },
-  {
-    code: "KG",
-    name: "Kyrgyzstan",
-    blurb:
-      "Yurts, alpine lakes and nomadic life — Issyk-Kul, Song-Kul and the wide-open Tian Shan.",
-    highlights: ["Issyk-Kul", "Song-Kul", "Tian Shan", "Bishkek"],
-  },
-  {
-    code: "TJ",
-    name: "Tajikistan",
-    blurb:
-      "The Pamir Highway — the world's most spectacular high-altitude road trip — plus the turquoise Iskanderkul.",
-    highlights: ["Pamir Hwy", "Wakhan", "Iskanderkul", "Dushanbe"],
-  },
-  {
-    code: "TM",
-    name: "Turkmenistan",
-    blurb:
-      "White-marble Ashgabat, ancient Merv, and the eternal Door to Hell flame in the Karakum desert.",
-    highlights: ["Ashgabat", "Merv", "Karakum", "Darvaza"],
-  },
-  {
-    code: "AF",
-    name: "Afghanistan",
-    blurb:
-      "Wakhan corridor, the impossibly blue lakes of Band-e-Amir, the cliffs of Bamiyan.",
-    highlights: ["Wakhan", "Band-e-Amir", "Bamiyan"],
-  },
-  {
-    code: "IR",
-    name: "Iran",
-    blurb:
-      "Isfahan's tiled mosques, Persepolis ruins, Yazd's adobe alleys, Tehran's pulse.",
-    highlights: ["Isfahan", "Persepolis", "Yazd", "Tehran"],
-  },
-];
-
-const countryByCode = Object.fromEntries(countries.map((c) => [c.code, c]));
-
-// ─────────────── Top-level component ──────────────────────────────────────
+// world-ca.svg viewBox — tight around the 7 operating countries.
+const MAP_VIEWBOX = "614.12 88.58 136.96 99.34";
 
 export function InteractiveMap() {
-  // "world" = pick a country by clicking on the map.
-  // "kz" = drilled into Kazakhstan to explore its 20 regions.
   const [view, setView] = useState<"world" | "kz">("world");
-  const [activeCode, setActiveCode] = useState<Country["code"]>("KZ");
-
-  // Defensive fallback — if for any reason the lookup fails (e.g. an unknown
-  // code slips in), default to Kazakhstan rather than crashing the page.
-  const active = countryByCode[activeCode] ?? countries[0];
+  const [activeCode, setActiveCode] = useState<CountryInfo["code"]>("KZ");
+  const active = countryByCode[activeCode] ?? countryInfo[0];
 
   return (
     <section
@@ -119,7 +51,7 @@ export function InteractiveMap() {
             <AnimatePresence mode="wait">
               {view === "kz" ? (
                 <motion.button
-                  key="back-cta"
+                  key="back"
                   initial={{ opacity: 0, x: 8 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 8 }}
@@ -130,18 +62,17 @@ export function InteractiveMap() {
                   <span>←</span> Back to Central Asia
                 </motion.button>
               ) : (
-                <motion.div
+                <motion.p
                   key="hint"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
+                  className="text-[13px] text-brand-cream/70 md:text-[13.5px]"
                 >
-                  <p className="text-[13.5px] text-brand-cream/70 md:text-[14px]">
-                    Tap any highlighted country on the map.{" "}
-                    <span className="text-brand-saffron">Tap Kazakhstan</span>{" "}
-                    and the map zooms into all twenty of its regions.
-                  </p>
-                </motion.div>
+                  Tap any country for its facts.{" "}
+                  <span className="text-brand-saffron">Tap Kazakhstan</span> to
+                  zoom into all twenty regions.
+                </motion.p>
               )}
             </AnimatePresence>
           </div>
@@ -156,9 +87,7 @@ export function InteractiveMap() {
                 animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                 exit={{ opacity: 0, scale: 1.3, filter: "blur(10px)" }}
                 transition={{ duration: 0.7, ease: [0.65, 0, 0.35, 1] }}
-                // Zoom into Kazakhstan's approximate position on the cropped
-                // viewBox so it feels like "diving in" to that country.
-                style={{ transformOrigin: "60% 30%" }}
+                style={{ transformOrigin: "50% 30%" }}
               >
                 <WorldView
                   activeCode={activeCode}
@@ -185,7 +114,7 @@ export function InteractiveMap() {
   );
 }
 
-// ─────────────── World view (the actual clickable Central Asia map) ──────
+// ─────────────── World view ───────────────────────────────────────────────
 
 function WorldView({
   activeCode,
@@ -193,49 +122,36 @@ function WorldView({
   onPick,
   onDrillKZ,
 }: {
-  activeCode: Country["code"];
-  active: Country;
-  onPick: (code: Country["code"]) => void;
+  activeCode: CountryInfo["code"];
+  active: CountryInfo;
+  onPick: (code: CountryInfo["code"]) => void;
   onDrillKZ: () => void;
 }) {
   const [svg, setSvg] = useState<string | null>(null);
-  const wrapRef = useRef<HTMLDivElement>(null);
-
-  // Crop the equirectangular world to Central Asia + immediate neighbours.
-  const cropViewBox = "550 60 280 200";
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/world.svg")
+    fetch("/world-ca.svg")
       .then((r) => r.text())
-      .then((t) => {
-        if (!cancelled) setSvg(t);
-      })
-      .catch(() => {
-        if (!cancelled) setSvg("");
-      });
+      .then((t) => !cancelled && setSvg(t))
+      .catch(() => !cancelled && setSvg(""));
     return () => {
       cancelled = true;
     };
   }, []);
 
-  // The DOM `data-code` attribute is lower-case (kz, uz, ...) — we
-  // normalize to upper case to match Country["code"] keys.
   const validCodes = useMemo(
-    () => new Set(countries.map((c) => c.code)),
+    () => new Set(countryInfo.map((c) => c.code)),
     []
   );
-
-  const codeFrom = (t: EventTarget | null): Country["code"] | null => {
+  const codeFrom = (t: EventTarget | null): CountryInfo["code"] | null => {
     const el = t as Element | null;
     if (!el || typeof el.getAttribute !== "function") return null;
     const raw = el.getAttribute("data-code");
     if (!raw) return null;
-    const code = raw.toUpperCase() as Country["code"];
+    const code = raw.toUpperCase() as CountryInfo["code"];
     return validCodes.has(code) ? code : null;
   };
-
-  // Hover (mouse only) → just update the side-panel preview.
   const onHover = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
       if (e.pointerType === "touch") return;
@@ -245,17 +161,12 @@ function WorldView({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [activeCode, onPick]
   );
-
-  // Click / tap → select; clicking Kazakhstan drills straight into the
-  // 20-region map after a short visual confirmation.
   const onCountryClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       const code = codeFrom(e.target);
       if (!code) return;
       onPick(code);
-      if (code === "KZ") {
-        window.setTimeout(() => onDrillKZ(), 320);
-      }
+      if (code === "KZ") window.setTimeout(() => onDrillKZ(), 320);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [onPick, onDrillKZ]
@@ -264,37 +175,32 @@ function WorldView({
   return (
     <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
       {/* Map */}
-      <div ref={wrapRef} className="relative lg:col-span-8">
-        <div className="relative overflow-hidden rounded-md border border-brand-cream/10 bg-gradient-to-br from-white/[0.04] to-white/[0.01] p-3 md:p-6">
+      <div className="relative lg:col-span-7">
+        <div className="relative overflow-hidden rounded-2xl border border-brand-cream/10 bg-gradient-to-br from-white/[0.05] to-white/[0.01] p-3 md:p-6">
           <div className="mb-3 flex items-baseline justify-between md:mb-5">
             <div className="text-[10.5px] uppercase tracking-[0.32em] text-brand-saffron">
               Operating in
             </div>
             <div className="font-mono text-[10.5px] tracking-widest text-brand-cream/55">
-              {countries.length} countries · click to pick
+              7 countries · tap to pick
             </div>
           </div>
 
-          {/* Map CSS — styles every country, brightens operating ones, and
-              switches the active country to saffron. Hover state included. */}
           <style jsx global>{`
             .ozge-cmap svg {
               display: block;
               width: 100%;
               height: auto;
             }
-            .ozge-cmap .c {
-              fill: rgba(245, 236, 220, 0.10);
-              stroke: rgba(255, 255, 255, 0.12);
+            .ozge-cmap .op {
+              fill: rgba(245, 236, 220, 0.82);
+              stroke: rgba(26, 20, 16, 0.55);
               stroke-width: 0.35;
+              cursor: pointer;
               transition: fill 0.45s cubic-bezier(0.22, 1, 0.36, 1),
                 filter 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-              outline: none;
               -webkit-tap-highlight-color: transparent;
-            }
-            .ozge-cmap .op {
-              fill: rgba(245, 236, 220, 0.85);
-              cursor: pointer;
+              outline: none;
             }
             .ozge-cmap .op:hover {
               fill: rgba(224, 160, 57, 0.85);
@@ -307,42 +213,30 @@ function WorldView({
             .ozge-cmap.active-af .af,
             .ozge-cmap.active-ir .ir {
               fill: #e0a039;
-              filter: drop-shadow(0 0 6px rgba(224, 160, 57, 0.5));
+              filter: drop-shadow(0 0 5px rgba(224, 160, 57, 0.55));
             }
           `}</style>
 
           <div
-            className={cn(
-              "ozge-cmap relative",
-              `active-${activeCode.toLowerCase()}`
-            )}
+            className={cn("ozge-cmap relative", `active-${activeCode.toLowerCase()}`)}
             onClick={onCountryClick}
             onPointerMove={onHover}
             role="application"
             aria-label="Clickable map of Central Asia"
           >
             {svg ? (
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: svg.replace(
-                    /viewBox="[^"]*"/,
-                    `viewBox="${cropViewBox}"`
-                  ),
-                }}
-              />
+              <div dangerouslySetInnerHTML={{ __html: svg }} />
             ) : (
-              <div className="flex aspect-[14/10] items-center justify-center text-[11px] uppercase tracking-[0.28em] text-brand-cream/40">
+              <div className="flex aspect-[1.38] items-center justify-center text-[11px] uppercase tracking-[0.28em] text-brand-cream/40">
                 Loading map…
               </div>
             )}
-
-            {/* Floating country labels over each operating country */}
             <CountryLabels active={activeCode} />
           </div>
 
-          {/* Bottom legend / mobile chip selector */}
+          {/* Chip selector / legend with flags */}
           <div className="mt-5 flex flex-wrap gap-2">
-            {countries.map((c) => {
+            {countryInfo.map((c) => {
               const isActive = c.code === activeCode;
               return (
                 <button
@@ -362,7 +256,7 @@ function WorldView({
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={`/flags/${c.code.toLowerCase()}.svg`}
+                    src={`/flags/${c.flag}.svg`}
                     alt=""
                     className="h-4 w-6 shrink-0 rounded-[3px] object-cover ring-1 ring-black/10"
                     loading="lazy"
@@ -375,9 +269,9 @@ function WorldView({
         </div>
       </div>
 
-      {/* Side detail panel */}
-      <div className="lg:col-span-4">
-        <div className="sticky top-28 rounded-md border border-brand-cream/10 bg-white/[0.03] p-6 md:p-8 backdrop-blur">
+      {/* Country fact panel */}
+      <div className="lg:col-span-5">
+        <div className="rounded-2xl border border-brand-cream/10 bg-white/[0.03] p-6 md:p-8 backdrop-blur">
           <AnimatePresence mode="wait">
             <motion.div
               key={active.code}
@@ -386,32 +280,78 @@ function WorldView({
               exit={{ opacity: 0, y: -8, filter: "blur(6px)" }}
               transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="text-[10.5px] uppercase tracking-[0.32em] text-brand-saffron">
-                {active.code} · selected
-              </div>
-              <div className="mt-3 font-display text-3xl font-light leading-tight text-brand-cream md:text-4xl">
-                {active.name}
-              </div>
-              <p className="mt-4 text-[13.5px] leading-relaxed text-brand-cream/75 md:text-[14px]">
-                {active.blurb}
-              </p>
-
-              <div className="mt-6">
-                <div className="text-[10px] uppercase tracking-[0.28em] text-brand-cream/55">
-                  Highlights
+              {/* Header */}
+              <div className="flex items-center gap-3">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/flags/${active.flag}.svg`}
+                  alt=""
+                  className="h-8 w-12 shrink-0 rounded-[4px] object-cover ring-1 ring-brand-cream/20"
+                />
+                <div>
+                  <div className="text-[10px] uppercase tracking-[0.32em] text-brand-saffron">
+                    {active.code} · selected
+                  </div>
+                  <div className="font-display text-2xl font-light leading-tight text-brand-cream md:text-[28px]">
+                    {active.name}
+                  </div>
                 </div>
-                <ul className="mt-3 flex flex-wrap gap-2">
-                  {active.highlights.map((h) => (
+              </div>
+              <div className="mt-1.5 font-serif text-[13px] italic text-brand-cream/55">
+                {active.official}
+              </div>
+
+              {/* Quick facts grid */}
+              <dl className="mt-5 grid grid-cols-2 gap-px overflow-hidden rounded-md bg-brand-cream/10">
+                <Fact label="Capital" value={active.capital} />
+                <Fact label="Population" value={active.population} />
+                <Fact label="Area" value={active.area} />
+                <Fact label="Currency" value={active.currency} />
+              </dl>
+
+              {/* Stacked details */}
+              <div className="mt-5 space-y-3">
+                <Row label="Languages" value={active.languages} />
+                <Row label="Ethnic groups" value={active.ethnicGroups} />
+                <Row label="Religions" value={active.religions} />
+              </div>
+
+              {/* Destinations */}
+              <div className="mt-5">
+                <div className="text-[10px] uppercase tracking-[0.28em] text-brand-cream/55">
+                  Famous destinations
+                </div>
+                <ul className="mt-2.5 flex flex-wrap gap-1.5">
+                  {active.destinations.map((d) => (
                     <li
-                      key={h}
-                      className="rounded-full border border-brand-cream/15 px-3 py-1.5 text-[12px] text-brand-cream/85"
+                      key={d}
+                      className="rounded-full border border-brand-cream/15 px-2.5 py-1 text-[11.5px] text-brand-cream/85"
                     >
-                      {h}
+                      {d}
                     </li>
                   ))}
                 </ul>
               </div>
 
+              {/* UNESCO */}
+              <div className="mt-5">
+                <div className="text-[10px] uppercase tracking-[0.28em] text-brand-cream/55">
+                  UNESCO heritage
+                </div>
+                <ul className="mt-2.5 space-y-1.5">
+                  {active.unesco.map((u) => (
+                    <li
+                      key={u}
+                      className="flex items-start gap-2 text-[12.5px] text-brand-cream/80"
+                    >
+                      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-brand-saffron" />
+                      {u}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* CTA */}
               {active.hasRegions ? (
                 <button
                   type="button"
@@ -419,9 +359,7 @@ function WorldView({
                   className="group mt-7 inline-flex w-full items-center justify-between gap-2 rounded-full bg-brand-saffron px-5 py-3 text-[13px] font-medium text-brand-ink transition-all hover:bg-white"
                 >
                   Explore all 20 regions
-                  <span className="transition-transform group-hover:translate-x-1">
-                    →
-                  </span>
+                  <span className="transition-transform group-hover:translate-x-1">→</span>
                 </button>
               ) : (
                 <a
@@ -429,9 +367,7 @@ function WorldView({
                   className="group mt-7 inline-flex w-full items-center justify-between gap-2 rounded-full bg-brand-saffron px-5 py-3 text-[13px] font-medium text-brand-ink transition-all hover:bg-white"
                 >
                   Plan a trip to {active.name}
-                  <span className="transition-transform group-hover:translate-x-1">
-                    →
-                  </span>
+                  <span className="transition-transform group-hover:translate-x-1">→</span>
                 </a>
               )}
             </motion.div>
@@ -442,46 +378,37 @@ function WorldView({
   );
 }
 
-// Approx label positions in the cropped viewBox (550 60 280 200, ie. centers
-// over each country). Hand-tuned visually.
-const labelCoords: Record<Country["code"], { x: number; y: number }> = {
-  KZ: { x: 705, y: 115 },
-  UZ: { x: 695, y: 142 },
-  KG: { x: 720, y: 138 },
-  TJ: { x: 707, y: 150 },
-  TM: { x: 668, y: 152 },
-  AF: { x: 700, y: 165 },
-  IR: { x: 645, y: 165 },
-};
-
-function CountryLabels({ active }: { active: Country["code"] }) {
+function CountryLabels({ active }: { active: CountryInfo["code"] }) {
   return (
     <svg
-      viewBox="550 60 280 200"
+      viewBox={MAP_VIEWBOX}
       preserveAspectRatio="xMidYMid meet"
       className="pointer-events-none absolute inset-0 h-full w-full"
       aria-hidden="true"
     >
-      {countries.map((c) => {
-        const p = labelCoords[c.code];
+      {countryInfo.map((c) => {
         const isActive = c.code === active;
         return (
-          <g key={c.code} transform={`translate(${p.x} ${p.y})`}>
+          <g key={c.code} transform={`translate(${c.cx} ${c.cy})`}>
             <circle
-              r={isActive ? 1.6 : 1.0}
-              fill={isActive ? "#1a1410" : "rgba(26,20,16,0.6)"}
+              r={isActive ? 1.4 : 0.9}
+              fill={isActive ? "#1a1410" : "rgba(26,20,16,0.55)"}
               stroke="#fbf8f1"
-              strokeWidth="0.4"
+              strokeWidth="0.35"
             />
             <text
-              y={4.4}
+              y={3.4}
               textAnchor="middle"
               fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace"
-              fontSize={isActive ? 3.8 : 3.2}
-              letterSpacing="0.12em"
-              fill={isActive ? "#1a1410" : "#fbf8f1"}
+              fontSize={isActive ? 3 : 2.6}
+              letterSpacing="0.1em"
               fontWeight={isActive ? 700 : 500}
-              style={{ paintOrder: "stroke", stroke: isActive ? "#fbf8f1" : "rgba(26,20,16,0.85)", strokeWidth: 0.8 }}
+              fill={isActive ? "#1a1410" : "#fbf8f1"}
+              style={{
+                paintOrder: "stroke",
+                stroke: isActive ? "#fbf8f1" : "rgba(26,20,16,0.85)",
+                strokeWidth: 0.7,
+              }}
             >
               {c.code}
             </text>
@@ -489,6 +416,30 @@ function CountryLabels({ active }: { active: Country["code"] }) {
         );
       })}
     </svg>
+  );
+}
+
+function Fact({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="bg-brand-ink/40 p-3">
+      <div className="text-[9px] uppercase tracking-[0.24em] text-brand-cream/50">
+        {label}
+      </div>
+      <div className="mt-1 text-[12.5px] font-medium leading-snug text-brand-cream">
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex flex-col gap-0.5 border-b border-brand-cream/10 pb-2.5 sm:flex-row sm:items-baseline sm:gap-3">
+      <span className="w-28 shrink-0 text-[9.5px] uppercase tracking-[0.24em] text-brand-cream/50">
+        {label}
+      </span>
+      <span className="text-[12.5px] text-brand-cream/85">{value}</span>
+    </div>
   );
 }
 
@@ -503,8 +454,7 @@ function KazakhstanRegionsView() {
 
   useEffect(() => {
     if (isMobile && !pinned) {
-      const a = regions.find((r) => r.id === "KZ19") ?? regions[0];
-      setPinned(a);
+      setPinned(regions.find((r) => r.id === "KZ19") ?? regions[0]);
     }
   }, [isMobile, pinned]);
 
@@ -522,8 +472,8 @@ function KazakhstanRegionsView() {
 
   return (
     <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
-      <div ref={wrapRef} onMouseMove={handleMove} className="relative lg:col-span-8">
-        <div className="relative overflow-hidden rounded-md border border-brand-cream/10 bg-gradient-to-br from-white/[0.04] to-white/[0.01] p-3 md:p-6">
+      <div ref={wrapRef} onMouseMove={handleMove} className="relative lg:col-span-7">
+        <div className="relative overflow-hidden rounded-2xl border border-brand-cream/10 bg-gradient-to-br from-white/[0.05] to-white/[0.01] p-3 md:p-6">
           <div className="mb-3 flex items-baseline justify-between md:mb-5">
             <div className="text-[10.5px] uppercase tracking-[0.32em] text-brand-saffron">
               Kazakhstan · 20 regions
@@ -548,18 +498,14 @@ function KazakhstanRegionsView() {
                 </feMerge>
               </filter>
             </defs>
-            <g>
+            <g strokeLinejoin="round">
               {ordered.map((r) => {
                 const isActive = display?.id === r.id;
                 return (
                   <path
                     key={r.id}
                     d={r.d}
-                    className={cn(
-                      "transition-all duration-500 ease-smooth cursor-pointer",
-                      "focus:outline-none focus-visible:outline-none",
-                      "[-webkit-tap-highlight-color:transparent]"
-                    )}
+                    className="cursor-pointer transition-all duration-500 ease-smooth focus:outline-none focus-visible:outline-none [-webkit-tap-highlight-color:transparent]"
                     style={{
                       fill: isActive ? "#e0a039" : "rgba(245, 236, 220, 0.92)",
                       stroke: "#1a1410",
@@ -592,10 +538,10 @@ function KazakhstanRegionsView() {
                 exit={{ opacity: 0, y: 8, scale: 0.98 }}
                 transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
                 style={{
-                  left: Math.min(pointer.x + 18, (wrapRef.current?.clientWidth ?? 0) - 320),
+                  left: Math.min(pointer.x + 18, (wrapRef.current?.clientWidth ?? 0) - 300),
                   top: Math.max(pointer.y - 12, 0),
                 }}
-                className="pointer-events-none absolute z-10 w-[300px] rounded-md border border-brand-cream/15 bg-brand-ink/95 p-4 shadow-2xl backdrop-blur"
+                className="pointer-events-none absolute z-10 w-[280px] rounded-md border border-brand-cream/15 bg-brand-ink/95 p-4 shadow-2xl backdrop-blur"
               >
                 <div className="text-[10.5px] uppercase tracking-[0.32em] text-brand-saffron">
                   {active.id}
@@ -603,7 +549,7 @@ function KazakhstanRegionsView() {
                 <div className="mt-1 font-display text-xl font-light text-brand-cream">
                   {active.name}
                 </div>
-                <p className="mt-2 text-[13px] leading-snug text-brand-cream/75">
+                <p className="mt-2 text-[12.5px] leading-snug text-brand-cream/75">
                   {active.blurb}
                 </p>
               </motion.div>
@@ -612,8 +558,9 @@ function KazakhstanRegionsView() {
         </div>
       </div>
 
-      <div className="lg:col-span-4">
-        <div className="sticky top-28 rounded-md border border-brand-cream/10 bg-white/[0.03] p-6 md:p-8 backdrop-blur">
+      {/* Region fact panel */}
+      <div className="lg:col-span-5">
+        <div className="sticky top-28 rounded-2xl border border-brand-cream/10 bg-white/[0.03] p-6 md:p-8 backdrop-blur">
           <AnimatePresence mode="wait">
             <motion.div
               key={display?.id ?? "empty"}
@@ -627,22 +574,30 @@ function KazakhstanRegionsView() {
                   <div className="text-[10.5px] uppercase tracking-[0.32em] text-brand-saffron">
                     Region · {display.id}
                   </div>
-                  <div className="mt-3 font-display text-3xl font-light text-brand-cream">
+                  <div className="mt-2 font-display text-2xl font-light text-brand-cream md:text-3xl">
                     {display.name}
                   </div>
-                  <p className="mt-4 text-[13.5px] leading-relaxed text-brand-cream/75">
+                  <p className="mt-3 text-[13px] leading-relaxed text-brand-cream/75">
                     {display.blurb}
                   </p>
+
+                  {(display.population || display.area) && (
+                    <dl className="mt-5 grid grid-cols-2 gap-px overflow-hidden rounded-md bg-brand-cream/10">
+                      <Fact label="Population" value={display.population ?? "—"} />
+                      <Fact label="Total area" value={display.area ?? "—"} />
+                    </dl>
+                  )}
+
                   {display.highlights.length > 0 && (
-                    <div className="mt-6">
+                    <div className="mt-5">
                       <div className="text-[10px] uppercase tracking-[0.28em] text-brand-cream/55">
-                        Highlights
+                        Famous destinations
                       </div>
-                      <ul className="mt-3 flex flex-wrap gap-2">
+                      <ul className="mt-2.5 flex flex-wrap gap-1.5">
                         {display.highlights.map((h) => (
                           <li
                             key={h}
-                            className="rounded-full border border-brand-cream/15 px-3 py-1.5 text-[12px] text-brand-cream/85"
+                            className="rounded-full border border-brand-cream/15 px-2.5 py-1 text-[11.5px] text-brand-cream/85"
                           >
                             {h}
                           </li>
@@ -650,16 +605,53 @@ function KazakhstanRegionsView() {
                       </ul>
                     </div>
                   )}
+
+                  {display.unesco && display.unesco.length > 0 && (
+                    <div className="mt-5">
+                      <div className="text-[10px] uppercase tracking-[0.28em] text-brand-cream/55">
+                        UNESCO heritage
+                      </div>
+                      <ul className="mt-2.5 space-y-1.5">
+                        {display.unesco.map((u) => (
+                          <li
+                            key={u}
+                            className="flex items-start gap-2 text-[12.5px] text-brand-cream/80"
+                          >
+                            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-brand-saffron" />
+                            {u}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {display.adventure && display.adventure.length > 0 && (
+                    <div className="mt-5">
+                      <div className="text-[10px] uppercase tracking-[0.28em] text-brand-cream/55">
+                        Adventure opportunities
+                      </div>
+                      <ul className="mt-2.5 flex flex-wrap gap-1.5">
+                        {display.adventure.map((a) => (
+                          <li
+                            key={a}
+                            className="rounded-full bg-brand-saffron/15 px-2.5 py-1 text-[11.5px] text-brand-saffron"
+                          >
+                            {a}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
                   <a
                     href="#book"
-                    className="mt-7 inline-flex items-center gap-2 text-sm font-medium text-brand-saffron hover:text-brand-cream transition-colors"
+                    className="mt-7 inline-flex items-center gap-2 text-sm font-medium text-brand-saffron transition-colors hover:text-brand-cream"
                   >
-                    Plan a trip here
-                    <span>→</span>
+                    Plan a trip here <span>→</span>
                   </a>
                 </>
               ) : (
-                <div className="text-brand-cream/70 text-sm">
+                <div className="text-sm text-brand-cream/70">
                   Hover a region on the map to discover its story.
                 </div>
               )}
@@ -668,6 +660,7 @@ function KazakhstanRegionsView() {
         </div>
       </div>
 
+      {/* Mobile region chips */}
       <div className="lg:col-span-12 lg:hidden">
         <div className="text-[10px] uppercase tracking-[0.28em] text-brand-cream/55">
           Or jump straight to a region
