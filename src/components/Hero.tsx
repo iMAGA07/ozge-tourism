@@ -109,12 +109,12 @@ export function Hero() {
 
       {/* Headline */}
       <motion.div
-        style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]), opacity: fade }}
+        style={{ y: useTransform(scrollYProgress, [0, 1], ["12%", "-18%"]), opacity: fade }}
         className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center"
       >
         <h1 className="fluid-h1 max-w-[16ch] font-display font-light text-white">
           <RevealText text="Explore. Enjoy." delay={0.05} />
-          <span className="block font-serif italic font-normal text-brand-saffron">
+          <span className="block font-serif italic font-semibold text-brand-saffron">
             <RevealText text="Connect." delay={0.18} />
           </span>
         </h1>
@@ -126,8 +126,8 @@ export function Hero() {
           className="mt-7 max-w-[52ch] fluid-lead text-white/90"
         >
           Join us to experience and enjoy the very best of{" "}
-          <span className="font-serif italic text-brand-saffron">
-            Kazakhstan and Central Asia
+          <span className="whitespace-nowrap font-serif italic font-semibold text-brand-saffron">
+            Kazakhstan &amp; Central Asia
           </span>{" "}
           — from majestic landscapes and thrilling outdoor adventures to rich
           history and vibrant cultures.
@@ -152,12 +152,12 @@ export function Hero() {
                   duration: 0.7,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="group flex h-full min-h-[56px] items-center gap-3 rounded-xl border border-white/20 bg-white/10 px-3.5 py-2.5 backdrop-blur-md transition-all duration-500 hover:-translate-y-0.5 hover:border-brand-saffron/60 hover:bg-white/15"
+                className="group flex h-full min-h-[64px] items-center justify-center gap-3 rounded-xl border border-white/20 bg-white/10 px-3.5 py-2.5 backdrop-blur-md transition-all duration-500 hover:-translate-y-0.5 hover:border-brand-saffron/60 hover:bg-white/15"
               >
                 <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-saffron/90 text-brand-ink">
                   <Icon strokeWidth={1.8} className="h-[18px] w-[18px]" />
                 </span>
-                <span className="text-[12.5px] font-medium leading-tight tracking-wide text-white">
+                <span className="text-center text-[12.5px] font-medium leading-tight tracking-wide text-white">
                   {o.label}
                 </span>
               </motion.div>
@@ -169,25 +169,25 @@ export function Hero() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.4, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-9 flex flex-wrap items-center justify-center gap-3"
+          className="mt-9 flex w-full flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap"
         >
-          <Magnetic strength={0.18}>
+          <Magnetic strength={0.18} className="w-full max-w-[280px] sm:w-auto sm:max-w-none">
             <a
               href="#book"
               data-cursor="hover"
               data-cursor-label="Book"
-              className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-brand-saffron px-7 py-3.5 text-[13.5px] font-medium tracking-wide text-brand-ink transition-all duration-500 hover:bg-white"
+              className="group relative inline-flex w-full items-center justify-center gap-3 overflow-hidden rounded-full bg-brand-saffron px-7 py-3.5 text-[13.5px] font-medium tracking-wide text-brand-ink transition-all duration-500 hover:bg-white sm:w-[240px]"
             >
               <span>Book an adventure</span>
               <span className="transition-transform duration-500 group-hover:translate-x-1">→</span>
             </a>
           </Magnetic>
-          <Magnetic strength={0.18}>
+          <Magnetic strength={0.18} className="w-full max-w-[280px] sm:w-auto sm:max-w-none">
             <a
               href="#map"
               data-cursor="hover"
               data-cursor-label="Map"
-              className="inline-flex items-center gap-3 rounded-full border border-white/40 bg-white/5 px-7 py-3.5 text-[13.5px] font-medium tracking-wide text-white backdrop-blur-md transition-all duration-500 hover:bg-white hover:text-brand-ink"
+              className="inline-flex w-full items-center justify-center gap-3 rounded-full border border-white/40 bg-white/5 px-7 py-3.5 text-[13.5px] font-medium tracking-wide text-white backdrop-blur-md transition-all duration-500 hover:bg-white hover:text-brand-ink sm:w-[240px]"
             >
               Discover the map
             </a>
@@ -217,18 +217,6 @@ export function Hero() {
               {active.label}
             </motion.div>
           </AnimatePresence>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.4, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="flex flex-col items-center gap-2 text-white/80"
-        >
-          <span className="text-[10.5px] uppercase tracking-[0.32em]">Scroll</span>
-          <div className="h-9 w-[1px] overflow-hidden bg-white/25">
-            <span className="block h-3 w-[1px] animate-scroll-hint bg-brand-saffron" />
-          </div>
         </motion.div>
 
         <motion.div
