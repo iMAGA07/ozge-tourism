@@ -1,44 +1,46 @@
-export const adventures = {
-  weekend: [
-    {
-      dates: "May 1–3",
-      regions: ["Mangystau", "Almaty", "South Kazakhstan", "East Kazakhstan"],
-    },
-    {
-      dates: "May 8–10",
-      regions: ["Mangystau", "Almaty", "South Kazakhstan", "East Kazakhstan"],
-    },
-    {
-      dates: "May 15–17",
-      regions: ["Mangystau", "Almaty", "South Kazakhstan", "East Kazakhstan"],
-    },
-    {
-      dates: "May 22–24",
-      regions: ["Mangystau", "Almaty", "South Kazakhstan", "East Kazakhstan"],
-    },
-    {
-      dates: "May 29–31",
-      regions: ["Mangystau", "Almaty", "South Kazakhstan", "East Kazakhstan"],
-    },
+export type GroupTour = {
+  dates: string;
+  title: string;
+  /** ISO-2 of the destination, lower-case (matches /public/flags/<code>.svg). null for non-country items (e.g. summer camp). */
+  flag: string | null;
+  /** Short subtitle for non-country items, e.g. "School students 10+". */
+  subtitle?: string;
+  /** Country / region for the photo backdrop on the hero card. */
+  photoRegion: string;
+};
+
+export type Recurring = {
+  title: string;
+  cadence: string;
+  destinations: string[];
+};
+
+export const adventures: {
+  month: { label: string; long: string };
+  group: GroupTour[];
+  kzWeekend: Recurring;
+  getaways: Recurring;
+  privateTours: string;
+} = {
+  month: { label: "June 2026", long: "Adventures for June 2026" },
+  group: [
+    { dates: "June 1–8",        title: "Uzbekistan",       flag: "uz", photoRegion: "Uzbekistan" },
+    { dates: "June 8–15",       title: "Tajikistan",       flag: "tj", photoRegion: "Tajikistan" },
+    { dates: "June 13–14",      title: "Summer Camp",      flag: null, subtitle: "School students ages 10+", photoRegion: "Kazakhstan" },
+    { dates: "June 19–28",      title: "Turkmenistan",     flag: "tm", photoRegion: "Turkmenistan" },
+    { dates: "June 26 – July 4", title: "Kyrgyzstan",       flag: "kg", photoRegion: "Kyrgyzstan" },
   ],
-  longform: [
-    {
-      dates: "May 1–10",
-      regions: ["Kazakhstan", "Uzbekistan", "Kyrgyzstan", "Tajikistan", "Turkmenistan"],
-    },
-    {
-      dates: "May 8–17",
-      regions: ["Kazakhstan", "Uzbekistan", "Kyrgyzstan", "Tajikistan", "Turkmenistan"],
-    },
-    {
-      dates: "May 15–24",
-      regions: ["Kazakhstan", "Uzbekistan", "Kyrgyzstan", "Tajikistan", "Turkmenistan"],
-    },
-    {
-      dates: "May 22–31",
-      regions: ["Kazakhstan", "Uzbekistan", "Kyrgyzstan", "Tajikistan", "Turkmenistan"],
-    },
-  ],
+  kzWeekend: {
+    title: "Kazakhstan Weekend Tours",
+    cadence: "Every Weekend (Fri–Sun)",
+    destinations: ["Mangystau", "East Kazakhstan", "South Kazakhstan", "Almaty Region"],
+  },
+  getaways: {
+    title: "Weekend Getaways",
+    cadence: "Every Weekend",
+    destinations: ["Burabay", "Zerenda", "Buiratau", "Bayanaul", "& More"],
+  },
+  privateTours: "Available anytime across Central Asia",
 };
 
 export const services = [

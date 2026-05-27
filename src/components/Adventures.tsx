@@ -2,21 +2,23 @@
 import { useState, useMemo } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import { Tent } from "lucide-react";
 import { Reveal } from "./Reveal";
 import { SectionHeader } from "./SectionHeader";
-import { adventures } from "@/data/content";
-import { flagSrc } from "@/data/flags";
+import { adventures, type GroupTour } from "@/data/content";
 import { cn } from "@/lib/utils";
 
-type Track = "weekend" | "longform";
-
-// Hand-picked region → photo pairings (used as background of the active
-// detail card and as the small thumbnail on each date pill).
+// Photo backdrop per destination
 const regionPhoto: Record<string, string> = {
   Mangystau: "IMG_3858.jpg",
   Almaty: "IMG_2799.jpg",
+  "Almaty Region": "IMG_2799.jpg",
   "South Kazakhstan": "IMG_8134.jpg",
   "East Kazakhstan": "IMG_3873.jpg",
+  Burabay: "IMG_3882.jpg",
+  Zerenda: "IMG_2600_3.jpg",
+  Buiratau: "IMG_6585.jpg",
+  Bayanaul: "IMG_6075.jpg",
   Kazakhstan: "IMG_2600_3.jpg",
   Uzbekistan: "IMG_6919.jpg",
   Kyrgyzstan: "IMG_3882.jpg",
@@ -24,25 +26,32 @@ const regionPhoto: Record<string, string> = {
   Turkmenistan: "IMG_2972.jpg",
 };
 
-function parseDayRange(label: string): { d1: string; d2?: string; month: string } {
-  // "May 1–3" → { d1: '1', d2: '3', month: 'May' }
-  const m = label.match(/^(\w+)\s+(\d+)(?:[-–](\d+))?/);
-  if (!m) return { d1: "—", month: label };
-  return { month: m[1], d1: m[2], d2: m[3] };
+function parseDayRange(label: string): {
+  d1: string;
+  d2?: string;
+  month1: string;
+  month2?: string;
+} {
+  // Handles "June 1–8" and "June 26 – July 4"
+  const m = label.match(/^(\w+)\s+(\d+)\s*[-–]\s*(?:(\w+)\s+)?(\d+)/);
+  if (!m) return { d1: "—", month1: label };
+  return {
+    month1: m[1],
+    d1: m[2],
+    month2: m[3] || m[1],
+    d2: m[4],
+  };
 }
 
 export function Adventures() {
-  const [track, setTrack] = useState<Track>("weekend");
   const [activeIndex, setActiveIndex] = useState(0);
+  const active = adventures.group[activeIndex] ?? adventures.group[0];
 
-  const list = track === "weekend" ? adventures.weekend : adventures.longform;
-  const active = list[activeIndex] ?? list[0];
-
-  // Photo for the hero panel: cycle the first region of the selected date
   const heroPhoto = useMemo(() => {
-    const region = active?.regions?.[0];
-    return (region && regionPhoto[region]) || "IMG_2600_3.jpg";
+    return regionPhoto[active?.photoRegion ?? ""] ?? "IMG_2600_3.jpg";
   }, [active]);
+
+  const range = parseDayRange(active.dates);
 
   return (
     <section
@@ -51,66 +60,31 @@ export function Adventures() {
     >
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
         <SectionHeader
-          eyebrow="Upcoming Adventures"
+          eyebrow={`Upcoming · ${adventures.month.label}`}
           title="Scheduled Adventures"
-          italic="of May 2026 — Choose Yours!"
-          lead="Our major group adventures for May. We also run one-day & special outdoor activities (minor adventures) announced weekly or a few days in advance, and private & exclusive adventures any day, any week, any season — tailored just for you."
+          italic={`of ${adventures.month.label} — Choose Yours!`}
+          lead="Our major group adventures for June. We also run Kazakhstan weekend tours every Friday–Sunday, casual weekend getaways year-round, and fully private trips any day, any week, any season — tailored just for you."
         />
 
-        {/* Track toggle */}
+        {/* ─── Group Tours: hero + date tape ─────────────────────────── */}
         <Reveal delay={0.05}>
-          <div className="mt-12 flex flex-wrap items-center gap-3 md:mt-16">
-            <div className="inline-flex rounded-full border border-brand-charcoal/15 bg-brand-paper p-1">
-              {(["weekend", "longform"] as const).map((t) => {
-                const isActive = track === t;
-                return (
-                  <button
-                    key={t}
-                    type="button"
-                    data-cursor="hover"
-                    onClick={() => {
-                      setTrack(t);
-                      setActiveIndex(0);
-                    }}
-                    className={cn(
-                      "relative rounded-full px-4 py-2 text-[12px] font-medium transition-colors duration-500",
-                      isActive
-                        ? "text-brand-cream"
-                        : "text-brand-charcoal/70 hover:text-brand-ink"
-                    )}
-                  >
-                    {isActive && (
-                      <motion.span
-                        layoutId="trackPill"
-                        transition={{
-                          type: "spring",
-                          damping: 24,
-                          stiffness: 320,
-                        }}
-                        className="absolute inset-0 rounded-full bg-brand-ink"
-                      />
-                    )}
-                    <span className="relative">
-                      {t === "weekend" ? "Weekend · 2–3 Days" : "Week-Long · 10 Days"}
-                    </span>
-                  </button>
-                );
-              })}
+          <div className="mt-12 flex flex-wrap items-baseline gap-3 md:mt-16">
+            <div className="rounded-full bg-brand-ink px-4 py-1.5 text-[10.5px] uppercase tracking-[0.28em] text-brand-cream">
+              Group Tours
             </div>
             <div className="text-[10.5px] uppercase tracking-[0.28em] text-brand-charcoal/55">
-              {list.length} dates · {track === "weekend" ? "Kazakhstan" : "Central Asia"}
+              {adventures.group.length} departures · Central Asia
             </div>
           </div>
         </Reveal>
 
-        {/* Hero detail panel */}
         <Reveal delay={0.1}>
-          <div className="relative mt-8 grid overflow-hidden rounded-md bg-brand-ink text-brand-cream md:mt-10 md:grid-cols-12">
+          <div className="relative mt-6 grid overflow-hidden rounded-xl bg-brand-ink text-brand-cream md:mt-8 md:grid-cols-12">
             {/* Photo half */}
-            <div className="relative h-[260px] md:col-span-7 md:h-[480px]">
+            <div className="relative h-[280px] md:col-span-7 md:h-[480px]">
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={`${track}-${activeIndex}`}
+                  key={`photo-${activeIndex}`}
                   initial={{ opacity: 0, scale: 1.04 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.98 }}
@@ -132,7 +106,7 @@ export function Adventures() {
               {/* Floating date badge */}
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={`badge-${track}-${activeIndex}`}
+                  key={`badge-${activeIndex}`}
                   initial={{ opacity: 0, y: 14 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
@@ -140,25 +114,29 @@ export function Adventures() {
                   className="absolute left-6 top-6 z-10 md:left-9 md:top-9"
                 >
                   <div className="text-[10.5px] uppercase tracking-[0.32em] text-brand-saffron">
-                    {track === "weekend" ? "Weekend" : "Week-Long"}
+                    Departure · {String(activeIndex + 1).padStart(2, "0")} / 0{adventures.group.length}
                   </div>
-                  <div className="mt-1 flex items-end gap-3">
-                    <span className="font-display text-7xl font-light leading-none text-brand-cream md:text-8xl">
-                      {parseDayRange(active.dates).d1}
+                  <div className="mt-1 flex items-end gap-2.5">
+                    <span className="font-display text-6xl font-light leading-none text-brand-cream md:text-8xl">
+                      {range.d1}
                     </span>
-                    {parseDayRange(active.dates).d2 && (
+                    {range.d2 && (
                       <>
-                        <span className="pb-2 text-3xl font-light text-brand-cream/70 md:text-4xl">
+                        <span className="pb-2 text-2xl font-light text-brand-cream/70 md:text-4xl">
                           –
                         </span>
-                        <span className="font-display text-7xl font-light leading-none text-brand-cream md:text-8xl">
-                          {parseDayRange(active.dates).d2}
+                        <span className="font-display text-6xl font-light leading-none text-brand-cream md:text-8xl">
+                          {range.d2}
                         </span>
                       </>
                     )}
-                    <span className="pb-3 ml-2 text-[11px] uppercase tracking-[0.32em] text-brand-cream/70">
-                      {parseDayRange(active.dates).month} · 2026
-                    </span>
+                  </div>
+                  <div className="mt-2 text-[11px] uppercase tracking-[0.32em] text-brand-cream/70">
+                    {range.month1}
+                    {range.month2 && range.month2 !== range.month1
+                      ? ` → ${range.month2}`
+                      : ""}{" "}
+                    · 2026
                   </div>
                 </motion.div>
               </AnimatePresence>
@@ -168,32 +146,45 @@ export function Adventures() {
             <div className="relative flex flex-col p-7 md:col-span-5 md:p-10">
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={`info-${track}-${activeIndex}`}
+                  key={`info-${activeIndex}`}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <div className="text-[10.5px] uppercase tracking-[0.32em] text-brand-saffron">
-                    Regions on this trip
+                    Destination
                   </div>
-                  <ul className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-                    {active.regions.map((r) => (
-                      <li
-                        key={r}
-                        className="flex items-center gap-3 rounded-full border border-brand-cream/15 bg-white/[0.04] px-3.5 py-1.5 text-[12.5px] text-brand-cream"
-                      >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={flagSrc(r)}
-                          alt=""
-                          className="h-3.5 w-5 shrink-0 rounded-[2px] object-cover ring-1 ring-brand-cream/20"
-                          loading="lazy"
-                        />
-                        {r}
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="mt-3 flex items-center gap-3">
+                    {active.flag ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={`/flags/${active.flag}.svg`}
+                        alt=""
+                        className="h-9 w-12 shrink-0 rounded-[4px] object-cover ring-1 ring-brand-cream/20"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span className="inline-flex h-9 w-12 shrink-0 items-center justify-center rounded-[4px] bg-brand-saffron/20 text-brand-saffron ring-1 ring-brand-saffron/40">
+                        <Tent strokeWidth={1.6} className="h-5 w-5" />
+                      </span>
+                    )}
+                    <div>
+                      <div className="font-display text-2xl font-light leading-tight md:text-3xl">
+                        {active.title}
+                      </div>
+                      {active.subtitle && (
+                        <div className="mt-1 text-[12px] text-brand-cream/65">
+                          {active.subtitle}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <p className="mt-5 text-[13px] leading-relaxed text-brand-cream/70">
+                    {active.flag
+                      ? `Full ${active.title} group adventure — guided end-to-end. Camping under the stars or hotel stays, your choice.`
+                      : "Outdoor camp for school students 10+ — hiking, archery, campfire nights, and team challenges. Run by our guides."}
+                  </p>
                 </motion.div>
               </AnimatePresence>
 
@@ -201,8 +192,6 @@ export function Adventures() {
                 <div className="flex flex-wrap items-center gap-3">
                   <a
                     href="#book"
-                    data-cursor="hover"
-                    data-cursor-label="Reserve"
                     className="group inline-flex items-center gap-2 rounded-full bg-brand-saffron px-6 py-3 text-[13px] font-medium text-brand-ink transition-all hover:bg-white"
                   >
                     Reserve this date
@@ -210,9 +199,8 @@ export function Adventures() {
                   </a>
                   <a
                     href={`https://wa.me/77757145327?text=${encodeURIComponent(
-                      `Hi, I'd like to ask about the ${track === "weekend" ? "weekend" : "10-day"} adventure on ${active.dates}.`
+                      `Hi, I'd like to ask about the ${active.title} adventure on ${active.dates}.`
                     )}`}
-                    data-cursor="hover"
                     className="inline-flex items-center gap-2 rounded-full border border-brand-cream/30 px-6 py-3 text-[13px] font-medium text-brand-cream/90 hover:border-brand-cream/60 hover:text-brand-cream"
                   >
                     Ask on WhatsApp
@@ -225,39 +213,56 @@ export function Adventures() {
 
         {/* Date tape (scrollable) */}
         <Reveal delay={0.15}>
-          <div className="mt-6 md:mt-8 -mx-6 md:-mx-10">
+          <div className="mt-5 md:mt-6 -mx-6 md:-mx-10">
             <div className="no-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto px-6 pb-3 md:gap-4 md:px-10">
-              {list.map((d, i) => {
+              {adventures.group.map((d, i) => {
                 const isActive = i === activeIndex;
-                const range = parseDayRange(d.dates);
+                const r = parseDayRange(d.dates);
                 return (
                   <button
                     key={d.dates}
                     type="button"
                     onClick={() => setActiveIndex(i)}
-                    data-cursor="hover"
                     className={cn(
-                      "group relative shrink-0 snap-center overflow-hidden rounded-md border text-left transition-all duration-500 ease-smooth",
-                      "w-[42vw] sm:w-[200px] md:w-[220px]",
+                      "group relative shrink-0 snap-center overflow-hidden rounded-xl border text-left transition-all duration-500 ease-smooth",
+                      "w-[48vw] sm:w-[210px] md:w-[230px]",
                       isActive
                         ? "border-brand-terracotta bg-brand-ink text-brand-cream"
                         : "border-brand-charcoal/15 bg-brand-paper text-brand-ink hover:border-brand-charcoal/40"
                     )}
                   >
                     <div className="p-4 md:p-5">
-                      <div
-                        className={cn(
-                          "text-[10px] uppercase tracking-[0.28em]",
-                          isActive ? "text-brand-saffron" : "text-brand-terracotta/80"
+                      <div className="flex items-center gap-2">
+                        {d.flag ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={`/flags/${d.flag}.svg`}
+                            alt=""
+                            className="h-3.5 w-5 shrink-0 rounded-[2px] object-cover ring-1 ring-black/10"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <span className={cn(
+                            "inline-flex h-3.5 w-5 shrink-0 items-center justify-center rounded-[2px]",
+                            isActive ? "bg-brand-saffron/20 text-brand-saffron" : "bg-brand-saffron/15 text-brand-terracotta"
+                          )}>
+                            <Tent strokeWidth={1.8} className="h-2.5 w-2.5" />
+                          </span>
                         )}
-                      >
-                        {String(i + 1).padStart(2, "0")} · {range.month}
+                        <div
+                          className={cn(
+                            "text-[10px] uppercase tracking-[0.22em] truncate",
+                            isActive ? "text-brand-saffron" : "text-brand-terracotta/80"
+                          )}
+                        >
+                          {d.title}
+                        </div>
                       </div>
-                      <div className="mt-2 flex items-end gap-1.5">
+                      <div className="mt-3 flex items-end gap-1.5">
                         <span className="font-display text-3xl font-light leading-none md:text-4xl">
-                          {range.d1}
+                          {r.d1}
                         </span>
-                        {range.d2 && (
+                        {r.d2 && (
                           <>
                             <span
                               className={cn(
@@ -268,18 +273,19 @@ export function Adventures() {
                               –
                             </span>
                             <span className="font-display text-3xl font-light leading-none md:text-4xl">
-                              {range.d2}
+                              {r.d2}
                             </span>
                           </>
                         )}
                       </div>
                       <div
                         className={cn(
-                          "mt-3 text-[11px]",
+                          "mt-2 text-[11px]",
                           isActive ? "text-brand-cream/70" : "text-brand-charcoal/55"
                         )}
                       >
-                        {d.regions.length} regions
+                        {r.month1}
+                        {r.month2 && r.month2 !== r.month1 ? ` → ${r.month2}` : ""}
                       </div>
                     </div>
                     <div
@@ -298,7 +304,45 @@ export function Adventures() {
           </div>
         </Reveal>
 
-        {/* Please-note block stays for transparency */}
+        {/* ─── Two recurring panels: KZ weekends + Getaways ───────────── */}
+        <div className="mt-12 grid gap-5 md:mt-16 md:grid-cols-2 md:gap-6">
+          <RecurringPanel
+            track="kzWeekend"
+            data={adventures.kzWeekend}
+            accent="terracotta"
+          />
+          <RecurringPanel
+            track="getaways"
+            data={adventures.getaways}
+            accent="saffron"
+          />
+        </div>
+
+        {/* ─── Private tours callout ──────────────────────────────────── */}
+        <Reveal delay={0.15}>
+          <a
+            href="#book"
+            className="group mt-5 flex items-center justify-between gap-4 rounded-xl border border-brand-charcoal/12 bg-brand-paper px-5 py-4 transition-all hover:border-brand-terracotta/40 hover:bg-white md:mt-6 md:px-7 md:py-5"
+          >
+            <div className="min-w-0">
+              <div className="text-[10px] uppercase tracking-[0.32em] text-brand-terracotta">
+                Private tours
+              </div>
+              <div className="mt-1 font-display text-lg font-medium text-brand-ink md:text-xl">
+                {adventures.privateTours}
+              </div>
+              <div className="mt-0.5 text-[12px] text-brand-charcoal/60">
+                Any day, any week, any season — designed around you.
+              </div>
+            </div>
+            <span className="inline-flex shrink-0 items-center gap-2 text-[12.5px] font-medium text-brand-terracotta transition-transform group-hover:translate-x-1">
+              Request
+              <span>→</span>
+            </span>
+          </a>
+        </Reveal>
+
+        {/* Please-note */}
         <Reveal delay={0.2}>
           <div className="mt-10 rounded-md border border-brand-charcoal/10 bg-brand-paper p-5 md:mt-14 md:p-7">
             <div className="text-[10px] uppercase tracking-[0.32em] text-brand-terracotta/80">
@@ -306,14 +350,14 @@ export function Adventures() {
             </div>
             <ul className="mt-3 grid gap-3 text-[12.5px] leading-relaxed text-brand-charcoal/60 md:grid-cols-3 md:gap-5">
               <li>
-                These are ONLY our major group adventures for May. As usual, we
-                will also have one-day &amp; special outdoor activities (minor
-                adventures) announced weekly or a few days in advance.
+                These are our major group adventures for June. We also have
+                one-day &amp; special outdoor activities announced weekly or a
+                few days in advance.
               </li>
               <li>
-                We also organize private &amp; exclusive adventures anywhere
-                across Central Asia for you, your family, or organization — any
-                day, any week, any season.
+                Private &amp; exclusive adventures any day, any week, any
+                season — tailored just for you, your family, or your
+                organization across Central Asia.
               </li>
               <li>
                 Choose your style: fully equipped camping under the stars or
@@ -342,5 +386,88 @@ export function Adventures() {
         </Reveal>
       </div>
     </section>
+  );
+}
+
+// ─── Recurring (weekend tours / getaways) ─────────────────────────────────
+
+function RecurringPanel({
+  track,
+  data,
+  accent,
+}: {
+  track: "kzWeekend" | "getaways";
+  data: { title: string; cadence: string; destinations: string[] };
+  accent: "terracotta" | "saffron";
+}) {
+  const accentText =
+    accent === "terracotta" ? "text-brand-terracotta" : "text-brand-saffron";
+
+  return (
+    <Reveal delay={track === "kzWeekend" ? 0.05 : 0.1}>
+      <article className="group relative h-full overflow-hidden rounded-xl border border-brand-charcoal/12 bg-brand-paper p-6 transition-all hover:border-brand-charcoal/25 md:p-8">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <div className={cn("text-[10px] uppercase tracking-[0.32em]", accentText)}>
+              {data.cadence}
+            </div>
+            <h3 className="mt-2 font-display text-xl font-medium leading-tight text-brand-ink md:text-2xl">
+              {data.title}
+            </h3>
+          </div>
+          <span
+            className={cn(
+              "rounded-full px-2.5 py-0.5 text-[10px] uppercase tracking-widest",
+              accent === "terracotta"
+                ? "bg-brand-terracotta/10 text-brand-terracotta"
+                : "bg-brand-saffron/15 text-brand-saffron"
+            )}
+          >
+            Weekly
+          </span>
+        </div>
+
+        <ul className="mt-6 flex flex-wrap gap-2">
+          {data.destinations.map((d) => {
+            const isBeyond = d === "& More";
+            return (
+              <li
+                key={d}
+                className={cn(
+                  "inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[12.5px] transition-all",
+                  isBeyond
+                    ? "border-dashed border-brand-charcoal/30 text-brand-charcoal/55"
+                    : "border-brand-charcoal/15 bg-white text-brand-ink"
+                )}
+              >
+                {!isBeyond && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src="/flags/kz.svg"
+                    alt=""
+                    className="h-3 w-[18px] rounded-[1.5px] object-cover ring-1 ring-black/10"
+                    loading="lazy"
+                  />
+                )}
+                {d}
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className="mt-6 border-t border-brand-charcoal/10 pt-4">
+          <a
+            href="#book"
+            className={cn(
+              "inline-flex items-center gap-2 text-[12.5px] font-medium transition-transform group-hover:translate-x-1",
+              accentText
+            )}
+          >
+            Reserve a weekend
+            <span>→</span>
+          </a>
+        </div>
+      </article>
+    </Reveal>
   );
 }
