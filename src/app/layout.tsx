@@ -1,18 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Cormorant_Garamond } from "next/font/google";
+import { Jost, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { site } from "@/data/site";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { Cursor } from "@/components/Cursor";
 import { StickyBookCTA } from "@/components/SectionProgress";
 
-const sans = Inter({
+// Per the brief, the brand corporate font is Futura. Apple devices have it
+// installed system-wide; everywhere else we use Jost — the closest
+// open-source Futura match — via next/font for performance + SSR.
+const sans = Jost({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans",
   weight: ["300", "400", "500", "600", "700"],
 });
-const display = Inter({
+const display = Jost({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-display",

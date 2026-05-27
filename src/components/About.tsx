@@ -17,16 +17,6 @@ const polaroids = [
 
 // Approximate geographic positions on a 600×340 stylised Central Asia
 // canvas (west → east, north → south). Numbers tuned visually, not GIS-grade.
-const countries = [
-  { code: "KZ", name: "Kazakhstan",   x: 350, y: 100, big: true },
-  { code: "UZ", name: "Uzbekistan",   x: 280, y: 215 },
-  { code: "TM", name: "Turkmenistan", x: 215, y: 235 },
-  { code: "KG", name: "Kyrgyzstan",   x: 440, y: 195 },
-  { code: "TJ", name: "Tajikistan",   x: 410, y: 245 },
-  { code: "AF", name: "Afghanistan",  x: 330, y: 290 },
-  { code: "IR", name: "Iran",         x: 130, y: 280 },
-];
-
 type HelpTab = "tours" | "outdoor" | "retreats" | "logistics";
 const helpTabs: { id: HelpTab; label: string; body: string }[] = [
   {
@@ -269,7 +259,7 @@ export function About() {
           </div>
         </Reveal>
 
-        {/* WHERE WE OPERATE — stylised Central Asia map */}
+        {/* WHERE WE OPERATE — small map + glass card grid */}
         <Reveal delay={0.1}>
           <div className="mt-14 md:mt-20">
             <div className="flex items-baseline justify-between text-[10.5px] uppercase tracking-[0.34em] text-brand-terracotta">
@@ -279,30 +269,7 @@ export function About() {
               </span>
             </div>
 
-            <div className="relative mt-5 overflow-hidden rounded-md border border-brand-charcoal/12 bg-brand-mist/40 p-4 md:p-6">
-              <CentralAsiaMap />
-            </div>
-
-            {/* Country chips below the map */}
-            <ul className="mt-4 flex flex-wrap gap-2">
-              {countries.map((c) => (
-                <li
-                  key={c.code}
-                  className="inline-flex items-center gap-2 rounded-full border border-brand-charcoal/15 bg-brand-paper px-3 py-1.5 text-[12px] text-brand-charcoal/80"
-                >
-                  <span className="font-mono text-[10.5px] tracking-widest text-brand-terracotta">
-                    {c.code}
-                  </span>
-                  {c.name}
-                </li>
-              ))}
-              <li className="inline-flex items-center gap-2 rounded-full border border-dashed border-brand-charcoal/30 px-3 py-1.5 text-[12px] text-brand-charcoal/60">
-                <span className="font-mono text-[10.5px] tracking-widest text-brand-charcoal/50">
-                  +
-                </span>
-                &amp; beyond
-              </li>
-            </ul>
+            <WhereWeOperate />
           </div>
         </Reveal>
 
@@ -335,28 +302,33 @@ function Divider() {
   return <span className="h-6 w-px bg-brand-charcoal/15" />;
 }
 
-/* ───────── World map (uses user-supplied Simplified_World_Map.svg) ───────── */
+/* ───────── Where we operate — small map + glass card grid ────────────────── */
 
-// Markers calibrated to the simplified world SVG (viewBox 0 0 1016.371 514.609,
-// Equirectangular projection). x = (lon+180)/360 * 1016.371,
-// y = (90-lat)/180 * 514.609.
-const cityMarkers = [
-  { code: "KZ", name: "Kazakhstan",   x: 710, y: 111, hub: true },
-  { code: "UZ", name: "Uzbekistan",   x: 704, y: 139 },
-  { code: "KG", name: "Kyrgyzstan",   x: 719, y: 135 },
-  { code: "TJ", name: "Tajikistan",   x: 702, y: 147 },
-  { code: "TM", name: "Turkmenistan", x: 673, y: 149 },
-  { code: "AF", name: "Afghanistan",  x: 703, y: 159 },
-  { code: "IR", name: "Iran",         x: 653, y: 155 },
+const operatingCountries: {
+  code: string;
+  flag: string;
+  name: string;
+  capital: string;
+  xPct: number; // dot position on the small map (% of container)
+  yPct: number;
+  hub?: boolean;
+}[] = [
+  { code: "KZ", flag: "kz", name: "Kazakhstan",   capital: "Astana",    xPct: 49.0, yPct: 29.3, hub: true },
+  { code: "UZ", flag: "uz", name: "Uzbekistan",   capital: "Tashkent",  xPct: 49.0, yPct: 47.3 },
+  { code: "KG", flag: "kg", name: "Kyrgyzstan",   capital: "Bishkek",   xPct: 67.6, yPct: 46.7 },
+  { code: "TJ", flag: "tj", name: "Tajikistan",   capital: "Dushanbe",  xPct: 60.8, yPct: 54.9 },
+  { code: "TM", flag: "tm", name: "Turkmenistan", capital: "Ashgabat",  xPct: 34.4, yPct: 52.5 },
+  { code: "AF", flag: "af", name: "Afghanistan",  capital: "Kabul",     xPct: 54.4, yPct: 65.7 },
+  { code: "IR", flag: "ir", name: "Iran",         capital: "Tehran",    xPct: 23.5, yPct: 70.2 },
 ];
 
-function CentralAsiaMap() {
+function WhereWeOperate() {
   const [svg, setSvg] = useState<string | null>(null);
   const [hover, setHover] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/world-simple.svg")
+    fetch("/world-ca.svg")
       .then((r) => r.text())
       .then((t) => {
         if (!cancelled) setSvg(t);
@@ -369,166 +341,154 @@ function CentralAsiaMap() {
     };
   }, []);
 
-  // Show the entire world; users can see all continents, and our 7
-  // operating countries are highlighted by the marker overlay.
-  const cropViewBox = "0 0 1016.371 514.609";
-
   return (
-    <div className="relative">
-      {/* Brand recolor of the simplified map */}
-      <style jsx global>{`
-        .ozge-world svg {
-          width: 100%;
-          height: auto;
-          display: block;
-        }
-        .ozge-world .land,
-        .ozge-world path {
-          fill: #e9e0cb;
-          stroke: rgba(26, 20, 16, 0.22);
-          stroke-width: 0.45;
-          stroke-miterlimit: 10;
-        }
-      `}</style>
+    <div className="mt-5">
+      {/* Map + cards live in a single subtle panel */}
+      <div className="relative overflow-hidden rounded-2xl border border-brand-charcoal/10 bg-gradient-to-br from-brand-mist/50 via-brand-mist/30 to-brand-paper p-5 md:p-8">
+        {/* Style scope: only this map's paths */}
+        <style jsx global>{`
+          .ozge-where-map svg {
+            width: 100%;
+            height: auto;
+            display: block;
+            overflow: visible;
+          }
+          .ozge-where-map .op {
+            fill: #efe7d6;
+            stroke: rgba(26, 20, 16, 0.18);
+            stroke-width: 0.35;
+            stroke-linejoin: round;
+            stroke-linecap: round;
+            transition: fill 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+          }
+          .ozge-where-map .op.kz { fill: #e8c98a; }
+          .ozge-where-map.hover-kz .op.kz,
+          .ozge-where-map.hover-uz .op.uz,
+          .ozge-where-map.hover-kg .op.kg,
+          .ozge-where-map.hover-tj .op.tj,
+          .ozge-where-map.hover-tm .op.tm,
+          .ozge-where-map.hover-af .op.af,
+          .ozge-where-map.hover-ir .op.ir {
+            fill: #e0a039;
+          }
+        `}</style>
 
-      <div className="relative aspect-[2/1] w-full overflow-hidden rounded-md bg-brand-mist/40">
-        {/* Subtle dot grid backdrop */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-40"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle, rgba(26,20,16,0.08) 1px, transparent 1px)",
-            backgroundSize: "18px 18px",
-          }}
-        />
+        {/* Small map on top */}
+        <div className="mx-auto max-w-[460px]">
+          <div
+            className={cn(
+              "ozge-where-map relative",
+              hover ? `hover-${hover.toLowerCase()}` : ""
+            )}
+          >
+            {svg ? (
+              <div dangerouslySetInnerHTML={{ __html: svg }} aria-hidden="true" />
+            ) : (
+              <div className="flex aspect-[1.38] items-center justify-center text-[11px] uppercase tracking-[0.28em] text-brand-charcoal/40">
+                Loading map…
+              </div>
+            )}
 
-        {/* The world map itself */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          {svg ? (
-            <div
-              className="ozge-world h-full w-full"
-              dangerouslySetInnerHTML={{ __html: svg }}
-              aria-hidden="true"
-            />
-          ) : (
-            <div className="text-[11px] uppercase tracking-[0.28em] text-brand-charcoal/40">
-              Loading map…
-            </div>
-          )}
-        </div>
-
-        {/* Marker overlay — separate SVG sized to match the map viewBox */}
-        <svg
-          viewBox={cropViewBox}
-          preserveAspectRatio="xMidYMid meet"
-          className="absolute inset-0 h-full w-full"
-        >
-          {/* Silk-road routes from KZ hub */}
-          {cityMarkers
-            .filter((m) => m.code !== "KZ")
-            .map((m) => (
-              <line
-                key={`route-${m.code}`}
-                x1={cityMarkers[0].x}
-                y1={cityMarkers[0].y}
-                x2={m.x}
-                y2={m.y}
-                stroke="rgba(176,75,47,0.55)"
-                strokeWidth="0.5"
-                strokeDasharray="1.4 2.2"
-              />
-            ))}
-
-          {cityMarkers.map((m) => {
-            const isHover = hover === m.code;
-            const r = m.hub ? 3.4 : 2.4;
-            return (
-              <g
-                key={m.code}
-                onMouseEnter={() => setHover(m.code)}
-                onMouseLeave={() => setHover(null)}
-                style={{ cursor: "pointer" }}
-              >
-                <circle
-                  cx={m.x}
-                  cy={m.y}
-                  r={r + (isHover ? 6 : 3.5)}
-                  fill={
-                    isHover
-                      ? "rgba(224,160,57,0.40)"
-                      : "rgba(224,160,57,0.22)"
-                  }
-                  className="transition-all duration-500"
-                />
-                <circle
-                  cx={m.x}
-                  cy={m.y}
-                  r={r}
-                  fill={m.hub ? "#b14a2e" : "#1a1410"}
-                  stroke="#fbf8f1"
-                  strokeWidth="0.8"
-                />
-                <text
-                  x={m.x}
-                  y={m.y + r + 5}
-                  textAnchor="middle"
-                  fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace"
-                  fontSize={m.hub ? 5 : 4.2}
-                  letterSpacing="0.12em"
-                  fill="rgba(26,20,16,0.85)"
+            {/* Tiny dots over the map — no text, no overlap */}
+            <div className="pointer-events-none absolute inset-0">
+              {operatingCountries.map((c) => (
+                <span
+                  key={c.code}
+                  className="absolute"
+                  style={{ left: `${c.xPct}%`, top: `${c.yPct}%` }}
                 >
-                  {m.code}
-                </text>
-                {isHover && (
-                  <g>
-                    <rect
-                      x={m.x - m.name.length * 1.6}
-                      y={m.y - r - 11}
-                      width={m.name.length * 3.2}
-                      height={7}
-                      rx={1.2}
-                      fill="#1a1410"
-                    />
-                    <text
-                      x={m.x}
-                      y={m.y - r - 6}
-                      textAnchor="middle"
-                      fontFamily="ui-sans-serif, system-ui, sans-serif"
-                      fontSize="4.6"
-                      fill="#fbf8f1"
-                      fontWeight="500"
-                    >
-                      {m.name}
-                    </text>
-                  </g>
-                )}
-              </g>
-            );
-          })}
-        </svg>
-
-        {/* Top-left legend */}
-        <div className="absolute left-3 top-3 flex flex-col gap-1.5 rounded-sm bg-brand-paper/90 px-3 py-2 backdrop-blur">
-          <div className="text-[9.5px] uppercase tracking-[0.32em] text-brand-charcoal/55">
-            Where we operate
+                  <span
+                    className={cn(
+                      "block h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 transition-all duration-500",
+                      hover === c.code
+                        ? "h-2.5 w-2.5 bg-brand-saffron ring-brand-saffron/30"
+                        : c.hub
+                        ? "bg-brand-terracotta ring-brand-terracotta/30"
+                        : "bg-brand-ink ring-brand-ink/20"
+                    )}
+                  />
+                </span>
+              ))}
+            </div>
           </div>
-          <div className="flex items-center gap-3 text-[10.5px] text-brand-ink">
+
+          {/* Tiny inline legend */}
+          <div className="mt-3 flex justify-center gap-4 text-[10px] uppercase tracking-[0.28em] text-brand-charcoal/55">
             <span className="inline-flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-brand-terracotta" />
-              Hub · Kazakhstan
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-terracotta" />
+              Hub
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-brand-ink" />
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-ink" />
               Operating
             </span>
           </div>
         </div>
 
-        {/* Bottom-right caption */}
-        <div className="absolute bottom-3 right-3 rounded-sm bg-brand-paper/90 px-2.5 py-1 font-mono text-[9.5px] tracking-widest text-brand-charcoal/55 backdrop-blur">
-          7 COUNTRIES · CENTRAL ASIA
-        </div>
+        {/* Glass-effect country cards */}
+        <ul className="mt-8 grid grid-cols-2 gap-3 md:mt-10 md:grid-cols-4">
+          {operatingCountries.map((c) => (
+            <li key={c.code}>
+              <button
+                type="button"
+                onMouseEnter={() => setHover(c.code)}
+                onMouseLeave={() => setHover((h) => (h === c.code ? null : h))}
+                onFocus={() => setHover(c.code)}
+                onBlur={() => setHover((h) => (h === c.code ? null : h))}
+                className={cn(
+                  "group relative flex h-full w-full items-center gap-3 overflow-hidden rounded-md border p-3.5 text-left backdrop-blur-md transition-all duration-500",
+                  "border-white/55 bg-white/45 hover:border-brand-terracotta/45 hover:bg-white/65",
+                  // Subtle ring on the hub
+                  c.hub && "ring-1 ring-brand-terracotta/35 ring-offset-1 ring-offset-brand-paper/40"
+                )}
+                aria-label={`${c.name} · capital ${c.capital}`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/flags/${c.flag}.svg`}
+                  alt=""
+                  className="h-7 w-10 shrink-0 rounded-[3px] object-cover ring-1 ring-black/10"
+                  loading="lazy"
+                />
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-baseline gap-2">
+                    <span className="font-mono text-[10px] tracking-widest text-brand-terracotta">
+                      {c.code}
+                    </span>
+                    {c.hub && (
+                      <span className="rounded-full bg-brand-terracotta/10 px-1.5 py-0.5 text-[9px] uppercase tracking-widest text-brand-terracotta">
+                        Hub
+                      </span>
+                    )}
+                  </div>
+                  <div className="mt-0.5 truncate font-display text-[14.5px] font-medium leading-snug text-brand-ink">
+                    {c.name}
+                  </div>
+                  <div className="mt-0.5 truncate text-[11px] text-brand-charcoal/60">
+                    {c.capital}
+                  </div>
+                </div>
+              </button>
+            </li>
+          ))}
+
+          {/* "& beyond" trailing card */}
+          <li>
+            <div className="flex h-full items-center justify-center rounded-md border border-dashed border-brand-charcoal/30 bg-white/30 p-3.5 text-center backdrop-blur-md">
+              <div>
+                <div className="font-mono text-[10px] tracking-widest text-brand-charcoal/50">
+                  +
+                </div>
+                <div className="mt-1 font-display text-[14.5px] font-medium text-brand-charcoal/70">
+                  &amp; beyond
+                </div>
+                <div className="mt-0.5 text-[11px] text-brand-charcoal/50">
+                  on request
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   );

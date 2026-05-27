@@ -21,8 +21,29 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ["var(--font-display)", "Futura", "Trebuchet MS", "system-ui", "sans-serif"],
-        sans: ["var(--font-sans)", "Futura", "Trebuchet MS", "system-ui", "sans-serif"],
+        // Brand corporate font is Futura. Apple devices have it system-wide;
+        // every other platform falls back to Jost (next/font) — the
+        // closest open-source Futura clone.
+        display: [
+          "Futura",
+          "Futura PT",
+          '"Futura BT"',
+          "var(--font-display)",
+          "Jost",
+          "Trebuchet MS",
+          "system-ui",
+          "sans-serif",
+        ],
+        sans: [
+          "Futura",
+          "Futura PT",
+          '"Futura BT"',
+          "var(--font-sans)",
+          "Jost",
+          "Trebuchet MS",
+          "system-ui",
+          "sans-serif",
+        ],
         serif: ["var(--font-serif)", "Cormorant Garamond", "Georgia", "serif"],
       },
       letterSpacing: {
