@@ -8,7 +8,9 @@ import { SectionHeader } from "./SectionHeader";
 import { adventures, type GroupTour } from "@/data/content";
 import { cn } from "@/lib/utils";
 
-// Photo backdrop per destination
+// Photo backdrop per destination. The five group-tour destinations use
+// dedicated adv-*.jpg shots supplied by the client. Kazakhstan regions
+// keep the existing in-house photography.
 const regionPhoto: Record<string, string> = {
   Mangystau: "IMG_3858.jpg",
   Almaty: "IMG_2799.jpg",
@@ -19,11 +21,11 @@ const regionPhoto: Record<string, string> = {
   Zerenda: "IMG_2600_3.jpg",
   Buiratau: "IMG_6585.jpg",
   Bayanaul: "IMG_6075.jpg",
-  Kazakhstan: "IMG_2600_3.jpg",
-  Uzbekistan: "IMG_6919.jpg",
-  Kyrgyzstan: "IMG_3882.jpg",
-  Tajikistan: "IMG_3865.jpg",
-  Turkmenistan: "IMG_2972.jpg",
+  Kazakhstan: "adv-summer-camp.jpg",
+  Uzbekistan: "adv-uzbekistan.jpg",
+  Kyrgyzstan: "adv-kyrgyzstan.jpg",
+  Tajikistan: "adv-tajikistan.jpg",
+  Turkmenistan: "adv-turkmenistan.jpg",
 };
 
 function parseDayRange(label: string): {
