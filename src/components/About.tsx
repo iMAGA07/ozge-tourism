@@ -425,8 +425,11 @@ function WhereWeOperate() {
           </div>
         </div>
 
-        {/* Glass-effect country cards */}
-        <ul className="mt-8 grid grid-cols-2 gap-3 md:mt-10 md:grid-cols-4">
+        {/* Glass-effect country cards.
+            Layout: vertical (flag top, info below) on mobile so long names
+            never clip; horizontal (flag left, info right) on desktop where
+            cards are wider. */}
+        <ul className="mt-8 grid grid-cols-2 gap-2.5 sm:grid-cols-2 md:mt-10 md:grid-cols-4 md:gap-3">
           {operatingCountries.map((c) => (
             <li key={c.code}>
               <button
@@ -436,22 +439,25 @@ function WhereWeOperate() {
                 onFocus={() => setHover(c.code)}
                 onBlur={() => setHover((h) => (h === c.code ? null : h))}
                 className={cn(
-                  "group relative flex h-full w-full items-center gap-3 overflow-hidden rounded-md border p-3.5 text-left backdrop-blur-md transition-all duration-500",
+                  "group relative flex h-full w-full flex-col items-start gap-3 overflow-hidden rounded-xl border p-3 text-left backdrop-blur-md transition-all duration-500",
                   "border-white/55 bg-white/45 hover:border-brand-terracotta/45 hover:bg-white/65",
+                  // Desktop horizontal
+                  "md:flex-row md:items-center md:gap-3 md:p-3.5",
                   // Subtle ring on the hub
                   c.hub && "ring-1 ring-brand-terracotta/35 ring-offset-1 ring-offset-brand-paper/40"
                 )}
                 aria-label={`${c.name} · capital ${c.capital}`}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={`/flags/${c.flag}.svg`}
-                  alt=""
-                  className="h-7 w-10 shrink-0 rounded-[3px] object-cover ring-1 ring-black/10"
-                  loading="lazy"
-                />
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-baseline gap-2">
+                <div className="flex w-full items-start justify-between md:w-auto md:contents">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={`/flags/${c.flag}.svg`}
+                    alt=""
+                    className="h-7 w-10 shrink-0 rounded-[3px] object-cover ring-1 ring-black/10 md:h-7 md:w-10"
+                    loading="lazy"
+                  />
+                  {/* Code + hub badge on the right of the flag on mobile */}
+                  <div className="flex items-center gap-1.5 md:hidden">
                     <span className="font-mono text-[10px] tracking-widest text-brand-terracotta">
                       {c.code}
                     </span>
@@ -461,10 +467,23 @@ function WhereWeOperate() {
                       </span>
                     )}
                   </div>
-                  <div className="mt-0.5 truncate font-display text-[14.5px] font-medium leading-snug text-brand-ink">
+                </div>
+                <div className="min-w-0 flex-1">
+                  {/* Code + hub badge above the name on desktop only */}
+                  <div className="hidden items-baseline gap-2 md:flex">
+                    <span className="font-mono text-[10px] tracking-widest text-brand-terracotta">
+                      {c.code}
+                    </span>
+                    {c.hub && (
+                      <span className="rounded-full bg-brand-terracotta/10 px-1.5 py-0.5 text-[9px] uppercase tracking-widest text-brand-terracotta">
+                        Hub
+                      </span>
+                    )}
+                  </div>
+                  <div className="font-display text-[14px] font-medium leading-snug text-brand-ink md:mt-0.5 md:text-[14.5px]">
                     {c.name}
                   </div>
-                  <div className="mt-0.5 truncate text-[11px] text-brand-charcoal/60">
+                  <div className="mt-0.5 text-[11.5px] text-brand-charcoal/60">
                     {c.capital}
                   </div>
                 </div>
@@ -474,7 +493,7 @@ function WhereWeOperate() {
 
           {/* "& beyond" trailing card */}
           <li>
-            <div className="flex h-full items-center justify-center rounded-md border border-dashed border-brand-charcoal/30 bg-white/30 p-3.5 text-center backdrop-blur-md">
+            <div className="flex h-full items-center justify-center rounded-xl border border-dashed border-brand-charcoal/30 bg-white/30 p-3 text-center backdrop-blur-md md:p-3.5">
               <div>
                 <div className="font-mono text-[10px] tracking-widest text-brand-charcoal/50">
                   +

@@ -152,12 +152,12 @@ export function Hero() {
                   duration: 0.7,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="group flex items-center gap-2.5 rounded-xl border border-white/20 bg-white/10 px-3.5 py-2.5 backdrop-blur-md transition-colors duration-500 hover:border-brand-saffron/60 hover:bg-white/15"
+                className="group flex h-full min-h-[56px] items-center gap-3 rounded-xl border border-white/20 bg-white/10 px-3.5 py-2.5 backdrop-blur-md transition-all duration-500 hover:-translate-y-0.5 hover:border-brand-saffron/60 hover:bg-white/15"
               >
-                <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-brand-saffron/90 text-brand-ink">
-                  <Icon strokeWidth={1.8} className="h-4 w-4" />
+                <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-saffron/90 text-brand-ink">
+                  <Icon strokeWidth={1.8} className="h-[18px] w-[18px]" />
                 </span>
-                <span className="text-[12px] font-medium tracking-wide text-white sm:text-[12.5px]">
+                <span className="text-[12.5px] font-medium leading-tight tracking-wide text-white">
                   {o.label}
                 </span>
               </motion.div>
