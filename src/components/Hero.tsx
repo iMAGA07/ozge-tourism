@@ -109,7 +109,7 @@ export function Hero() {
 
       {/* Headline */}
       <motion.div
-        style={{ y: useTransform(scrollYProgress, [0, 1], ["2%", "-28%"]), opacity: fade }}
+        style={{ y: useTransform(scrollYProgress, [0, 1], ["-2%", "-32%"]), opacity: fade }}
         className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center"
       >
         <h1 className="fluid-h1 max-w-[16ch] font-display font-light text-white">
@@ -133,9 +133,11 @@ export function Hero() {
           history and vibrant cultures.
         </motion.p>
 
-        {/* Four offerings as glass chips — icon on top, label below
-            so every icon sits at the chip's horizontal centre regardless
-            of whether the label wraps to two lines. */}
+        {/* Four offerings as glass chips. The label gets a fixed 78px
+            width on mobile so every chip's icon+text group has the same
+            width — that lets `justify-center` place the icon at the
+            same x-offset whether the label is one line ("Tours") or
+            two ("Outdoor Adventures"). */}
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
@@ -154,12 +156,12 @@ export function Hero() {
                   duration: 0.7,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="group flex h-full min-h-[92px] flex-col items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 px-3 py-3 backdrop-blur-md transition-all duration-500 hover:-translate-y-0.5 hover:border-brand-saffron/60 hover:bg-white/15 sm:min-h-0 sm:flex-row sm:gap-3 sm:py-2.5 sm:px-3.5"
+                className="group flex h-full min-h-[64px] items-center justify-center gap-3 rounded-xl border border-white/20 bg-white/10 px-3.5 py-2.5 backdrop-blur-md transition-all duration-500 hover:-translate-y-0.5 hover:border-brand-saffron/60 hover:bg-white/15"
               >
-                <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-saffron/90 text-brand-ink sm:h-8 sm:w-8">
-                  <Icon strokeWidth={1.8} className="h-[19px] w-[19px] sm:h-[18px] sm:w-[18px]" />
+                <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-saffron/90 text-brand-ink">
+                  <Icon strokeWidth={1.8} className="h-[18px] w-[18px]" />
                 </span>
-                <span className="text-center text-[12px] font-medium leading-tight tracking-wide text-white sm:text-[12.5px]">
+                <span className="w-[78px] text-center text-[12.5px] font-medium leading-tight tracking-wide text-white sm:w-auto sm:text-left">
                   {o.label}
                 </span>
               </motion.div>
