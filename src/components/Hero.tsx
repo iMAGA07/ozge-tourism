@@ -100,7 +100,7 @@ export function Hero() {
     <section
       id="home"
       ref={ref}
-      className="relative h-[100svh] min-h-[640px] w-full overflow-hidden bg-brand-ink"
+      className="relative h-[calc(100svh+15px)] min-h-[655px] w-full overflow-hidden bg-brand-ink"
     >
       {/* Cross-fading photo layers */}
       <motion.div style={{ y, scale }} className="absolute inset-0">
@@ -302,7 +302,7 @@ export function Hero() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[60] flex items-end justify-center p-3 sm:items-center sm:p-6"
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6"
             onClick={() => setOpenIndex(null)}
             role="dialog"
             aria-modal="true"
@@ -313,9 +313,9 @@ export function Hero() {
 
             {/* Card */}
             <motion.div
-              initial={{ opacity: 0, y: 22, scale: 0.97 }}
+              initial={{ opacity: 0, y: 14, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 14, scale: 0.98 }}
+              exit={{ opacity: 0, y: 10, scale: 0.97 }}
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               onClick={(e) => e.stopPropagation()}
               className="relative z-10 flex max-h-[72vh] w-full max-w-sm flex-col overflow-hidden rounded-2xl bg-brand-paper text-brand-ink shadow-2xl sm:max-h-[78vh] sm:max-w-md"
