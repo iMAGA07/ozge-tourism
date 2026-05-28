@@ -2,27 +2,63 @@
 import Image from "next/image";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { Compass, Mountain, Plane, CalendarCheck } from "lucide-react";
+import { Compass, Mountain, Plane, BedDouble, X, Sparkles } from "lucide-react";
 import { RevealText } from "./Reveal";
 import { Magnetic } from "./Magnetic";
 
 // The four things Ozge does, shown as glass chips under the hero copy.
+// Each one is tap-to-open: the description appears in a minimal popup.
 const offerings = [
-  { icon: Compass, label: "Tours" },
-  { icon: Mountain, label: "Outdoor Adventures" },
-  { icon: Plane, label: "Logistics & Transport" },
-  { icon: CalendarCheck, label: "Bookings" },
+  {
+    icon: Compass,
+    label: "Tours",
+    description: [
+      "We organize all kinds of tours across Central Asia with experienced local guides fluent in 10+ languages, including but not limited to English, French, Chinese, German, Spanish, and Turkish — from individual and family trips to group, corporate, organizational, embassy, university, and school tours.",
+      "Our experiences include city tours, nature and adventure tours, cultural and historical journeys, educational programs, summer trips, business delegations, and fully customized travel experiences. Whether you are a solo traveler, a family, a company, an embassy, or an institution, we design memorable journeys tailored to your needs.",
+    ],
+  },
+  {
+    icon: Mountain,
+    label: "Outdoor Adventures",
+    description: [
+      "We organize outdoor adventures of all kinds across Central Asia for individuals, families, groups, corporate teams, embassies, universities, and organizations.",
+      "Our activities include horse riding, quad biking, hiking, camping, skiing, skating, archery, trekking, mountain adventures, and many more exciting experiences designed for all levels of adventure seekers.",
+      "We also have a Professional Horse Riding and Archery School for beginners, intermediate learners, and advanced students interested in developing their skills through professional training and guided practice.",
+      "All our experiences are led by experienced instructors, guides, and local experts, ensuring both safety and unforgettable memories in the heart of Central Asia’s natural beauty.",
+    ],
+  },
+  {
+    icon: Plane,
+    label: "Logistics & Transport",
+    description: [
+      "We also provide logistics and transportation services of all kinds across Central Asia, helping travelers, organizations, companies, and delegations enjoy smooth and comfortable journeys from start to finish.",
+      "Our services include flight bookings, airport pickup and drop-off, guest welcoming and assistance, intercity transportation, private transfers, and on-the-ground travel coordination. We offer transportation options in Economy, Comfort, Business, and Premium classes based on your needs and preferences.",
+      "Whether for individual travelers, families, corporate groups, embassies, events, or official delegations, we provide reliable and professional logistics support tailored to every journey.",
+    ],
+  },
+  {
+    icon: BedDouble,
+    label: "Accommodation & Booking",
+    description: [
+      "We also assist with bookings of different services across Central Asia for individuals, families, groups, companies, embassies, and organizations.",
+      "Our booking services include flight tickets, hotel and accommodation reservations, transportation arrangements, event and conference hall bookings, restaurant reservations, activity and excursion bookings, and many other travel and hospitality services based on your needs.",
+      "Whether you are planning a personal trip, a business visit, a group tour, or a large-scale event, we help make the entire process smooth, convenient, and professionally organized.",
+    ],
+  },
 ];
 
-// Five cinematic frames that crossfade slowly in the background. Each has
-// its own object-position so the strongest part of the photo stays in view
-// (smaller Y = show more of the top, which crops the people at the bottom).
+// Eight cinematic frames that crossfade slowly in the background. Each
+// has its own object-position so the strongest part of the photo stays
+// in view (smaller Y = show more of the top).
 const heroFrames = [
-  { src: "IMG_0898.jpg", position: "center 30%", label: "Horseback · Kazakh steppe" },
-  { src: "IMG_3882.jpg", position: "center 8%", label: "Burabay · Akmola" },
-  { src: "IMG_2600_3.jpg", position: "center 8%", label: "Sacred lakes · Akmola" },
-  { src: "IMG_6075.jpg", position: "center 10%", label: "Open steppe" },
-  { src: "IMG_6585.jpg", position: "center 12%", label: "Karkaraly · Karaganda" },
+  { src: "hero-01.jpg", position: "center 35%", label: "Mountain pass · Central Asia" },
+  { src: "hero-02.jpg", position: "center 30%", label: "Ancient mosaic · Samarkand" },
+  { src: "hero-03.jpg", position: "center 40%", label: "Lake shore · Tian Shan" },
+  { src: "hero-04.jpg", position: "center 35%", label: "Old town · Bukhara" },
+  { src: "hero-05.jpg", position: "center 30%", label: "Snow ridge · Almaty" },
+  { src: "hero-06.jpg", position: "center 35%", label: "Sunset desert · Mangystau" },
+  { src: "hero-07.jpg", position: "center 40%", label: "Nomad valley · Kyrgyzstan" },
+  { src: "hero-08.jpg", position: "center 35%", label: "Historic gate · Khiva" },
 ];
 
 export function Hero() {
@@ -35,6 +71,7 @@ export function Hero() {
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
   const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
   const labelY = useTransform(scrollYProgress, [0, 1], ["0%", "120%"]);
+  const headlineY = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]);
 
   // Cross-fade between hero frames every 6s.
   const [frame, setFrame] = useState(0);
@@ -43,6 +80,21 @@ export function Hero() {
     return () => clearInterval(id);
   }, []);
   const active = heroFrames[frame];
+
+  // Popup state: which offering is open (null = closed).
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const activeOffering = openIndex !== null ? offerings[openIndex] : null;
+
+  // Lock body scroll while the popup is open.
+  useEffect(() => {
+    if (activeOffering) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = prev;
+      };
+    }
+  }, [activeOffering]);
 
   return (
     <section
@@ -109,12 +161,14 @@ export function Hero() {
 
       {/* Headline */}
       <motion.div
-        style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]), opacity: fade }}
-        className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center"
+        style={{ y: headlineY, opacity: fade }}
+        className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center sm:px-6"
       >
-        <h1 className="fluid-h1 max-w-[16ch] font-display font-light text-white">
-          <RevealText text="Explore. Enjoy." delay={0.05} />
-          <span className="block font-serif italic font-semibold text-brand-saffron">
+        {/* Headline — all three words on one line on mobile thanks to the
+            smaller mobile size + inline Connect span. */}
+        <h1 className="font-display font-light text-white text-[1.625rem] leading-[1.05] tracking-[-0.03em] sm:text-[3rem] md:text-[4rem] lg:text-[5.5rem] xl:text-[6.5rem] 2xl:text-[7rem] sm:leading-[0.95] sm:tracking-[-0.035em] sm:max-w-[18ch]">
+          <RevealText text="Explore. Enjoy." delay={0.05} />{" "}
+          <span className="font-serif italic font-semibold text-brand-saffron">
             <RevealText text="Connect." delay={0.18} />
           </span>
         </h1>
@@ -123,7 +177,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.85, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-6 max-w-[52ch] text-[14px] leading-[1.5] text-white/90 sm:mt-7 sm:text-[17px] sm:leading-[1.55] md:text-[18px] lg:text-[20px] xl:text-[22px]"
+          className="mt-5 max-w-[52ch] text-[13px] leading-[1.5] text-white/90 sm:mt-7 sm:text-[17px] sm:leading-[1.55] md:text-[18px] lg:text-[20px] xl:text-[22px]"
         >
           Join us to experience and enjoy the very best of{" "}
           <span className="whitespace-nowrap font-serif italic font-bold text-brand-saffron">
@@ -133,11 +187,11 @@ export function Hero() {
           history and vibrant cultures.
         </motion.p>
 
-        {/* Four offerings as glass chips. The label gets a fixed 78px
-            width on mobile so every chip's icon+text group has the same
-            width — that lets `justify-center` place the icon at the
-            same x-offset whether the label is one line ("Tours") or
-            two ("Outdoor Adventures"). */}
+        {/* Four offerings as glass chips. Each chip is a tap-target that
+            opens the description popup. Labels get a fixed 88px width on
+            mobile so the icon+text group is the same size for every
+            chip — that lets justify-center anchor every icon at the same
+            x-offset whether the label wraps to two lines or not. */}
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
@@ -147,8 +201,12 @@ export function Hero() {
           {offerings.map((o, i) => {
             const Icon = o.icon;
             return (
-              <motion.div
+              <motion.button
                 key={o.label}
+                type="button"
+                onClick={() => setOpenIndex(i)}
+                data-cursor="hover"
+                data-cursor-label="Open"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
@@ -156,15 +214,15 @@ export function Hero() {
                   duration: 0.7,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="group flex h-full min-h-[52px] items-center justify-center gap-2.5 rounded-xl border border-white/20 bg-white/10 px-3 py-2 backdrop-blur-md transition-all duration-500 hover:-translate-y-0.5 hover:border-brand-saffron/60 hover:bg-white/15 sm:min-h-[60px] sm:gap-3 sm:px-3.5 sm:py-2.5"
+                className="group flex h-full min-h-[52px] items-center justify-center gap-2.5 rounded-xl border border-white/20 bg-white/10 px-3 py-2 backdrop-blur-md transition-all duration-500 hover:-translate-y-0.5 hover:border-brand-saffron/60 hover:bg-white/15 active:scale-[0.98] sm:min-h-[60px] sm:gap-3 sm:px-3.5 sm:py-2.5"
               >
                 <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-brand-saffron/90 text-brand-ink sm:h-8 sm:w-8">
                   <Icon strokeWidth={1.8} className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
                 </span>
-                <span className="w-[80px] text-center text-[12px] font-medium leading-tight tracking-wide text-white sm:w-auto sm:text-left sm:text-[12.5px]">
+                <span className="w-[88px] text-center text-[12px] font-medium leading-tight tracking-wide text-white sm:w-auto sm:text-left sm:text-[12.5px]">
                   {o.label}
                 </span>
-              </motion.div>
+              </motion.button>
             );
           })}
         </motion.div>
@@ -173,7 +231,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.4, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-7 flex w-full flex-col items-center justify-center gap-3 sm:mt-9 sm:flex-row sm:flex-wrap"
+          className="mt-6 flex w-full flex-col items-center justify-center gap-3 sm:mt-9 sm:flex-row sm:flex-wrap"
         >
           <Magnetic strength={0.18} className="w-full max-w-[280px] sm:w-auto sm:max-w-none">
             <a
@@ -233,6 +291,100 @@ export function Hero() {
           <div className="mt-1 text-sm">Kazakhstan &amp; Central Asia</div>
         </motion.div>
       </motion.div>
+
+      {/* Offering popup — minimalistic glass card with icon, title and
+          description paragraphs. Closes on backdrop tap or the X button. */}
+      <AnimatePresence>
+        {activeOffering && openIndex !== null && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-[60] flex items-end justify-center p-3 sm:items-center sm:p-6"
+            onClick={() => setOpenIndex(null)}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="offering-title"
+          >
+            {/* Backdrop */}
+            <div className="absolute inset-0 bg-brand-ink/70 backdrop-blur-md" />
+
+            {/* Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 28, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 18, scale: 0.98 }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative z-10 flex max-h-[88vh] w-full max-w-md flex-col overflow-hidden rounded-2xl bg-brand-paper text-brand-ink shadow-2xl sm:max-w-lg"
+            >
+              {/* Header strip */}
+              <div className="relative flex items-start justify-between gap-4 border-b border-brand-charcoal/10 px-5 py-5 sm:px-7 sm:py-6">
+                {/* Subtle saffron glow behind the icon for a touch of warmth */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-brand-saffron/10 to-transparent"
+                />
+                <div className="relative flex items-center gap-3">
+                  <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-saffron text-brand-ink shadow-sm">
+                    <activeOffering.icon strokeWidth={1.7} className="h-5 w-5" />
+                  </span>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.3em] text-brand-terracotta">
+                      <Sparkles strokeWidth={1.8} className="h-3 w-3" />
+                      What we do
+                    </div>
+                    <h3
+                      id="offering-title"
+                      className="mt-1 font-display text-[19px] font-medium leading-tight text-brand-ink sm:text-[22px]"
+                    >
+                      {activeOffering.label}
+                    </h3>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setOpenIndex(null)}
+                  aria-label="Close"
+                  className="relative shrink-0 rounded-full p-2 text-brand-charcoal/55 transition-colors hover:bg-brand-charcoal/5 hover:text-brand-ink"
+                >
+                  <X strokeWidth={1.7} className="h-5 w-5" />
+                </button>
+              </div>
+
+              {/* Body */}
+              <div className="overflow-y-auto px-5 py-5 sm:px-7 sm:py-6">
+                <div className="space-y-3.5 text-[13.5px] leading-relaxed text-brand-charcoal/80 sm:text-[14.5px]">
+                  {activeOffering.description.map((para, idx) => (
+                    <p key={idx}>{para}</p>
+                  ))}
+                </div>
+
+                {/* Footer CTA */}
+                <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-brand-charcoal/10 pt-5">
+                  <a
+                    href="#book"
+                    onClick={() => setOpenIndex(null)}
+                    className="group inline-flex items-center gap-2 rounded-full bg-brand-ink px-5 py-2.5 text-[12.5px] font-medium text-brand-cream transition-all hover:bg-brand-terracotta"
+                  >
+                    Inquire
+                    <span className="transition-transform group-hover:translate-x-0.5">→</span>
+                  </a>
+                  <a
+                    href="https://wa.me/77757145327"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="inline-flex items-center gap-2 rounded-full border border-brand-charcoal/15 px-5 py-2.5 text-[12.5px] font-medium text-brand-ink transition-all hover:border-brand-terracotta/40 hover:text-brand-terracotta"
+                  >
+                    Message on WhatsApp
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
