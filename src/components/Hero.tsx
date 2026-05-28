@@ -162,11 +162,12 @@ export function Hero() {
       {/* Headline */}
       <motion.div
         style={{ y: headlineY, opacity: fade }}
-        className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center sm:px-6"
+        className="relative z-10 flex h-full flex-col items-center justify-center px-3 text-center sm:px-6"
       >
-        {/* Headline — all three words on one line on mobile thanks to the
-            smaller mobile size + inline Connect span. */}
-        <h1 className="font-display font-light text-white text-[1.625rem] leading-[1.05] tracking-[-0.03em] sm:text-[3rem] md:text-[4rem] lg:text-[5.5rem] xl:text-[6.5rem] 2xl:text-[7rem] sm:leading-[0.95] sm:tracking-[-0.035em] sm:max-w-[18ch]">
+        {/* Headline — all three words stay on one line on mobile thanks
+            to the smaller-on-mobile size + inline Connect span + tight
+            tracking. ~15% larger than the previous mobile size. */}
+        <h1 className="font-display font-light text-white text-[1.875rem] leading-[1.05] tracking-[-0.045em] sm:text-[3rem] md:text-[4rem] lg:text-[5.5rem] xl:text-[6.5rem] 2xl:text-[7rem] sm:leading-[0.95] sm:tracking-[-0.035em] sm:max-w-[18ch]">
           <RevealText text="Explore. Enjoy." delay={0.05} />{" "}
           <span className="font-serif italic font-semibold text-brand-saffron">
             <RevealText text="Connect." delay={0.18} />
@@ -177,7 +178,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.85, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-5 max-w-[52ch] text-[13px] leading-[1.5] text-white/90 sm:mt-7 sm:text-[17px] sm:leading-[1.55] md:text-[18px] lg:text-[20px] xl:text-[22px]"
+          className="mt-5 max-w-[52ch] text-[12px] leading-[1.45] text-white/90 sm:mt-7 sm:text-[17px] sm:leading-[1.55] md:text-[18px] lg:text-[20px] xl:text-[22px]"
         >
           Join us to experience and enjoy the very best of{" "}
           <span className="whitespace-nowrap font-serif italic font-bold text-brand-saffron">
@@ -292,7 +293,7 @@ export function Hero() {
         </motion.div>
       </motion.div>
 
-      {/* Offering popup — minimalistic glass card with icon, title and
+      {/* Offering popup — compact glass card with icon, title and
           description paragraphs. Closes on backdrop tap or the X button. */}
       <AnimatePresence>
         {activeOffering && openIndex !== null && (
@@ -312,32 +313,32 @@ export function Hero() {
 
             {/* Card */}
             <motion.div
-              initial={{ opacity: 0, y: 28, scale: 0.97 }}
+              initial={{ opacity: 0, y: 22, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 18, scale: 0.98 }}
-              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              exit={{ opacity: 0, y: 14, scale: 0.98 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               onClick={(e) => e.stopPropagation()}
-              className="relative z-10 flex max-h-[88vh] w-full max-w-md flex-col overflow-hidden rounded-2xl bg-brand-paper text-brand-ink shadow-2xl sm:max-w-lg"
+              className="relative z-10 flex max-h-[72vh] w-full max-w-sm flex-col overflow-hidden rounded-2xl bg-brand-paper text-brand-ink shadow-2xl sm:max-h-[78vh] sm:max-w-md"
             >
-              {/* Header strip */}
-              <div className="relative flex items-start justify-between gap-4 border-b border-brand-charcoal/10 px-5 py-5 sm:px-7 sm:py-6">
+              {/* Header strip — compact, single line of metadata */}
+              <div className="relative flex items-center justify-between gap-3 border-b border-brand-charcoal/10 px-4 py-3 sm:px-5 sm:py-4">
                 {/* Subtle saffron glow behind the icon for a touch of warmth */}
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-brand-saffron/10 to-transparent"
+                  className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-brand-saffron/10 to-transparent"
                 />
-                <div className="relative flex items-center gap-3">
-                  <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-saffron text-brand-ink shadow-sm">
-                    <activeOffering.icon strokeWidth={1.7} className="h-5 w-5" />
+                <div className="relative flex items-center gap-2.5">
+                  <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-saffron text-brand-ink shadow-sm">
+                    <activeOffering.icon strokeWidth={1.7} className="h-[18px] w-[18px]" />
                   </span>
                   <div className="min-w-0">
-                    <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.3em] text-brand-terracotta">
-                      <Sparkles strokeWidth={1.8} className="h-3 w-3" />
+                    <div className="flex items-center gap-1 text-[9px] uppercase tracking-[0.28em] text-brand-terracotta">
+                      <Sparkles strokeWidth={1.8} className="h-2.5 w-2.5" />
                       What we do
                     </div>
                     <h3
                       id="offering-title"
-                      className="mt-1 font-display text-[19px] font-medium leading-tight text-brand-ink sm:text-[22px]"
+                      className="mt-0.5 font-display text-[15.5px] font-medium leading-tight text-brand-ink sm:text-[17px]"
                     >
                       {activeOffering.label}
                     </h3>
@@ -347,39 +348,39 @@ export function Hero() {
                   type="button"
                   onClick={() => setOpenIndex(null)}
                   aria-label="Close"
-                  className="relative shrink-0 rounded-full p-2 text-brand-charcoal/55 transition-colors hover:bg-brand-charcoal/5 hover:text-brand-ink"
+                  className="relative shrink-0 rounded-full p-1.5 text-brand-charcoal/55 transition-colors hover:bg-brand-charcoal/5 hover:text-brand-ink"
                 >
-                  <X strokeWidth={1.7} className="h-5 w-5" />
+                  <X strokeWidth={1.7} className="h-[18px] w-[18px]" />
                 </button>
               </div>
 
-              {/* Body */}
-              <div className="overflow-y-auto px-5 py-5 sm:px-7 sm:py-6">
-                <div className="space-y-3.5 text-[13.5px] leading-relaxed text-brand-charcoal/80 sm:text-[14.5px]">
+              {/* Scrollable body */}
+              <div className="overflow-y-auto px-4 py-4 sm:px-5 sm:py-5">
+                <div className="space-y-2.5 text-[12.5px] leading-[1.55] text-brand-charcoal/80 sm:text-[13.5px]">
                   {activeOffering.description.map((para, idx) => (
                     <p key={idx}>{para}</p>
                   ))}
                 </div>
+              </div>
 
-                {/* Footer CTA */}
-                <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-brand-charcoal/10 pt-5">
-                  <a
-                    href="#book"
-                    onClick={() => setOpenIndex(null)}
-                    className="group inline-flex items-center gap-2 rounded-full bg-brand-ink px-5 py-2.5 text-[12.5px] font-medium text-brand-cream transition-all hover:bg-brand-terracotta"
-                  >
-                    Inquire
-                    <span className="transition-transform group-hover:translate-x-0.5">→</span>
-                  </a>
-                  <a
-                    href="https://wa.me/77757145327"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="inline-flex items-center gap-2 rounded-full border border-brand-charcoal/15 px-5 py-2.5 text-[12.5px] font-medium text-brand-ink transition-all hover:border-brand-terracotta/40 hover:text-brand-terracotta"
-                  >
-                    Message on WhatsApp
-                  </a>
-                </div>
+              {/* Fixed footer with CTAs */}
+              <div className="flex flex-wrap items-center gap-2 border-t border-brand-charcoal/10 bg-brand-paper px-4 py-3 sm:px-5 sm:py-4">
+                <a
+                  href="#book"
+                  onClick={() => setOpenIndex(null)}
+                  className="group inline-flex items-center gap-1.5 rounded-full bg-brand-ink px-4 py-2 text-[12px] font-medium text-brand-cream transition-all hover:bg-brand-terracotta"
+                >
+                  Inquire
+                  <span className="transition-transform group-hover:translate-x-0.5">→</span>
+                </a>
+                <a
+                  href="https://wa.me/77757145327"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-brand-charcoal/15 px-4 py-2 text-[12px] font-medium text-brand-ink transition-all hover:border-brand-terracotta/40 hover:text-brand-terracotta"
+                >
+                  WhatsApp
+                </a>
               </div>
             </motion.div>
           </motion.div>
