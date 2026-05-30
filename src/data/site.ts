@@ -18,6 +18,7 @@ export const site = {
 export const navItems = [
   { label: "Home", href: "#home" },
   { label: "Upcoming Adventures", href: "#adventures" },
+  { label: "Riding School", href: "#horse-school" },
   { label: "Our Services", href: "#services" },
   { label: "Why Choose Us", href: "#why" },
   { label: "Our Pricing", href: "#pricing" },

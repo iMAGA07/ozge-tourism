@@ -3,6 +3,7 @@ import { Hero } from "@/components/Hero";
 import { Marquee } from "@/components/Marquee";
 import { InteractiveMap } from "@/components/InteractiveMap";
 import { Adventures } from "@/components/Adventures";
+import { HorseSchool } from "@/components/HorseSchool";
 import { Services } from "@/components/Services";
 import { WhyUs } from "@/components/WhyUs";
 import { Pricing } from "@/components/Pricing";
@@ -19,6 +20,7 @@ export default function HomePage() {
       <Marquee />
       <InteractiveMap />
       <Adventures />
+      <HorseSchool />
       <Services />
       <WhyUs />
       <Pricing />

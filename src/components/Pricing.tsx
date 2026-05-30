@@ -1,10 +1,42 @@
 "use client";
 import { motion } from "framer-motion";
+import { Gift, Users, Building2, ShieldCheck, type LucideIcon } from "lucide-react";
 import { Reveal } from "./Reveal";
 import { SectionHeader } from "./SectionHeader";
 import { pricing } from "@/data/content";
 import { AnimatedNumber } from "./AnimatedNumber";
 import { cn } from "@/lib/utils";
+
+// Special-discount tiers, distilled from the client's brief.
+type Discount = {
+  icon: LucideIcon;
+  title: string;
+  detail: string;
+  tag: string;
+};
+const discounts: Discount[] = [
+  {
+    icon: Gift,
+    title: "Loyal riders & referrers",
+    detail:
+      "Joined 5+ adventures or referred a friend? Enjoy an exclusive discount on any trip.",
+    tag: "Exclusive",
+  },
+  {
+    icon: Users,
+    title: "Families of 4+",
+    detail:
+      "Travelling together? Special discounted family rates on every adventure.",
+    tag: "Family rate",
+  },
+  {
+    icon: Building2,
+    title: "Organized groups",
+    detail:
+      "From one company, embassy or organization — 5+ people −10% each, 10+ people −25% each.",
+    tag: "Up to −25%",
+  },
+];
 
 // Killer phrase + bullets per option. Kept here (not in content.ts) so the
 // pricing data file stays as the docx wording; this file owns the
@@ -97,6 +129,57 @@ export function Pricing() {
           ))}
         </div>
 
+        {/* ── Special discounts ───────────────────────────────────────── */}
+        <div className="mt-20 md:mt-24">
+          <Reveal>
+            <div className="flex flex-col items-center text-center">
+              <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.32em] text-brand-terracotta">
+                <span className="h-[1px] w-8 bg-brand-terracotta/60" />
+                Ways to save more
+                <span className="h-[1px] w-8 bg-brand-terracotta/60" />
+              </span>
+              <h3 className="mt-4 font-display text-2xl font-light text-brand-ink md:text-3xl">
+                Special{" "}
+                <span className="font-serif italic text-brand-terracotta">
+                  discounts
+                </span>{" "}
+                for you.
+              </h3>
+            </div>
+          </Reveal>
+
+          <div className="mt-9 grid gap-4 md:grid-cols-3 md:gap-5">
+            {discounts.map((d, i) => (
+              <DiscountCard key={d.title} discount={d} index={i} />
+            ))}
+          </div>
+
+          {/* 100% refund guarantee ribbon */}
+          <Reveal delay={0.15}>
+            <div className="relative mt-5 overflow-hidden rounded-2xl border border-brand-saffron/30 bg-brand-ink px-6 py-7 text-brand-cream md:mt-6 md:px-10 md:py-8">
+              <div className="pointer-events-none absolute -right-16 -top-16 h-52 w-52 rounded-full bg-brand-saffron/15 blur-3xl" />
+              <div className="relative flex flex-col items-start gap-5 md:flex-row md:items-center md:gap-7">
+                <span className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-brand-saffron/15 text-brand-saffron ring-1 ring-brand-saffron/30">
+                  <ShieldCheck strokeWidth={1.6} className="h-7 w-7" />
+                </span>
+                <div className="min-w-0">
+                  <div className="text-[10.5px] uppercase tracking-[0.32em] text-brand-saffron">
+                    Our bold promise — now &amp; forever
+                  </div>
+                  <p className="mt-2 text-[15px] leading-relaxed text-brand-cream/90 md:text-base">
+                    If, at the end of your adventure, you feel the experience was
+                    not worth what you paid, we refund you{" "}
+                    <span className="font-medium text-brand-saffron">
+                      100% — guaranteed, anytime.
+                    </span>{" "}
+                    ☺️
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+
         {/* Closing manifesto */}
         <Reveal delay={0.2}>
           <div className="mx-auto mt-16 max-w-[72ch] text-center md:mt-20">
@@ -117,6 +200,45 @@ export function Pricing() {
         </Reveal>
       </div>
     </section>
+  );
+}
+
+function DiscountCard({
+  discount,
+  index,
+}: {
+  discount: Discount;
+  index: number;
+}) {
+  const Icon = discount.icon;
+  return (
+    <Reveal delay={Math.min(index, 4) * 0.07}>
+      <motion.div
+        whileHover={{ y: -4 }}
+        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+        className="group relative h-full overflow-hidden rounded-2xl border border-brand-charcoal/12 bg-white p-6 transition-colors hover:border-brand-terracotta/30 md:p-7"
+      >
+        <div className="flex items-start justify-between gap-3">
+          <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-terracotta/10 text-brand-terracotta transition-colors group-hover:bg-brand-terracotta group-hover:text-brand-cream">
+            <Icon strokeWidth={1.6} className="h-[22px] w-[22px]" />
+          </span>
+          <span className="rounded-full border border-brand-terracotta/30 px-2.5 py-0.5 text-[9.5px] uppercase tracking-[0.2em] text-brand-terracotta">
+            {discount.tag}
+          </span>
+        </div>
+        <h4 className="mt-5 font-display text-[18px] font-medium leading-snug text-brand-ink">
+          {discount.title}
+        </h4>
+        <p className="mt-2 text-[13px] leading-relaxed text-brand-charcoal/70">
+          {discount.detail}
+        </p>
+        {/* Bottom accent line — grows on hover */}
+        <span
+          aria-hidden="true"
+          className="absolute inset-x-6 bottom-0 h-[2px] origin-left scale-x-0 bg-brand-terracotta transition-transform duration-700 ease-smooth group-hover:scale-x-100 md:inset-x-7"
+        />
+      </motion.div>
+    </Reveal>
   );
 }
 
