@@ -13,6 +13,10 @@ export function Cursor() {
   const [variant, setVariant] = useState<"default" | "hover" | "drag">("default");
   const [enabled, setEnabled] = useState(false);
   const labelRef = useRef("");
+  // Track the current variant in a ref so the high-frequency pointer
+  // handlers can skip redundant setState calls (pointerover fires on every
+  // element boundary the cursor crosses).
+  const variantRef = useRef<"default" | "hover" | "drag">("default");
 
   const ringX = useSpring(x, { damping: 22, stiffness: 220, mass: 0.7 });
   const ringY = useSpring(y, { damping: 22, stiffness: 220, mass: 0.7 });
@@ -26,6 +30,11 @@ export function Cursor() {
     if (!hasFinePointer || prefersReduced) return;
     setEnabled(true);
 
+    const apply = (v: "default" | "hover" | "drag") => {
+      if (variantRef.current === v) return;
+      variantRef.current = v;
+      setVariant(v);
+    };
     const move = (e: PointerEvent) => {
       x.set(e.clientX);
       y.set(e.clientY);
@@ -39,12 +48,12 @@ export function Cursor() {
       if (interactive) {
         const label = (interactive as HTMLElement).dataset.cursorLabel;
         labelRef.current = label ?? "";
-        setVariant("hover");
+        apply("hover");
       } else {
-        setVariant("default");
+        apply("default");
       }
     };
-    const down = () => setVariant("drag");
+    const down = () => apply("drag");
     const up = (e: PointerEvent) => {
       over(e);
     };
@@ -81,7 +90,7 @@ export function Cursor() {
               variant === "hover" ? "rgba(176,75,47,0.55)" : "rgba(26,20,16,0.5)",
           }}
           transition={{ type: "spring", damping: 24, stiffness: 240, mass: 0.6 }}
-          className="-ml-4 -mt-4 rounded-full border backdrop-blur-[2px]"
+          className="-ml-4 -mt-4 rounded-full border"
           style={{ width: 32, height: 32 }}
         />
       </motion.div>

@@ -49,7 +49,7 @@ export function HorseSchool() {
   return (
     <section
       id="horse-school"
-      className="relative overflow-hidden bg-brand-ink py-24 text-brand-cream md:py-36"
+      className="relative overflow-hidden bg-brand-ink py-20 text-brand-cream md:py-28"
     >
       {/* Warm radial glow + faint grain for depth */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-[radial-gradient(ellipse_at_top,rgba(224,160,57,0.12),transparent_65%)]" />

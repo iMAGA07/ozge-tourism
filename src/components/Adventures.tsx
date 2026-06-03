@@ -58,7 +58,7 @@ export function Adventures() {
   return (
     <section
       id="adventures"
-      className="relative overflow-hidden bg-brand-cream py-24 md:py-36"
+      className="relative overflow-hidden bg-brand-cream py-20 md:py-28"
     >
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
         <SectionHeader
@@ -381,7 +381,8 @@ export function Adventures() {
               >
                 +7 775 714 53 27
               </a>{" "}
-              (WhatsApp &amp; Telegram — Mohammad). See you soon on one — or
+              (WhatsApp &amp; Telegram — Mohammad Habib Abdullah). See you soon
+              on one — or
               maybe all — of our adventures! 😊
             </p>
           </div>
@@ -432,22 +433,25 @@ function RecurringPanel({
         <ul className="mt-6 flex flex-wrap gap-2">
           {data.destinations.map((d) => {
             const isBeyond = d === "& More";
+            const photo = regionPhoto[d] ?? "IMG_2600_3.jpg";
             return (
               <li
                 key={d}
                 className={cn(
-                  "inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[12.5px] transition-all",
+                  "inline-flex items-center gap-2 rounded-full border py-1 pr-3.5 text-[12.5px] transition-colors",
                   isBeyond
-                    ? "border-dashed border-brand-charcoal/30 text-brand-charcoal/55"
-                    : "border-brand-charcoal/15 bg-white text-brand-ink"
+                    ? "border-dashed border-brand-charcoal/30 pl-3.5 text-brand-charcoal/55"
+                    : "border-brand-charcoal/15 bg-white pl-1 text-brand-ink"
                 )}
               >
-                {!isBeyond && (
+                {isBeyond ? (
+                  <span className="text-brand-charcoal/45">+</span>
+                ) : (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src="/flags/kz.svg"
-                    alt=""
-                    className="h-3 w-[18px] rounded-[1.5px] object-cover ring-1 ring-black/10"
+                    src={`/photos/${photo}`}
+                    alt={d}
+                    className="h-7 w-7 shrink-0 rounded-full object-cover ring-1 ring-black/5"
                     loading="lazy"
                   />
                 )}

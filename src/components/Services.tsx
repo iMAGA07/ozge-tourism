@@ -54,7 +54,7 @@ export function Services() {
   return (
     <section
       id="services"
-      className="relative overflow-hidden bg-brand-mist py-24 md:py-36"
+      className="relative overflow-hidden bg-brand-mist py-20 md:py-28"
     >
       {/* Subtle radial accent */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(ellipse_at_top,rgba(224,160,57,0.08),transparent_60%)]" />

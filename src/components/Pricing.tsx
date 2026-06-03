@@ -87,7 +87,7 @@ export function Pricing() {
   return (
     <section
       id="pricing"
-      className="relative overflow-hidden bg-brand-paper py-24 md:py-36"
+      className="relative overflow-hidden bg-brand-paper py-20 md:py-28"
     >
       {/* Faint decorative arc */}
       <svg

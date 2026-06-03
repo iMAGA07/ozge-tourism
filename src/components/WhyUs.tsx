@@ -65,7 +65,7 @@ export function WhyUs() {
   return (
     <section
       id="why"
-      className="relative overflow-hidden bg-brand-paper py-24 md:py-36"
+      className="relative overflow-hidden bg-brand-paper py-20 md:py-28"
     >
       {/* Faint dashed flight-path */}
       <svg
@@ -193,7 +193,7 @@ export function WhyUs() {
                 </p>
                 <div className="mt-7 flex items-center gap-3 text-[11px] uppercase tracking-[0.34em] text-brand-cream/60">
                   <span className="h-[1px] w-10 bg-brand-saffron/60" />
-                  Mohammad · Founder, Ozge Tourism
+                  Mohammad Habib Abdullah · Founder, Ozge Tourism
                 </div>
               </div>
             </div>

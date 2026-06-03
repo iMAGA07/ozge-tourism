@@ -50,7 +50,7 @@ export function About() {
   const active = helpTabs.find((t) => t.id === tab)!;
 
   return (
-    <section id="about" className="relative overflow-hidden bg-brand-paper py-24 md:py-36">
+    <section id="about" className="relative overflow-hidden bg-brand-paper py-20 md:py-28">
       {/* Faint dashed flight path */}
       <svg
         aria-hidden="true"
@@ -145,8 +145,8 @@ export function About() {
                 {/* Signature line */}
                 <div className="mt-8 flex items-end justify-between">
                   <div>
-                    <div className="font-serif text-[26px] italic leading-none text-brand-ink md:text-[32px]">
-                      Mohammad
+                    <div className="font-serif text-[22px] italic leading-tight text-brand-ink md:text-[28px]">
+                      Mohammad Habib Abdullah
                     </div>
                     <div className="mt-2 text-[10.5px] uppercase tracking-[0.32em] text-brand-charcoal/55">
                       Founder · Ozge Tourism

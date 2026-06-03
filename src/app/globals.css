@@ -94,25 +94,24 @@ html.lenis body {
   opacity: 1;
 }
 
-/* Map region defaults */
+/* Map region defaults — fill/stroke only on hover. We deliberately drop the
+   animated drop-shadow filter: animating filter on complex SVG paths is the
+   main cause of laggy hovering over the map. */
 .kz-region {
   fill: #efe7d6;
   stroke: #fbf8f1;
   stroke-width: 0.8;
-  transition: fill 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: fill 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    stroke 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   cursor: pointer;
-  transform-origin: center;
-  transform-box: fill-box;
 }
 .kz-region:hover {
   fill: #e0a039;
-  filter: drop-shadow(0 4px 18px rgba(176, 75, 47, 0.35));
+  stroke: #e0a039;
 }
 .kz-region.active {
   fill: #b14a2e;
-  filter: drop-shadow(0 6px 24px rgba(138, 42, 31, 0.45));
+  stroke: #b14a2e;
 }
 
 /* Grain overlay */

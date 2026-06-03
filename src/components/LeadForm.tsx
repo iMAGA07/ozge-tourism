@@ -12,7 +12,7 @@ type FormState = {
   contact: string;
   email: string;
   details: string;
-  preferred: "WhatsApp" | "Telegram" | "Email";
+  preferred: "WhatsApp" | "Email";
 };
 
 const initial: FormState = {
@@ -64,7 +64,7 @@ export function LeadForm() {
   return (
     <section
       id="book"
-      className="relative overflow-hidden bg-brand-ink py-24 text-brand-cream md:py-36"
+      className="relative overflow-hidden bg-brand-ink py-20 text-brand-cream md:py-28"
     >
       <div className="absolute inset-0 opacity-25">
         <Image
@@ -121,7 +121,7 @@ export function LeadForm() {
                   {site.email}
                 </a>
                 <a className="hover:text-brand-saffron" href={site.whatsapp}>
-                  WhatsApp / Telegram · {site.phone}
+                  WhatsApp · {site.phone}
                 </a>
                 <span className="text-brand-cream/55">{site.address}</span>
               </div>
@@ -145,7 +145,7 @@ export function LeadForm() {
                     placeholder="Jane Doe"
                   />
                   <Field
-                    label="Contact Number (WhatsApp / Telegram)"
+                    label="Contact Number (WhatsApp)"
                     id="contact"
                     error={errors.contact}
                     value={data.contact}
@@ -197,7 +197,7 @@ export function LeadForm() {
                     How would you prefer to be contacted?
                   </div>
                   <div className="mt-3 inline-flex rounded-full border border-brand-cream/20 p-1">
-                    {(["WhatsApp", "Telegram", "Email"] as const).map((opt) => (
+                    {(["WhatsApp", "Email"] as const).map((opt) => (
                       <button
                         key={opt}
                         type="button"
@@ -280,10 +280,10 @@ function Field({
   error?: string;
 }) {
   return (
-    <div>
+    <div className="flex flex-col">
       <label
         htmlFor={id}
-        className="text-[10.5px] uppercase tracking-[0.32em] text-brand-cream/65"
+        className="flex min-h-[2.4em] items-start text-[10.5px] uppercase leading-[1.5] tracking-[0.32em] text-brand-cream/65"
       >
         {label}
       </label>

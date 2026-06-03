@@ -6,7 +6,7 @@ import { testimonials } from "@/data/content";
 
 export function Testimonials() {
   return (
-    <section id="testimonials" className="relative bg-brand-mist py-24 md:py-36">
+    <section id="testimonials" className="relative bg-brand-mist py-20 md:py-28">
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
         <SectionHeader
           eyebrow="Testimonials"

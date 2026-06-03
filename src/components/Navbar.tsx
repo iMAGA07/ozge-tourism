@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, MessageCircle, Mail } from "lucide-react";
 import { navItems, site } from "@/data/site";
 import { cn } from "@/lib/utils";
 
@@ -124,35 +124,65 @@ export function Navbar() {
         </a>
 
         <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1">
-          {navItems.slice(0, -1).map((item) => (
+          {navItems.map((item) => (
             <a
               key={item.href}
               href={item.href}
               className={cn(
-                "rounded-full px-3 py-2 text-[12.5px] font-medium transition-colors duration-500",
+                "rounded-full px-2.5 py-2 text-[12.5px] font-medium transition-colors duration-500",
                 onHero
                   ? "text-white/85 hover:text-white"
                   : "text-brand-charcoal/80 hover:text-brand-ink"
               )}
             >
-              {item.label}
+              {item.short ?? item.label}
             </a>
           ))}
         </nav>
 
         <div className="flex items-center gap-2">
-          <a
-            href="#book"
+          {/* Always-visible contact cluster (header is fixed) */}
+          <div
             className={cn(
-              "hidden sm:inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-[12.5px] font-medium tracking-wide transition-colors duration-500",
-              onHero
-                ? "bg-white text-brand-ink hover:bg-brand-saffron"
-                : "bg-brand-ink text-brand-cream hover:bg-brand-terracotta"
+              "hidden sm:flex items-center gap-1.5 rounded-full border py-1 pl-3 pr-1 transition-colors duration-500",
+              onHero ? "border-white/30 bg-white/10" : "border-brand-charcoal/15 bg-brand-paper"
             )}
           >
-            Book an adventure
-            <span className="text-brand-terracotta">→</span>
-          </a>
+            <span
+              className={cn(
+                "text-[10px] font-medium uppercase tracking-[0.22em] transition-colors duration-500",
+                onHero ? "text-white/80" : "text-brand-charcoal/60"
+              )}
+            >
+              Contact
+            </span>
+            <a
+              href={site.whatsapp}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Message us on WhatsApp"
+              className={cn(
+                "inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-300",
+                onHero
+                  ? "bg-white/15 text-white hover:bg-brand-saffron hover:text-brand-ink"
+                  : "bg-brand-ink/5 text-brand-ink hover:bg-brand-terracotta hover:text-brand-cream"
+              )}
+            >
+              <MessageCircle className="h-[17px] w-[17px]" />
+            </a>
+            <a
+              href={`mailto:${site.email}`}
+              aria-label="Email us"
+              className={cn(
+                "inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-300",
+                onHero
+                  ? "bg-white/15 text-white hover:bg-brand-saffron hover:text-brand-ink"
+                  : "bg-brand-ink/5 text-brand-ink hover:bg-brand-terracotta hover:text-brand-cream"
+              )}
+            >
+              <Mail className="h-[17px] w-[17px]" />
+            </a>
+          </div>
           <button
             ref={buttonRef}
             type="button"
@@ -259,21 +289,35 @@ export function Navbar() {
                   {site.phone}
                 </a>
                 <div className="mt-3 text-[12px] text-brand-charcoal/55">
-                  WhatsApp · Telegram · Email
+                  WhatsApp · Email
                 </div>
               </motion.div>
 
-              <motion.a
-                href="#book"
-                onClick={() => setOpen(false)}
+              <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6, duration: 0.55 }}
-                className="mt-5 inline-flex items-center justify-center gap-3 rounded-full bg-brand-ink py-4 text-[14px] font-medium text-brand-cream"
+                className="mt-5 grid grid-cols-2 gap-3"
               >
-                Book an adventure
-                <span>→</span>
-              </motion.a>
+                <a
+                  href={site.whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setOpen(false)}
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-ink py-4 text-[13.5px] font-medium text-brand-cream"
+                >
+                  <MessageCircle className="h-[18px] w-[18px]" />
+                  WhatsApp
+                </a>
+                <a
+                  href={`mailto:${site.email}`}
+                  onClick={() => setOpen(false)}
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-brand-charcoal/20 py-4 text-[13.5px] font-medium text-brand-ink"
+                >
+                  <Mail className="h-[18px] w-[18px]" />
+                  Email
+                </a>
+              </motion.div>
             </nav>
           </motion.div>
         )}

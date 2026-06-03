@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { Instagram, Facebook, Mail, Send, MessageCircle } from "lucide-react";
+import { Instagram, Facebook, Mail, MessageCircle } from "lucide-react";
 import { site } from "@/data/site";
 
 const TikTokIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -14,7 +14,6 @@ const socials = [
   { Icon: Facebook, href: site.facebook, label: "Facebook" },
   { Icon: TikTokIcon, href: site.tiktok, label: "TikTok" },
   { Icon: MessageCircle, href: site.whatsapp, label: "WhatsApp" },
-  { Icon: Send, href: site.telegram, label: "Telegram" },
   { Icon: Mail, href: `mailto:${site.email}`, label: "Email" },
 ];
 
@@ -30,14 +29,14 @@ export function Footer() {
             height={120}
             className="h-20 w-20 object-contain md:h-24 md:w-24"
           />
-          <div className="mt-5 font-display text-2xl font-light tracking-tight text-brand-ink md:text-3xl">
+          <div className="mt-3 font-display text-2xl font-light tracking-tight text-brand-ink md:text-3xl">
             Ozge Tourism
           </div>
-          <div className="mt-2 text-[12px] uppercase tracking-[0.32em] text-brand-charcoal/55">
+          <div className="mt-1.5 text-[12px] uppercase tracking-[0.32em] text-brand-charcoal/55">
             Explore · Enjoy · Connect
           </div>
 
-          <div className="mt-9 flex items-center gap-2.5 md:gap-3.5">
+          <div className="mt-5 flex items-center gap-2.5 md:gap-3.5">
             {socials.map(({ Icon, href, label }) => (
               <a
                 key={label}
@@ -45,7 +44,7 @@ export function Footer() {
                 aria-label={label}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex h-11 w-11 items-center justify-center rounded-full border border-brand-charcoal/15 text-brand-charcoal/80 transition-all duration-500 hover:border-brand-terracotta hover:bg-brand-terracotta hover:text-brand-cream"
+                className="group inline-flex h-11 w-11 items-center justify-center rounded-full border border-brand-charcoal/15 text-brand-charcoal/80 transition-colors duration-300 hover:border-brand-terracotta hover:bg-brand-terracotta hover:text-brand-cream"
               >
                 <Icon className="h-[18px] w-[18px]" />
               </a>
@@ -66,7 +65,7 @@ export function Footer() {
             </div>
             <div className="bg-brand-paper p-5">
               <div className="text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
-                WhatsApp · Telegram
+                WhatsApp
               </div>
               <a
                 href={site.whatsapp}

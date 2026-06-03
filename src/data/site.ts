@@ -15,14 +15,13 @@ export const site = {
     "Z05T3F6, Astana, Esil district, 55/23 Mangilik El, office 246",
 };
 
-export const navItems = [
+export const navItems: { label: string; short?: string; href: string }[] = [
   { label: "Home", href: "#home" },
-  { label: "Upcoming Adventures", href: "#adventures" },
-  { label: "Riding School", href: "#horse-school" },
-  { label: "Our Services", href: "#services" },
-  { label: "Why Choose Us", href: "#why" },
-  { label: "Our Pricing", href: "#pricing" },
-  { label: "Testimonials", href: "#testimonials" },
-  { label: "About Us", href: "#about" },
-  { label: "Book an Adventure", href: "#book" },
+  { label: "Upcoming Adventures", short: "Adventures", href: "#adventures" },
+  { label: "Our Services", short: "Services", href: "#services" },
+  { label: "Horse Riding School", short: "Riding School", href: "#horse-school" },
+  { label: "Why Choose Us", short: "Why Us", href: "#why" },
+  { label: "Our Pricing", short: "Pricing", href: "#pricing" },
+  { label: "Testimonials", short: "Reviews", href: "#testimonials" },
+  { label: "About Us", short: "About", href: "#about" },
 ];
