@@ -2,8 +2,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, MessageCircle, Mail } from "lucide-react";
+import { Menu, X, Mail } from "lucide-react";
 import { navItems, site } from "@/data/site";
+import { WhatsAppIcon } from "./icons";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
@@ -168,7 +169,7 @@ export function Navbar() {
                   : "bg-brand-ink/5 text-brand-ink hover:bg-brand-terracotta hover:text-brand-cream"
               )}
             >
-              <MessageCircle className="h-[17px] w-[17px]" />
+              <WhatsAppIcon className="h-[17px] w-[17px]" />
             </a>
             <a
               href={`mailto:${site.email}`}
@@ -306,7 +307,7 @@ export function Navbar() {
                   onClick={() => setOpen(false)}
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-ink py-4 text-[13.5px] font-medium text-brand-cream"
                 >
-                  <MessageCircle className="h-[18px] w-[18px]" />
+                  <WhatsAppIcon className="h-[18px] w-[18px]" />
                   WhatsApp
                 </a>
                 <a

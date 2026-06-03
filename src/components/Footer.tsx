@@ -1,7 +1,8 @@
 "use client";
 import Image from "next/image";
-import { Instagram, Facebook, Mail, MessageCircle } from "lucide-react";
+import { Instagram, Facebook, Mail } from "lucide-react";
 import { site } from "@/data/site";
+import { WhatsAppIcon } from "./icons";
 
 const TikTokIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
@@ -13,7 +14,7 @@ const socials = [
   { Icon: Instagram, href: site.instagram, label: "Instagram" },
   { Icon: Facebook, href: site.facebook, label: "Facebook" },
   { Icon: TikTokIcon, href: site.tiktok, label: "TikTok" },
-  { Icon: MessageCircle, href: site.whatsapp, label: "WhatsApp" },
+  { Icon: WhatsAppIcon, href: site.whatsapp, label: "WhatsApp" },
   { Icon: Mail, href: `mailto:${site.email}`, label: "Email" },
 ];
 

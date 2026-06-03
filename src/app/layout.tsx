@@ -4,7 +4,6 @@ import "./globals.css";
 import { site } from "@/data/site";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { Cursor } from "@/components/Cursor";
-import { StickyBookCTA } from "@/components/SectionProgress";
 
 // Per the brief, the brand corporate font is Futura. Apple devices have it
 // installed system-wide; everywhere else we use Jost — the closest
@@ -82,7 +81,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SmoothScroll />
         <Cursor />
         {children}
-        <StickyBookCTA />
       </body>
     </html>
   );
