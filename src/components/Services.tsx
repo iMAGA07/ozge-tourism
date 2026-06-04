@@ -50,6 +50,18 @@ const servicePhotos: Record<ServiceIcon, string> = {
   headset: "IMG_2332_3.jpg",   // 24/7 concierge
 };
 
+// Per-title overrides — needed where two services share an icon (both
+// transport services use the "car" icon, so the icon map can't tell them
+// apart). Looked up first; falls back to the icon map above.
+const servicePhotoByTitle: Record<string, string> = {
+  "Adventure & Outdoor Activities": "outdoor.jpg",
+  "Airport Services & Transportation": "airport.jpg",
+  "Transportation Services": "transportation.jpg",
+};
+
+const photoFor = (s: (typeof services)[number]) =>
+  servicePhotoByTitle[s.title] ?? servicePhotos[s.icon];
+
 export function Services() {
   return (
     <section
@@ -91,7 +103,7 @@ function ServiceTile({
   index: number;
 }) {
   const Icon = iconMap[service.icon];
-  const photo = servicePhotos[service.icon];
+  const photo = photoFor(service);
 
   return (
     <article
@@ -227,7 +239,7 @@ function MobileServicesList() {
                     <div className="px-4 pb-5 pt-1">
                       <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md">
                         <Image
-                          src={`/photos/${servicePhotos[s.icon]}`}
+                          src={`/photos/${photoFor(s)}`}
                           alt=""
                           fill
                           sizes="100vw"
