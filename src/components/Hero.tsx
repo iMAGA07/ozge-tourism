@@ -38,7 +38,7 @@ const offerings = [
   },
   {
     icon: BedDouble,
-    label: "Accommodation & Booking",
+    label: "Accommodation & Bookings",
     description: [
       "We also assist with bookings of different services across Central Asia for individuals, families, groups, companies, embassies, and organizations.",
       "Our booking services include flight tickets, hotel and accommodation reservations, transportation arrangements, event and conference hall bookings, restaurant reservations, activity and excursion bookings, and many other travel and hospitality services based on your needs.",

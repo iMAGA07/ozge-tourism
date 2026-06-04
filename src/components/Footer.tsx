@@ -21,7 +21,7 @@ const socials = [
 export function Footer() {
   return (
     <footer className="relative bg-brand-paper">
-      <div className="mx-auto max-w-[1400px] px-6 py-20 md:px-10 md:py-28">
+      <div className="mx-auto max-w-[1400px] px-6 py-12 md:px-10 md:py-16">
         <div className="flex flex-col items-center text-center">
           <Image
             src="/logo.png"
@@ -52,7 +52,7 @@ export function Footer() {
             ))}
           </div>
 
-          <div className="mt-12 grid w-full max-w-[920px] gap-px overflow-hidden rounded-md border border-brand-charcoal/10 bg-brand-charcoal/10 text-left sm:grid-cols-3">
+          <div className="mt-8 grid w-full max-w-[920px] gap-px overflow-hidden rounded-md border border-brand-charcoal/10 bg-brand-charcoal/10 text-left sm:grid-cols-3">
             <div className="bg-brand-paper p-5">
               <div className="text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
                 Email
@@ -86,7 +86,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 flex flex-col items-center justify-between gap-3 border-t border-brand-charcoal/10 pt-7 text-[12px] text-brand-charcoal/55 md:flex-row">
+        <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-brand-charcoal/10 pt-6 text-[12px] text-brand-charcoal/55 md:flex-row">
           <span>© {new Date().getFullYear()} Ozge Tourism. All rights reserved.</span>
           <span>Designed with care in Astana · Kazakhstan</span>
         </div>
