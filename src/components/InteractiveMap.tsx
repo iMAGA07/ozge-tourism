@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useMemo, useEffect, useCallback } from "react";
+import { useState, useRef, useMemo, useEffect, useCallback, memo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { regions as kzRegions, regionViewBox as kzViewBox } from "@/data/regions";
 import { regionMaps } from "@/data/region-maps";
@@ -78,6 +78,28 @@ export function InteractiveMap() {
   const [activeCode, setActiveCode] = useState<CountryInfo["code"]>("KZ");
   const active = countryByCode[activeCode] ?? countryInfo[0];
   const drillCountry = drill ? countryByCode[drill] : null;
+  const lowPower = useLowPower();
+
+  // View transition. We deliberately avoid animating `filter: blur()` over
+  // the whole map+panel subtree — it was the single most expensive effect
+  // and janked low-end devices. Capable devices get a gentle scale; weak
+  // devices / reduced-motion get a plain crossfade.
+  const worldAnim = lowPower
+    ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.2 } }
+    : {
+        initial: { opacity: 0, scale: 0.98 },
+        animate: { opacity: 1, scale: 1 },
+        exit: { opacity: 0, scale: 1.05 },
+        transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const },
+      };
+  const drillAnim = lowPower
+    ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.2 } }
+    : {
+        initial: { opacity: 0, scale: 1.04 },
+        animate: { opacity: 1, scale: 1 },
+        exit: { opacity: 0, scale: 0.97 },
+        transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const },
+      };
 
   return (
     <section
@@ -148,28 +170,24 @@ export function InteractiveMap() {
             {!drillCountry ? (
               <motion.div
                 key="world"
-                initial={{ opacity: 0, scale: 0.96, filter: "blur(8px)" }}
-                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                exit={{ opacity: 0, scale: 1.3, filter: "blur(10px)" }}
-                transition={{ duration: 0.7, ease: [0.65, 0, 0.35, 1] }}
-                style={{ transformOrigin: "50% 35%" }}
+                {...worldAnim}
+                style={{ transformOrigin: "50% 35%", willChange: "transform, opacity" }}
               >
                 <WorldView
                   activeCode={activeCode}
                   active={active}
                   onPick={setActiveCode}
                   onDrill={(c) => setDrill(c)}
+                  lowPower={lowPower}
                 />
               </motion.div>
             ) : (
               <motion.div
                 key={`drill-${drillCountry.code}`}
-                initial={{ opacity: 0, scale: 1.15, filter: "blur(10px)" }}
-                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                exit={{ opacity: 0, scale: 0.92, filter: "blur(8px)" }}
-                transition={{ duration: 0.7, ease: [0.65, 0, 0.35, 1] }}
+                {...drillAnim}
+                style={{ willChange: "transform, opacity" }}
               >
-                <RegionsView country={drillCountry} />
+                <RegionsView country={drillCountry} lowPower={lowPower} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -186,11 +204,13 @@ function WorldView({
   active,
   onPick,
   onDrill,
+  lowPower,
 }: {
   activeCode: CountryInfo["code"];
   active: CountryInfo;
   onPick: (code: CountryInfo["code"]) => void;
   onDrill: (code: CountryInfo["code"]) => void;
+  lowPower: boolean;
 }) {
   const [svg, setSvg] = useState<string | null>(null);
 
@@ -255,18 +275,20 @@ function WorldView({
               stroke: rgba(26, 20, 16, 0.55);
               stroke-width: 0.35;
               cursor: pointer;
-              transition: fill 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-                filter 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+              transition: fill 0.35s cubic-bezier(0.22, 1, 0.36, 1);
               -webkit-tap-highlight-color: transparent;
               outline: none;
             }
             .ozge-cmap .op:hover { fill: rgba(224, 160, 57, 0.85); }
+            /* Active country: brighter fill + stroke instead of an animated
+               drop-shadow filter (filters on SVG paths are expensive). */
             .ozge-cmap.active-kz .kz, .ozge-cmap.active-uz .uz,
             .ozge-cmap.active-kg .kg, .ozge-cmap.active-tj .tj,
             .ozge-cmap.active-tm .tm, .ozge-cmap.active-af .af,
             .ozge-cmap.active-ir .ir {
               fill: #e0a039;
-              filter: drop-shadow(0 0 5px rgba(224, 160, 57, 0.55));
+              stroke: #e0a039;
+              stroke-width: 0.6;
             }
           `}</style>
 
@@ -323,14 +345,17 @@ function WorldView({
 
       {/* Country fact panel */}
       <div className="lg:col-span-5">
-        <div className="rounded-2xl border border-brand-cream/10 bg-white/[0.03] p-6 md:p-8 backdrop-blur">
+        <div className={cn(
+          "rounded-2xl border border-brand-cream/10 bg-white/[0.03] p-6 md:p-8",
+          !lowPower && "backdrop-blur"
+        )}>
           <AnimatePresence mode="wait">
             <motion.div
               key={active.code}
-              initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, y: -8, filter: "blur(6px)" }}
-              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             >
               <div className="flex items-center gap-3">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -510,13 +535,21 @@ function CountryOverview({ country }: { country: CountryInfo }) {
 
 // ─────────── Generic regions drill-down (works for all 7 countries) ───────
 
-function RegionsView({ country }: { country: CountryInfo }) {
+function RegionsView({
+  country,
+  lowPower,
+}: {
+  country: CountryInfo;
+  lowPower: boolean;
+}) {
   const map = useMemo(() => getRegionMap(country.code), [country.code]);
   const [active, setActive] = useState<ViewRegion | null>(null);
   const [pinned, setPinned] = useState<ViewRegion | null>(null);
   const [pointer, setPointer] = useState({ x: 0, y: 0 });
   const wrapRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
+  // The mouse-follow tooltip is desktop-only and skipped on weak devices.
+  const showTooltip = !isMobile && !lowPower;
 
   // No auto-pin — landing on the region page shows the COUNTRY overview
   // first (level-1 facts), then a region's detail once you hover/tap it.
@@ -525,12 +558,15 @@ function RegionsView({ country }: { country: CountryInfo }) {
     () => [...map.regions].sort((a, b) => b.d.length - a.d.length),
     [map]
   );
-  const glowStd = useMemo(
-    () => Math.max(2.5, parseFloat(map.viewBox.split(" ")[2]) * 0.0025),
-    [map]
-  );
+
+  // Stable handlers so the memoized region paths don't re-render on every
+  // pointer move (which only updates the tooltip position).
+  const handleActivate = useCallback((r: ViewRegion) => setActive(r), []);
+  const handleClear = useCallback(() => setActive(null), []);
+  const handlePin = useCallback((r: ViewRegion) => setPinned(r), []);
 
   const handleMove = (e: React.MouseEvent) => {
+    if (!showTooltip) return;
     const rect = wrapRef.current?.getBoundingClientRect();
     if (!rect) return;
     setPointer({ x: e.clientX - rect.left, y: e.clientY - rect.top });
@@ -538,7 +574,7 @@ function RegionsView({ country }: { country: CountryInfo }) {
 
   return (
     <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
-      <div ref={wrapRef} onMouseMove={handleMove} className="relative lg:col-span-7">
+      <div ref={wrapRef} onMouseMove={showTooltip ? handleMove : undefined} className="relative lg:col-span-7">
         <div className="relative overflow-hidden rounded-2xl border border-brand-cream/10 bg-gradient-to-br from-white/[0.05] to-white/[0.01] p-3 md:p-6">
           <div className="mb-3 flex items-baseline justify-between md:mb-5">
             <div className="flex items-center gap-2 text-[10.5px] uppercase tracking-[0.32em] text-brand-saffron">
@@ -557,48 +593,19 @@ function RegionsView({ country }: { country: CountryInfo }) {
             role="img"
             aria-label={`Interactive map of ${country.name}`}
           >
-            <defs>
-              <filter id="glow-region">
-                <feGaussianBlur stdDeviation={glowStd} result="b" />
-                <feMerge>
-                  <feMergeNode in="b" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-            <g strokeLinejoin="round">
-              {ordered.map((r) => {
-                const isActive = display?.id === r.id;
-                return (
-                  <path
-                    key={r.id}
-                    d={r.d}
-                    className="cursor-pointer transition-all duration-500 ease-smooth focus:outline-none focus-visible:outline-none [-webkit-tap-highlight-color:transparent]"
-                    style={{
-                      fill: isActive ? "#e0a039" : "rgba(245, 236, 220, 0.92)",
-                      stroke: "#1a1410",
-                      strokeWidth: map.strokeWidth,
-                      filter: isActive ? "url(#glow-region)" : "none",
-                      outline: "none",
-                    }}
-                    onMouseEnter={() => setActive(r)}
-                    onMouseLeave={() => setActive(null)}
-                    onClick={() => setPinned(r)}
-                    onFocus={() => setActive(r)}
-                    onBlur={() => setActive(null)}
-                    tabIndex={0}
-                    role="button"
-                    aria-label={r.name}
-                  >
-                    <title>{r.name}</title>
-                  </path>
-                );
-              })}
-            </g>
+            <MemoRegionPaths
+              ordered={ordered}
+              activeId={display?.id ?? null}
+              strokeWidth={map.strokeWidth}
+              lowPower={lowPower}
+              onActivate={handleActivate}
+              onClear={handleClear}
+              onPin={handlePin}
+            />
           </svg>
 
           <AnimatePresence>
-            {!isMobile && active && (
+            {showTooltip && active && (
               <motion.div
                 key={active.id}
                 initial={{ opacity: 0, y: 8, scale: 0.98 }}
@@ -626,14 +633,17 @@ function RegionsView({ country }: { country: CountryInfo }) {
 
       {/* Region fact panel */}
       <div className="lg:col-span-5">
-        <div className="sticky top-28 rounded-2xl border border-brand-cream/10 bg-white/[0.03] p-6 md:p-8 backdrop-blur">
+        <div className={cn(
+          "sticky top-28 rounded-2xl border border-brand-cream/10 bg-white/[0.03] p-6 md:p-8",
+          !lowPower && "backdrop-blur"
+        )}>
           <AnimatePresence mode="wait">
             <motion.div
               key={display?.id ?? "empty"}
-              initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, y: -8, filter: "blur(6px)" }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             >
               {display ? (
                 <>
@@ -735,3 +745,77 @@ function useIsMobile() {
   }, []);
   return m;
 }
+
+// Detects weak / low-power devices (or a reduced-motion preference) so we
+// can serve a lighter version of the map there: no blur filters, no SVG
+// glow, no mouse-follow tooltip. Capable devices keep the full experience.
+function useLowPower() {
+  const [low, setLow] = useState(false);
+  useEffect(() => {
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    const mem = (navigator as { deviceMemory?: number }).deviceMemory;
+    const cores = navigator.hardwareConcurrency;
+    // deviceMemory is Chrome/Android only (undefined elsewhere → ignored).
+    // Treat ≤4 GB RAM, or a very low core count, as low-power.
+    const weak = (typeof mem === "number" && mem <= 4) ||
+      (typeof cores === "number" && cores <= 3);
+    setLow(reduced || weak);
+  }, []);
+  return low;
+}
+
+// Region paths are split into a memoized component so that moving the mouse
+// (which updates the tooltip position state in the parent) does NOT recreate
+// up to ~100 <path> elements on every frame. It only re-renders when the
+// active region, the country map, or the low-power flag actually change.
+const RegionPaths = ({
+  ordered,
+  activeId,
+  strokeWidth,
+  lowPower,
+  onActivate,
+  onClear,
+  onPin,
+}: {
+  ordered: ViewRegion[];
+  activeId: string | null;
+  strokeWidth: number;
+  lowPower: boolean;
+  onActivate: (r: ViewRegion) => void;
+  onClear: () => void;
+  onPin: (r: ViewRegion) => void;
+}) => {
+  return (
+    <g strokeLinejoin="round">
+      {ordered.map((r) => {
+        const isActive = activeId === r.id;
+        return (
+          <path
+            key={r.id}
+            d={r.d}
+            className="cursor-pointer transition-[fill] duration-300 ease-smooth focus:outline-none focus-visible:outline-none [-webkit-tap-highlight-color:transparent]"
+            style={{
+              fill: isActive ? "#e0a039" : "rgba(245, 236, 220, 0.92)",
+              stroke: isActive ? "#e0a039" : "#1a1410",
+              strokeWidth: isActive ? strokeWidth * 1.8 : strokeWidth,
+              outline: "none",
+            }}
+            onMouseEnter={() => onActivate(r)}
+            onMouseLeave={onClear}
+            onClick={() => onPin(r)}
+            onFocus={() => onActivate(r)}
+            onBlur={onClear}
+            tabIndex={0}
+            role="button"
+            aria-label={r.name}
+          >
+            <title>{r.name}</title>
+          </path>
+        );
+      })}
+    </g>
+  );
+};
+const MemoRegionPaths = memo(RegionPaths);

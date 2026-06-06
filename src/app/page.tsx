@@ -1,7 +1,7 @@
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { Marquee } from "@/components/Marquee";
-import { InteractiveMap } from "@/components/InteractiveMap";
+import { MapSection } from "@/components/MapSection";
 import { Adventures } from "@/components/Adventures";
 import { Services } from "@/components/Services";
 import { HorseSchool } from "@/components/HorseSchool";
@@ -19,7 +19,7 @@ export default function HomePage() {
       <Navbar />
       <Hero />
       <Marquee />
-      <InteractiveMap />
+      <MapSection />
       <Adventures />
       <Services />
       <HorseSchool />
