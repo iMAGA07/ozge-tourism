@@ -165,8 +165,8 @@ export function WhyUs() {
         {/* Bold promise — dark hero band, kept as climax */}
         <Reveal delay={0.1}>
           <div className="relative mt-20 overflow-hidden rounded-md bg-brand-ink text-brand-cream md:mt-28">
-            <div className="pointer-events-none absolute -right-32 -top-32 h-72 w-72 rounded-full bg-brand-saffron/15 blur-3xl" />
-            <div className="pointer-events-none absolute -left-32 -bottom-32 h-72 w-72 rounded-full bg-brand-terracotta/20 blur-3xl" />
+            <div className="pointer-events-none absolute -right-32 -top-32 h-72 w-72 bg-[radial-gradient(circle,rgba(224,160,57,0.15),transparent_70%)]" />
+            <div className="pointer-events-none absolute -left-32 -bottom-32 h-72 w-72 bg-[radial-gradient(circle,rgba(177,74,46,0.2),transparent_70%)]" />
 
             <div className="relative grid items-center gap-10 px-7 py-12 md:grid-cols-12 md:gap-16 md:px-14 md:py-20">
               <div className="md:col-span-7">
@@ -277,7 +277,7 @@ function ManifestoCard() {
         "w-[80vw] sm:w-[360px] md:w-[400px]"
       )}
     >
-      <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-brand-saffron/20 blur-3xl" />
+      <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 bg-[radial-gradient(circle,rgba(224,160,57,0.2),transparent_70%)]" />
       <div>
         <div className="text-[10.5px] uppercase tracking-[0.34em] text-brand-saffron">
           And finally

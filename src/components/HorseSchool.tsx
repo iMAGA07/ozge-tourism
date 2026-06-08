@@ -53,7 +53,7 @@ export function HorseSchool() {
     >
       {/* Warm radial glow + faint grain for depth */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-[radial-gradient(ellipse_at_top,rgba(224,160,57,0.12),transparent_65%)]" />
-      <div className="pointer-events-none absolute -bottom-32 -left-32 h-80 w-80 rounded-full bg-brand-terracotta/15 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-32 -left-32 h-80 w-80 bg-[radial-gradient(circle,rgba(177,74,46,0.15),transparent_70%)]" />
 
       <div className="relative mx-auto max-w-[1400px] px-6 md:px-10">
         <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-14">

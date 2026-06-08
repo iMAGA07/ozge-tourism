@@ -157,7 +157,7 @@ export function Pricing() {
           {/* 100% refund guarantee ribbon */}
           <Reveal delay={0.15}>
             <div className="relative mt-5 overflow-hidden rounded-2xl border border-brand-saffron/30 bg-brand-ink px-6 py-7 text-brand-cream md:mt-6 md:px-10 md:py-8">
-              <div className="pointer-events-none absolute -right-16 -top-16 h-52 w-52 rounded-full bg-brand-saffron/15 blur-3xl" />
+              <div className="pointer-events-none absolute -right-16 -top-16 h-52 w-52 bg-[radial-gradient(circle,rgba(224,160,57,0.15),transparent_70%)]" />
               <div className="relative flex flex-col items-start gap-5 md:flex-row md:items-center md:gap-7">
                 <span className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-brand-saffron/15 text-brand-saffron ring-1 ring-brand-saffron/30">
                   <ShieldCheck strokeWidth={1.6} className="h-7 w-7" />
@@ -295,7 +295,7 @@ function PricingCard({
 
         {/* Saffron blur orb on the featured card */}
         {isDark && (
-          <div className="pointer-events-none absolute -bottom-24 -right-24 h-64 w-64 rounded-full bg-brand-saffron/20 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-24 -right-24 h-64 w-64 bg-[radial-gradient(circle,rgba(224,160,57,0.2),transparent_70%)]" />
         )}
 
         <div className="relative z-10 flex h-full flex-col">

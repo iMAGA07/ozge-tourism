@@ -11,13 +11,16 @@ type Props = {
   amount?: number;
 };
 
+// Opacity + translateY only. We deliberately avoid animating
+// `filter: blur()` here — this component wraps dozens of elements across the
+// page, and animating a blur filter on each scroll-in was a major source of
+// jank on weaker devices. Transform + opacity are GPU-composited and cheap.
 const variants: Variants = {
-  hidden: { opacity: 0, y: 28, filter: "blur(6px)" },
+  hidden: { opacity: 0, y: 24 },
   show: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
-    transition: { duration: 0.95, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
   },
 };
 

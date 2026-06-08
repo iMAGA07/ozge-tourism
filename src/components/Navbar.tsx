@@ -224,8 +224,8 @@ export function Navbar() {
             }}
           >
             {/* Subtle ambient accent */}
-            <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-brand-saffron/20 blur-3xl" />
-            <div className="pointer-events-none absolute -left-24 bottom-24 h-72 w-72 rounded-full bg-brand-terracotta/15 blur-3xl" />
+            <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 bg-[radial-gradient(circle,rgba(224,160,57,0.2),transparent_70%)]" />
+            <div className="pointer-events-none absolute -left-24 bottom-24 h-72 w-72 bg-[radial-gradient(circle,rgba(177,74,46,0.15),transparent_70%)]" />
 
             <nav className="relative flex flex-col px-6 py-8">
               <motion.div

@@ -28,7 +28,9 @@ const config: Config = {
           "Futura",
           "Futura PT",
           '"Futura BT"',
-          "var(--font-display)",
+          // Same Jost instance as `sans` — the display face was identical,
+          // so we point at one variable instead of loading Jost twice.
+          "var(--font-sans)",
           "Jost",
           "Trebuchet MS",
           "system-ui",

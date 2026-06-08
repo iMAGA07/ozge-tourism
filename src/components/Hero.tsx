@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Compass, Mountain, Plane, BedDouble, X, Sparkles } from "lucide-react";
 import { RevealText } from "./Reveal";
 import { Magnetic } from "./Magnetic";
+import { useLowPower } from "@/lib/useLowPower";
 
 // The four things Ozge does, shown as glass chips under the hero copy.
 // Each one is tap-to-open: the description appears in a minimal popup.
@@ -73,12 +74,16 @@ export function Hero() {
   const labelY = useTransform(scrollYProgress, [0, 1], ["0%", "120%"]);
   const headlineY = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]);
 
-  // Cross-fade between hero frames every 6s.
+  // Cross-fade between hero frames every 6s. On weak devices we keep a
+  // single static frame — periodically decoding a new full-viewport image
+  // was a source of the "freezing" some visitors saw.
+  const lowPower = useLowPower();
   const [frame, setFrame] = useState(0);
   useEffect(() => {
+    if (lowPower) return;
     const id = setInterval(() => setFrame((i) => (i + 1) % heroFrames.length), 6000);
     return () => clearInterval(id);
-  }, []);
+  }, [lowPower]);
   const active = heroFrames[frame];
 
   // Popup state: which offering is open (null = closed).
@@ -121,7 +126,7 @@ export function Hero() {
               sizes="100vw"
               className="object-cover"
               style={{ objectPosition: active.position }}
-              quality={88}
+              quality={72}
             />
           </motion.div>
         </AnimatePresence>

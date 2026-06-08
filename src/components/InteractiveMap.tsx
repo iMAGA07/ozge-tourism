@@ -5,6 +5,7 @@ import { regions as kzRegions, regionViewBox as kzViewBox } from "@/data/regions
 import { regionMaps } from "@/data/region-maps";
 import { countryInfo, countryByCode, type CountryInfo } from "@/data/countries";
 import { Reveal } from "./Reveal";
+import { useLowPower } from "@/lib/useLowPower";
 import { cn } from "@/lib/utils";
 
 const MAP_VIEWBOX = "617.72 91.10 129.75 94.29";
@@ -744,26 +745,6 @@ function useIsMobile() {
     return () => mq.removeEventListener("change", update);
   }, []);
   return m;
-}
-
-// Detects weak / low-power devices (or a reduced-motion preference) so we
-// can serve a lighter version of the map there: no blur filters, no SVG
-// glow, no mouse-follow tooltip. Capable devices keep the full experience.
-function useLowPower() {
-  const [low, setLow] = useState(false);
-  useEffect(() => {
-    const reduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-    const mem = (navigator as { deviceMemory?: number }).deviceMemory;
-    const cores = navigator.hardwareConcurrency;
-    // deviceMemory is Chrome/Android only (undefined elsewhere → ignored).
-    // Treat ≤4 GB RAM, or a very low core count, as low-power.
-    const weak = (typeof mem === "number" && mem <= 4) ||
-      (typeof cores === "number" && cores <= 3);
-    setLow(reduced || weak);
-  }, []);
-  return low;
 }
 
 // Region paths are split into a memoized component so that moving the mouse

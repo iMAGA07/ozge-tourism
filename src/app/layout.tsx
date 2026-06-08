@@ -8,24 +8,23 @@ import { Cursor } from "@/components/Cursor";
 // Per the brief, the brand corporate font is Futura. Apple devices have it
 // installed system-wide; everywhere else we use Jost — the closest
 // open-source Futura match — via next/font for performance + SSR.
+// One Jost instance powers both --font-sans and --font-display (the
+// "display" face was the same font — loading it twice just shipped
+// duplicate weights). Only the weights actually used (300–700); no 800/900.
 const sans = Jost({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans",
   weight: ["300", "400", "500", "600", "700"],
 });
-const display = Jost({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-display",
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
-});
+// Cormorant is only ever used italic on this site, so we load italic only
+// at the three weights in use — halving the serif font payload.
 const serif = Cormorant_Garamond({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-serif",
-  weight: ["300", "400", "500", "600", "700"],
-  style: ["normal", "italic"],
+  weight: ["400", "600", "700"],
+  style: ["italic"],
 });
 
 export const metadata: Metadata = {
@@ -76,7 +75,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${sans.variable} ${display.variable} ${serif.variable}`}>
+    <html lang="en" className={`${sans.variable} ${serif.variable}`}>
       <body className="bg-brand-paper text-brand-ink antialiased lg:cursor-none">
         <SmoothScroll />
         <Cursor />
