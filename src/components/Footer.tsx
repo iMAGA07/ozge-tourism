@@ -66,7 +66,7 @@ export function Footer() {
             </div>
             <div className="bg-brand-paper p-5">
               <div className="text-[10px] uppercase tracking-[0.32em] text-brand-charcoal/55">
-                WhatsApp
+                WhatsApp &amp; Telegram
               </div>
               <a
                 href={site.whatsapp}
