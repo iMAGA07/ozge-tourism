@@ -86,6 +86,14 @@ export function Hero() {
   }, [lowPower]);
   const active = heroFrames[frame];
 
+  // Scroll-linked parallax / fade. On weak devices the hero is fully static
+  // (no per-frame transform of the full-screen image), which removes a real
+  // scroll-lag source. Capable devices keep the cinematic parallax.
+  const imgStyle = lowPower ? undefined : { y, scale };
+  const fadeStyle = lowPower ? undefined : { opacity: fade };
+  const headlineStyle = lowPower ? undefined : { y: headlineY, opacity: fade };
+  const labelStyle = lowPower ? undefined : { y: labelY };
+
   // Popup state: which offering is open (null = closed).
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const activeOffering = openIndex !== null ? offerings[openIndex] : null;
@@ -108,7 +116,7 @@ export function Hero() {
       className="relative h-[calc(100svh+15px)] min-h-[655px] w-full overflow-hidden bg-brand-ink"
     >
       {/* Cross-fading photo layers */}
-      <motion.div style={{ y, scale }} className="absolute inset-0">
+      <motion.div style={imgStyle} className="absolute inset-0">
         <AnimatePresence initial={false}>
           <motion.div
             key={frame}
@@ -140,7 +148,7 @@ export function Hero() {
 
       {/* Frame-progress dots */}
       <motion.div
-        style={{ opacity: fade }}
+        style={fadeStyle}
         className="absolute right-5 top-1/2 z-10 hidden -translate-y-1/2 flex-col gap-2 md:flex"
       >
         {heroFrames.map((_, i) => (
@@ -166,7 +174,7 @@ export function Hero() {
 
       {/* Headline */}
       <motion.div
-        style={{ y: headlineY, opacity: fade }}
+        style={headlineStyle}
         className="relative z-10 flex h-full flex-col items-center justify-center px-3 text-center sm:px-6"
       >
         {/* Headline — all three words stay on one line on mobile thanks
@@ -265,11 +273,11 @@ export function Hero() {
 
       {/* Bottom row */}
       <motion.div
-        style={{ opacity: fade }}
+        style={fadeStyle}
         className="absolute inset-x-0 bottom-7 z-10 mx-auto flex max-w-[1400px] items-end justify-between px-6 md:px-10"
       >
         <motion.div
-          style={{ y: labelY }}
+          style={labelStyle}
           className="hidden md:block text-white/75"
         >
           <div className="text-[10.5px] uppercase tracking-[0.32em]">In frame</div>

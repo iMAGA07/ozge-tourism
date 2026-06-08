@@ -1,6 +1,7 @@
 "use client";
 import { motion, useInView, type Variants } from "framer-motion";
 import { useRef } from "react";
+import { useLowPower } from "@/lib/useLowPower";
 
 type Props = {
   children: React.ReactNode;
@@ -27,6 +28,14 @@ const variants: Variants = {
 export function Reveal({ children, delay = 0, className, once = true, amount = 0.25 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once, amount });
+  const lowPower = useLowPower();
+
+  // Weak devices / reduced-motion: render statically (content visible
+  // immediately, no scroll-in animation) for a standard, lag-free feel.
+  if (lowPower) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
     <motion.div
       ref={ref}
@@ -52,7 +61,14 @@ export function RevealText({
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.3 });
+  const lowPower = useLowPower();
   const words = text.split(" ");
+
+  // Weak devices / reduced-motion: just render the text, no per-word reveal.
+  if (lowPower) {
+    return <span className={className}>{text}</span>;
+  }
+
   return (
     <span ref={ref} className={className} aria-label={text}>
       {words.map((w, i) => (
