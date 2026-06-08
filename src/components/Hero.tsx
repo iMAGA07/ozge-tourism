@@ -126,7 +126,7 @@ export function Hero() {
               sizes="100vw"
               className="object-cover"
               style={{ objectPosition: active.position }}
-              quality={72}
+              quality={78}
             />
           </motion.div>
         </AnimatePresence>
