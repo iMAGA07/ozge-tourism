@@ -3,7 +3,6 @@ import { Jost, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { site } from "@/data/site";
 import { SmoothScroll } from "@/components/SmoothScroll";
-import { Cursor } from "@/components/Cursor";
 
 // Per the brief, the brand corporate font is Futura. Apple devices have it
 // installed system-wide; everywhere else we use Jost — the closest
@@ -76,9 +75,8 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${sans.variable} ${serif.variable}`}>
-      <body className="bg-brand-paper text-brand-ink antialiased lg:cursor-none">
+      <body className="bg-brand-paper text-brand-ink antialiased">
         <SmoothScroll />
-        <Cursor />
         {children}
       </body>
     </html>
