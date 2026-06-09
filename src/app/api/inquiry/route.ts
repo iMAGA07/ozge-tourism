@@ -36,18 +36,24 @@ export async function POST(req: Request) {
 
     // 2) Telegram — set TG_BOT_TOKEN and TG_CHAT_ID
     if (process.env.TG_BOT_TOKEN && process.env.TG_CHAT_ID) {
+      // Escape for HTML parse mode so special characters in user input
+      // (&, <, >) never break the message or make Telegram reject it.
+      const esc = (s: string) =>
+        String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
       const text = [
-        "*New inquiry · Ozge Tourism*",
-        `*Name:* ${payload.fullName}`,
-        `*Contact:* ${payload.contact}`,
-        `*Email:* ${payload.email}`,
-        `*Preferred:* ${payload.preferred}`,
+        "🆕 <b>New inquiry · Ozge Tourism</b>",
         "",
-        payload.details,
+        `👤 <b>Name:</b> ${esc(payload.fullName)}`,
+        `📞 <b>Contact:</b> ${esc(payload.contact)}`,
+        `✉️ <b>Email:</b> ${esc(payload.email)}`,
+        `💬 <b>Preferred:</b> ${esc(payload.preferred)}`,
+        "",
+        "📝 <b>Details:</b>",
+        esc(payload.details),
       ].join("\n");
 
       try {
-        await fetch(
+        const res = await fetch(
           `https://api.telegram.org/bot${process.env.TG_BOT_TOKEN}/sendMessage`,
           {
             method: "POST",
@@ -55,10 +61,14 @@ export async function POST(req: Request) {
             body: JSON.stringify({
               chat_id: process.env.TG_CHAT_ID,
               text,
-              parse_mode: "Markdown",
+              parse_mode: "HTML",
+              disable_web_page_preview: true,
             }),
           }
         );
+        if (!res.ok) {
+          console.error("[inquiry] telegram non-ok", res.status, await res.text());
+        }
       } catch (err) {
         console.error("[inquiry] telegram failed", err);
       }
