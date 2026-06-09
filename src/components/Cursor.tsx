@@ -72,20 +72,22 @@ export function Cursor() {
 
   return (
     <>
+      {/* mix-blend-mode: difference makes the cursor invert against whatever
+          is behind it — always legible on both the cream and the dark-ink
+          sections, with no fixed colour to clash. */}
       <motion.div
         aria-hidden="true"
-        style={{ x: ringX, y: ringY }}
+        style={{ x: ringX, y: ringY, mixBlendMode: "difference" }}
         className="pointer-events-none fixed left-0 top-0 z-[100] hidden lg:block"
       >
         <motion.div
           animate={{
             width: variant === "hover" ? 56 : variant === "drag" ? 22 : 32,
             height: variant === "hover" ? 56 : variant === "drag" ? 22 : 32,
-            opacity: variant === "drag" ? 0.6 : 1,
+            opacity: variant === "drag" ? 0.7 : 1,
             backgroundColor:
-              variant === "hover" ? "rgba(176,75,47,0.12)" : "rgba(26,20,16,0)",
-            borderColor:
-              variant === "hover" ? "rgba(176,75,47,0.55)" : "rgba(26,20,16,0.5)",
+              variant === "hover" ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0)",
+            borderColor: "rgba(255,255,255,0.9)",
           }}
           transition={{ type: "spring", damping: 24, stiffness: 240, mass: 0.6 }}
           className="-ml-4 -mt-4 rounded-full border"
@@ -94,13 +96,13 @@ export function Cursor() {
       </motion.div>
       <motion.div
         aria-hidden="true"
-        style={{ x: dotX, y: dotY }}
+        style={{ x: dotX, y: dotY, mixBlendMode: "difference" }}
         className="pointer-events-none fixed left-0 top-0 z-[100] hidden lg:block"
       >
         <motion.div
           animate={{
             scale: variant === "hover" ? 0 : variant === "drag" ? 1.4 : 1,
-            backgroundColor: "#1a1410",
+            backgroundColor: "#ffffff",
           }}
           transition={{ type: "spring", damping: 24, stiffness: 380 }}
           className="-ml-[3px] -mt-[3px] h-1.5 w-1.5 rounded-full"
