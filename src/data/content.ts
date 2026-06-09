@@ -115,7 +115,7 @@ export const whyUs = [
   },
   {
     title: "Professional, multilingual, and highly experienced guides",
-    desc: "",
+    desc: "Professional, experienced guides in 20+ languages — English, French, Chinese, Arabic, Turkish, Russian, and many more.",
   },
   {
     title: "Fully flexible, fully customized, and fully comprehensive packages",

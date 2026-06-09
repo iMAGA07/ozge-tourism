@@ -190,6 +190,12 @@ export function LeadForm() {
                       {errors.details}
                     </div>
                   )}
+                  <p className="mt-2.5 text-[12.5px] leading-relaxed text-brand-cream/55">
+                    FYI — we organize adventures of all kinds across{" "}
+                    <span className="text-brand-saffron">Central Asia &amp; Iran</span>.
+                    Simply tell us what you want and when, and we&apos;ll take care
+                    of the rest :)
+                  </p>
                 </div>
 
                 <div className="mt-6">

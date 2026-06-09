@@ -14,7 +14,7 @@ const offerings = [
     icon: Compass,
     label: "Tours",
     description: [
-      "We organize all kinds of tours across Central Asia with experienced local guides fluent in 10+ languages, including but not limited to English, French, Chinese, German, Spanish, and Turkish — from individual and family trips to group, corporate, organizational, embassy, university, and school tours.",
+      "We organize all kinds of tours across Central Asia with professional, experienced guides fluent in 20+ languages — including English, French, Chinese, Arabic, Turkish, Russian, and many more — from individual and family trips to group, corporate, organizational, embassy, university, and school tours.",
       "Our experiences include city tours, nature and adventure tours, cultural and historical journeys, educational programs, summer trips, business delegations, and fully customized travel experiences. Whether you are a solo traveler, a family, a company, an embassy, or an institution, we design memorable journeys tailored to your needs.",
     ],
   },

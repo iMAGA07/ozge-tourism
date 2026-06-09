@@ -139,7 +139,7 @@ export function About() {
                   <Divider />
                   <Stat label="Countries" value={<><AnimatedNumber to={7} duration={1100} />+</>} />
                   <Divider />
-                  <Stat label="Languages" value="EN · RU · KZ" />
+                  <Stat label="Languages" value="20+" />
                 </div>
 
                 {/* Signature line */}
