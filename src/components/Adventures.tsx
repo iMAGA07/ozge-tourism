@@ -65,7 +65,7 @@ export function Adventures() {
           eyebrow={`Upcoming · ${adventures.month.label}`}
           title="Scheduled Adventures"
           italic={`of ${adventures.month.label} — Choose Yours!`}
-          lead="Our major group adventures for June. We also run Kazakhstan weekend tours every Friday–Sunday, casual weekend getaways year-round, and fully private trips any day, any week, any season — tailored just for you."
+          lead="Our major group adventures for July. We also run Kazakhstan weekend tours every Friday–Sunday, casual weekend getaways year-round, and fully private trips any day, any week, any season — tailored just for you."
         />
 
         {/* ─── Group Tours: hero + date tape ─────────────────────────── */}
@@ -352,7 +352,7 @@ export function Adventures() {
             </div>
             <ul className="mt-3 grid gap-3 text-[12.5px] leading-relaxed text-brand-charcoal/60 md:grid-cols-3 md:gap-5">
               <li>
-                These are our major group adventures for June. We also have
+                These are our major group adventures for July. We also have
                 one-day &amp; special outdoor activities announced weekly or a
                 few days in advance.
               </li>
