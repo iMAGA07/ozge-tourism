@@ -1,7 +1,7 @@
 export type GroupTour = {
   dates: string;
   title: string;
-  /** ISO-2 of the destination, lower-case (matches /public/flags/<code>.svg). null for non-country items (e.g. summer camp). */
+  /** ISO-2 of the destination, lower-case (matches /public/flags/<code>.svg). null for non-country items (e.g. cultural picnic). */
   flag: string | null;
   /** Short subtitle for non-country items, e.g. "School students 10+". */
   subtitle?: string;
@@ -27,7 +27,7 @@ export const adventures: {
     { dates: "July 3–10",  title: "Uzbekistan",      flag: "uz", photoRegion: "Uzbekistan" },
     { dates: "July 10–17", title: "Kyrgyzstan",      flag: "kg", photoRegion: "Kyrgyzstan" },
     { dates: "July 17–24", title: "Tajikistan",      flag: "tj", photoRegion: "Tajikistan" },
-    { dates: "July 18–19", title: "Cultural Picnic", flag: null, photoRegion: "Kazakhstan" },
+    { dates: "July 18–19", title: "Cultural Picnic", flag: null, photoRegion: "Cultural Picnic" },
     { dates: "July 24–31", title: "Turkmenistan",    flag: "tm", photoRegion: "Turkmenistan" },
   ],
   kzWeekend: {

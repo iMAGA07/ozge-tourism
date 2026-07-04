@@ -2,7 +2,7 @@
 import { useState, useMemo } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Tent } from "lucide-react";
+import { Utensils } from "lucide-react";
 import { Reveal } from "./Reveal";
 import { SectionHeader } from "./SectionHeader";
 import { adventures, type GroupTour } from "@/data/content";
@@ -21,7 +21,7 @@ const regionPhoto: Record<string, string> = {
   Zerenda: "kz-zerenda.jpg",
   Buiratau: "kz-buiratau.jpg",
   Bayanaul: "kz-bayanaul.jpg",
-  Kazakhstan: "adv-summer-camp.jpg",
+  "Cultural Picnic": "adv-cultural-picnic.jpg",
   Uzbekistan: "adv-uzbekistan.jpg",
   Kyrgyzstan: "adv-kyrgyzstan.jpg",
   Tajikistan: "adv-tajikistan.jpg",
@@ -168,7 +168,7 @@ export function Adventures() {
                       />
                     ) : (
                       <span className="inline-flex h-9 w-12 shrink-0 items-center justify-center rounded-[4px] bg-brand-saffron/20 text-brand-saffron ring-1 ring-brand-saffron/40">
-                        <Tent strokeWidth={1.6} className="h-5 w-5" />
+                        <Utensils strokeWidth={1.6} className="h-5 w-5" />
                       </span>
                     )}
                     <div>
@@ -185,7 +185,7 @@ export function Adventures() {
                   <p className="mt-5 text-[13px] leading-relaxed text-brand-cream/70">
                     {active.flag
                       ? `Full ${active.title} group adventure — guided end-to-end. Camping under the stars or hotel stays, your choice.`
-                      : "Outdoor camp for school students 10+ — hiking, archery, campfire nights, and team challenges. Run by our guides."}
+                      : "A relaxed cultural picnic in the steppe — traditional food, yurt visits, music, and games. A warm taste of Kazakh hospitality with our guides."}
                   </p>
                 </motion.div>
               </AnimatePresence>
@@ -248,7 +248,7 @@ export function Adventures() {
                             "inline-flex h-3.5 w-5 shrink-0 items-center justify-center rounded-[2px]",
                             isActive ? "bg-brand-saffron/20 text-brand-saffron" : "bg-brand-saffron/15 text-brand-terracotta"
                           )}>
-                            <Tent strokeWidth={1.8} className="h-2.5 w-2.5" />
+                            <Utensils strokeWidth={1.8} className="h-2.5 w-2.5" />
                           </span>
                         )}
                         <div
