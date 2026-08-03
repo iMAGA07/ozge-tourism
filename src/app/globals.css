@@ -134,7 +134,9 @@ html.lenis body {
   100% { transform: translateX(-50%); }
 }
 .animate-marquee {
-  animation: marquee 60s linear infinite;
+  /* Duration scales with the number of photos so the strip keeps a constant
+     px/second speed as the gallery grows. Falls back to the original 60s. */
+  animation: marquee var(--marquee-duration, 60s) linear infinite;
 }
 
 /* Reduced motion */

@@ -28,24 +28,42 @@ export const photos = {
   family: { src: "IMG_6504_2.jpg", position: "center" },
 };
 
-// Ordered list used for galleries / marquee strips
+// Ordered list used for galleries / marquee strips.
+// The ozge-*.jpg set is the 2025 season drop; interleaved with the older
+// library so the strip mixes landscapes and group shots as it scrolls.
 export const galleryStrip: string[] = [
   "IMG_0898.jpg",
+  "ozge-01.jpg",
   "IMG_3882.jpg",
+  "ozge-02.jpg",
   "IMG_2600_3.jpg",
+  "ozge-03.jpg",
   "IMG_6075.jpg",
+  "ozge-04.jpg",
   "IMG_3716.jpg",
+  "ozge-05.jpg",
   "IMG_1751.jpg",
+  "ozge-06.jpg",
   "IMG_5616_2.jpg",
+  "ozge-07.jpg",
   "IMG_8134.jpg",
+  "ozge-08.jpg",
   "IMG_6919.jpg",
+  "ozge-09.jpg",
   "IMG_8742.jpg",
+  "ozge-10.jpg",
   "IMG_2972.jpg",
+  "ozge-11.jpg",
   "IMG_6585.jpg",
+  "ozge-12.jpg",
   "IMG_7140.jpg",
+  "ozge-13.jpg",
   "IMG_3865.jpg",
+  "ozge-14.jpg",
   "IMG_2332_3.jpg",
+  "ozge-15.jpg",
   "IMG_2799.jpg",
+  "ozge-16.jpg",
   "IMG_6504_2.jpg",
   "IMG_6750_2.jpg",
   "IMG_3858.jpg",

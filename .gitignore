@@ -35,3 +35,6 @@ yarn-error.log*
 # Typescript
 *.tsbuildinfo
 .env*
+
+# Raw photo drops (HEIC originals) — converted copies live in public/photos/
+/public/new photos ozge/

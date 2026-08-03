@@ -1,4 +1,5 @@
 "use client";
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import { galleryStrip } from "@/data/photos";
 
@@ -9,7 +10,10 @@ export function Marquee() {
       aria-hidden="true"
       className="relative w-full overflow-hidden border-y border-brand-mist/70 bg-brand-paper py-6"
     >
-      <div className="flex w-max animate-marquee gap-3 will-change-transform">
+      <div
+        className="flex w-max animate-marquee gap-3 will-change-transform"
+        style={{ "--marquee-duration": `${galleryStrip.length * 3}s` } as CSSProperties}
+      >
         {items.map((src, i) => (
           <div
             key={i}
