@@ -29,11 +29,14 @@ export const photos = {
 };
 
 // Ordered list used for galleries / marquee strips.
-// The ozge-*.jpg set is the 2025 season drop; interleaved with the older
-// library so the strip mixes landscapes and group shots as it scrolls.
+// The ozge-*.jpg set is the 2025 season drop and newaugust-*.jpg the late-summer
+// camping night; interleaved with the older library so the strip mixes
+// landscapes, group shots and night skies as it scrolls.
 export const galleryStrip: string[] = [
   "IMG_0898.jpg",
+  "newaugust1.jpg",
   "ozge-01.jpg",
+  "newaugust2.jpg",
   "IMG_3882.jpg",
   "ozge-02.jpg",
   "IMG_2600_3.jpg",
@@ -43,6 +46,7 @@ export const galleryStrip: string[] = [
   "IMG_3716.jpg",
   "ozge-05.jpg",
   "IMG_1751.jpg",
+  "newaugust3.jpg",
   "ozge-06.jpg",
   "IMG_5616_2.jpg",
   "ozge-07.jpg",

@@ -34,7 +34,7 @@ function parseDayRange(label: string): {
   month1: string;
   month2?: string;
 } {
-  // Handles "August 1–2" and cross-month ranges like "August 29 – September 1"
+  // Handles "September 4–6" and cross-month ranges like "August 29 – September 1"
   const m = label.match(/^(\w+)\s+(\d+)\s*[-–]\s*(?:(\w+)\s+)?(\d+)/);
   if (!m) return { d1: "—", month1: label };
   return {
@@ -65,7 +65,7 @@ export function Adventures() {
           eyebrow={`Upcoming · ${adventures.month.label}`}
           title="Scheduled Adventures"
           italic={`of ${adventures.month.label} — Choose Yours!`}
-          lead="Our major group adventures for August. We also run Kazakhstan weekend tours every Friday–Sunday, casual weekend getaways year-round, and fully private trips any day, any week, any season — tailored just for you."
+          lead="Our major group adventures for September. We also run Kazakhstan weekend tours every Friday–Sunday, casual weekend getaways year-round, and fully private trips any day, any week, any season — tailored just for you."
         />
 
         {/* ─── Group Tours: hero + date tape ─────────────────────────── */}
@@ -222,7 +222,7 @@ export function Adventures() {
                 const r = parseDayRange(d.dates);
                 return (
                   <button
-                    key={d.dates}
+                    key={`${d.dates}-${d.title}`}
                     type="button"
                     onClick={() => setActiveIndex(i)}
                     className={cn(
@@ -253,7 +253,7 @@ export function Adventures() {
                         )}
                         <div
                           className={cn(
-                            "text-[10px] uppercase tracking-[0.22em] truncate",
+                            "text-[10px] uppercase tracking-[0.22em] line-clamp-3 leading-[1.35]",
                             isActive ? "text-brand-saffron" : "text-brand-terracotta/80"
                           )}
                         >
@@ -352,7 +352,7 @@ export function Adventures() {
             </div>
             <ul className="mt-3 grid gap-3 text-[12.5px] leading-relaxed text-brand-charcoal/60 md:grid-cols-3 md:gap-5">
               <li>
-                These are our major group adventures for August. We also have
+                These are our major group adventures for September. We also have
                 one-day &amp; special outdoor activities announced weekly or a
                 few days in advance.
               </li>
