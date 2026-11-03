@@ -22,13 +22,13 @@ export const adventures: {
   getaways: Recurring;
   privateTours: string;
 } = {
-  month: { label: "October 2026", long: "Adventures for October 2026" },
+  month: { label: "November 2026", long: "Adventures for November 2026" },
   group: [
-    { dates: "October 2–4",   title: "Uzbekistan",   flag: "uz", photoRegion: "Uzbekistan" },
-    { dates: "October 9–11",  title: "Kyrgyzstan",   flag: "kg", photoRegion: "Kyrgyzstan" },
-    { dates: "October 16–18", title: "Overnight Camping & Intercultural Picnic Day", flag: null, photoRegion: "Cultural Picnic" },
-    { dates: "October 23–25", title: "Tajikistan",   flag: "tj", photoRegion: "Tajikistan" },
-    { dates: "October 25–30", title: "Turkmenistan", flag: "tm", photoRegion: "Turkmenistan" },
+    { dates: "November 1–8",   title: "Uzbekistan",               flag: "uz", photoRegion: "Uzbekistan" },
+    { dates: "November 8–15",  title: "Kyrgyzstan",               flag: "kg", photoRegion: "Kyrgyzstan" },
+    { dates: "November 14–15", title: "Intercultural Picnic Day", flag: null, photoRegion: "Cultural Picnic" },
+    { dates: "November 15–22", title: "Tajikistan",               flag: "tj", photoRegion: "Tajikistan" },
+    { dates: "November 22–29", title: "Turkmenistan",             flag: "tm", photoRegion: "Turkmenistan" },
   ],
   kzWeekend: {
     title: "Kazakhstan Weekend Tours",
