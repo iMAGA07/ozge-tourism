@@ -4,8 +4,22 @@
     {
       "name": "dev",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
       "port": 3000
+    },
+    {
+      "name": "academy",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "academy",
+        "run",
+        "dev"
+      ],
+      "port": 3001
     }
   ]
 }

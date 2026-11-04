@@ -1,0 +1,95 @@
+import type { Instructor } from "../types";
+
+// Role-based placeholders: names and photos stay null until each instructor
+// approves their published profile. Cards render the role and a
+// "Full profile coming soon" note instead of inventing people.
+export const instructors: Instructor[] = [
+  {
+    id: "english-native",
+    name: null,
+    role: "English Language Instructor",
+    languages: ["English (native)"],
+    expertise: ["General English", "Conversation", "Business English"],
+    bio: "Native English speaker with an internationally recognised teaching qualification, focused on confident, natural communication.",
+  },
+  {
+    id: "english-academic",
+    name: null,
+    role: "Academic English & Exam Specialist",
+    languages: ["English", "Russian", "Kazakh"],
+    expertise: ["Academic writing", "IELTS", "TOEFL"],
+    bio: "Specialist in academic English and exam preparation, helping students reach the scores their universities require.",
+  },
+  {
+    id: "ielts",
+    name: null,
+    role: "IELTS Preparation Lead",
+    languages: ["English", "Russian"],
+    expertise: ["IELTS Writing", "IELTS Speaking", "Band-score strategy"],
+    bio: "Leads IELTS preparation with detailed, criteria-based feedback on every Writing and Speaking task.",
+  },
+  {
+    id: "sat",
+    name: null,
+    role: "SAT, GRE & GMAT Instructor",
+    languages: ["English", "Russian"],
+    expertise: ["Quantitative reasoning", "Verbal reasoning", "Test strategy"],
+    bio: "Teaches the quantitative and verbal reasoning behind standardised admissions tests, with a strong focus on strategy.",
+  },
+  {
+    id: "russian-lead",
+    name: null,
+    role: "Russian Language Instructor",
+    languages: ["Russian (native)", "English"],
+    expertise: ["Russian as a foreign language", "Grammar", "Conversation"],
+    bio: "Native speaker teaching Russian as a foreign language to students, expatriates and heritage learners.",
+  },
+  {
+    id: "french",
+    name: null,
+    role: "French Language Instructor",
+    languages: ["French", "English", "Russian"],
+    expertise: ["General French", "DELF / DALF"],
+    bio: "Teaches modern, conversational French and prepares learners for DELF and DALF.",
+  },
+  {
+    id: "chinese",
+    name: null,
+    role: "Mandarin Chinese Instructor",
+    languages: ["Mandarin Chinese", "English", "Russian"],
+    expertise: ["Pronunciation & tones", "Characters", "HSK"],
+    bio: "Makes Mandarin approachable from lesson one, with a structured path through HSK levels.",
+  },
+  {
+    id: "kazakh",
+    name: null,
+    role: "Kazakh Language Instructor",
+    languages: ["Kazakh (native)", "Russian", "English"],
+    expertise: ["Kazakh for beginners", "Professional Kazakh", "Culture"],
+    bio: "Native speaker teaching Kazakh with warmth and cultural depth, from first words to professional use.",
+  },
+  {
+    id: "admissions",
+    name: null,
+    role: "University Admissions Advisor",
+    languages: ["English", "Russian", "Kazakh"],
+    expertise: ["University selection", "Personal statements", "Scholarships"],
+    bio: "Guides students through international applications — from shortlisting to essays, interviews and funding.",
+  },
+  {
+    id: "advisor",
+    name: null,
+    role: "Academic Advisor & Skills Coach",
+    languages: ["English", "Russian", "Kazakh"],
+    expertise: ["Academic planning", "Study skills", "Public speaking"],
+    bio: "Helps students set goals, plan their path and build the habits and soft skills that make success sustainable.",
+  },
+  {
+    id: "ai",
+    name: null,
+    role: "AI & Digital Skills Trainer",
+    languages: ["English", "Russian"],
+    expertise: ["Practical AI tools", "Productivity", "Responsible AI"],
+    bio: "Teaches practical, responsible use of AI tools for study and work — no coding required.",
+  },
+];

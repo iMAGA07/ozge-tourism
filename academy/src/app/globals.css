@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+  ::selection {
+    @apply bg-gold-300 text-ink;
+  }
+  :focus-visible {
+    @apply outline-none ring-2 ring-gold ring-offset-2 ring-offset-paper;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight;
+    font-variation-settings: "SOFT" 50, "WONK" 0;
+  }
+}
+
+@layer components {
+  .container-site {
+    @apply mx-auto w-full max-w-site px-4 sm:px-6 lg:px-8;
+  }
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.18em] text-brand;
+  }
+  .eyebrow::before {
+    content: "";
+    @apply h-px w-6 bg-gold;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-[14px] font-semibold transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-primary {
+    @apply btn bg-brand text-white shadow-[0_8px_24px_-10px_rgba(21,89,160,0.7)] hover:-translate-y-0.5 hover:bg-ink;
+  }
+  .btn-gold {
+    @apply btn bg-gold text-ink shadow-[0_8px_24px_-10px_rgba(217,165,28,0.8)] hover:-translate-y-0.5 hover:bg-gold-300;
+  }
+  .btn-ghost {
+    @apply btn border border-ink/15 bg-white/60 text-ink backdrop-blur hover:border-ink/40 hover:bg-white;
+  }
+  .btn-ghost-light {
+    @apply btn border border-white/25 text-white hover:border-white/60 hover:bg-white/10;
+  }
+  .card {
+    @apply rounded-3xl border border-ink/[0.07] bg-white shadow-[0_1px_0_rgba(10,31,56,0.04),0_18px_40px_-28px_rgba(10,31,56,0.35)];
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-ink/10 bg-white px-3 py-1 text-[12px] font-medium text-ink/75;
+  }
+  .prose-academy p {
+    @apply leading-relaxed text-ink/75;
+  }
+  /* Kazakh-ornament inspired texture, used very faintly on dark sections */
+  .ornament-bg {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cg fill='none' stroke='%23EDBE3A' stroke-width='1.2' opacity='.5'%3E%3Cpath d='M48 20c-8 0-12 6-12 11s4 9 9 9c4 0 6-3 6-6s-2-4-4-4M48 20c8 0 12 6 12 11s-4 9-9 9c-4 0-6-3-6-6s2-4 4-4M48 76c-8 0-12-6-12-11s4-9 9-9c4 0 6 3 6 6s-2 4-4 4M48 76c8 0 12-6 12-11s-4-9-9-9c-4 0-6 3-6 6s2 4 4 4'/%3E%3Cpath d='M48 40v16M40 48h16'/%3E%3C/g%3E%3C/svg%3E");
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Native <details> accordion with a smooth open */
+details > summary { list-style: none; cursor: pointer; }
+details > summary::-webkit-details-marker { display: none; }
+details[open] .faq-icon { transform: rotate(45deg); }
+details[open] > .faq-body { animation: faq-in 0.35s ease; }
+@keyframes faq-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
+/* Hero orbit: ONE animated angle drives both the ring and the counter-rotation
+   of its labels, so they can never drift out of phase. */
+@property --orbit {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 0deg;
+}
+@keyframes orbit-var { to { --orbit: 360deg; } }
+.orbit-ring {
+  container-type: size;
+  animation: orbit-var var(--orbit-dur, 70s) linear infinite;
+}
+.orbit-ring[data-reverse] { animation-direction: reverse; }
+.orbit-item {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform:
+    translate(-50%, -50%)
+    rotate(calc(var(--a) + var(--orbit)))
+    translateY(calc(-1 * var(--r)))
+    rotate(calc(-1 * (var(--a) + var(--orbit))));
+}
